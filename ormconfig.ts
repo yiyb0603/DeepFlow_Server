@@ -1,13 +1,13 @@
-import { join } from 'path';
 import { ConnectionOptions } from 'typeorm';
+import getProcessEnv from 'lib/getProcessEnv';
 
 const ormConfig: ConnectionOptions = {
   type: 'mysql',
-  host: 'localhost',
-  port: 3306,
-  username: 'root',
-  password: '',
-  database: 'test',
+  host: getProcessEnv('DB_HOST'),
+  port: Number(getProcessEnv('DB_PORT')),
+  username: getProcessEnv('DB_USERNAME'),
+  password: getProcessEnv('DB_PASSWORD'),
+  database: getProcessEnv('DATABASE'),
   synchronize: true,
   logging: false,
 	entities: [__dirname + '/../**/*.entity.{js,ts}'],
