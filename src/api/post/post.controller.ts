@@ -1,6 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Query, Res, UseGuards } from "@nestjs/common";
+import User from "api/user/user.entity";
 import { Response } from 'express';
+import { Token } from "lib/decorator/user.decorator";
 import { PostEnums } from "lib/enum/post";
+import AuthGuard from "middleware/auth";
 import { CreatePostDto } from "./dto/post.dto";
 import PostEntity from "./post.entity";
 import PostService from "./post.service";
@@ -12,7 +15,7 @@ export default class PostController {
   ) {}
 
   @Get('/')
-  public async getPostsByCategory(@Res() response: Response, @Query('category') category: PostEnums) {
+  public async getPostsByCategory(@Res() response: Response, @Token() user: User, @Query('category') category: PostEnums) {
     const posts: PostEntity[] = await this.postService.getPostsByCategory(category);
     
     return response.status(200).json({
@@ -37,6 +40,7 @@ export default class PostController {
   }
 
   @Post('/')
+  @UseGuards(new AuthGuard())
   public async handleCreatePost(@Res() response: Response, @Body() createPostDto: CreatePostDto) {
     await this.postService.handleCreatePost(createPostDto);
 
@@ -47,6 +51,7 @@ export default class PostController {
   }
 
   @Delete('/:idx')
+  @UseGuards(new AuthGuard())
   public async handleDeletePost(@Res() response: Response, @Param('idx') postIdx: number) {
     await this.postService.handleDeletePost(postIdx);
 

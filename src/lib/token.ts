@@ -1,8 +1,8 @@
-import 'dotenv/config';
 import * as jwt from 'jsonwebtoken';
 import { SignOptions } from 'jsonwebtoken';
+import getProcessEnv from './getProcessEnv';
 
-const { JWT_SECRET } = process.env;
+const JWT_SECRET: string = getProcessEnv('JWT_SECRET');
 
 export const createToken = (id: string) => {
 	const payload = {

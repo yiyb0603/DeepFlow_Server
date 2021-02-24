@@ -1,11 +1,12 @@
+import { PostEnums } from "lib/enum/post";
 import { EntityRepository, Repository } from "typeorm";
 import PostEntity from "./post.entity";
 
 @EntityRepository(PostEntity)
 export default class PostEntityRepository extends Repository<PostEntity> {
-  public getPostsByCategory(category: string): Promise<PostEntity[]> {
+  public getPostsByCategory(category: PostEnums): Promise<PostEntity[]> {
     return this.createQueryBuilder()
-      .where('category = :category', { category })
+      .where('category = :category', { category: category.toString() })
       .getMany();
   }
 

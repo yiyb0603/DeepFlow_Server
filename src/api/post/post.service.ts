@@ -23,7 +23,7 @@ export default class PostService {
   ) {}
 
   public async getPostsByCategory(category: PostEnums): Promise<PostEntity[]> {
-    const posts: PostEntity[] = await this.postRepository.getPostsByCategory(category.toString());
+    const posts: PostEntity[] = await this.postRepository.getPostsByCategory(category);
     
     for (const post of posts) {
       let postTags: Tags[] = [];

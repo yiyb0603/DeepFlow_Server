@@ -21,7 +21,7 @@ export default class CatchException implements ExceptionFilter {
     else {
       customError = {
         status: exception.getStatus() || 500,
-        message: exception.getResponse() || '서버 오류입니다.',
+        message: exception.message || '서버 오류입니다.',
       };
     }
 
