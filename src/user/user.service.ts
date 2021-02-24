@@ -18,7 +18,7 @@ export default class UserService {
     const { githubInfo, generation, major } = signUpDto;
     const { githubId, avatar, name, description, location } = githubInfo;
 
-    const existUser = await this.userRepository.findById(githubInfo.githubId);
+    const existUser = await this.userRepository.getUserById(githubInfo.githubId);
     if (existUser) {
       throw new HttpError(409, '이미 존재하는 유저입니다.');
     }
@@ -80,7 +80,7 @@ export default class UserService {
   }
 
   public async getToken(id: string): Promise<string> | null {
-    const user: User = await this.userRepository.findById(id);
+    const user: User = await this.userRepository.getUserById(id);
     if (user) {
       const token: string = createToken(user.githubId);
       return token;
@@ -90,7 +90,7 @@ export default class UserService {
   }
 
   public async getUserInfo(id: string): Promise<User> {
-    const user = await this.userRepository.findById(id);
+    const user = await this.userRepository.getUserById(id);
 
     if (!user) {
       throw new HttpError(404, '존재하지 않는 유저입니다.');

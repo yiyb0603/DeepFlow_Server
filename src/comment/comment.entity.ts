@@ -20,7 +20,7 @@ export default class Comment extends BaseEntity {
   })
   post!: PostEntity;
 
-  @ManyToOne((type) => User, { onUpdate: 'CASCADE' })
+  @ManyToOne((type) => User)
   @JoinColumn({
     name: 'fk_user_idx',
   })

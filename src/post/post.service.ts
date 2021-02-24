@@ -8,12 +8,12 @@ import User from "user/user.entity";
 import UserRepository from "user/user.repository";
 import { CreatePostDto } from "./dto/post.dto";
 import PostEntity from "./post.entity";
-import PostRepository from "./post.repository";
+import PostEntityRepository from "./post.repository";
 
 @Injectable()
 export default class PostService {
   constructor(
-    private readonly postRepository: PostRepository,
+    private readonly postRepository: PostEntityRepository,
 
     @InjectRepository(Tags)
     private readonly tagsRepository: TagsRepository,
@@ -49,7 +49,7 @@ export default class PostService {
   public async handleCreatePost(createPostDto: CreatePostDto): Promise<void> {
     const { userIdx, title, contents, category, postTags } = createPostDto;
 
-    const user: User = await this.userRepository.findByUserIdx(userIdx);
+    const user: User = await this.userRepository.getUserByIdx(userIdx);
 
     const post: PostEntity = new PostEntity();
     post.user = user;
