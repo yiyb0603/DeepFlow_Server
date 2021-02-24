@@ -1,8 +1,7 @@
-import { Post } from "@nestjs/common";
-import Comment from "comment/comment.entity";
-import PostEntity from "post/post.entity";
+import Comment from "api/comment/comment.entity";
+import PostEntity from "api/post/post.entity";
 import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import User from "user/user.entity";
+import User from "api/user/user.entity";
 
 @Entity({
   name: 'reply',

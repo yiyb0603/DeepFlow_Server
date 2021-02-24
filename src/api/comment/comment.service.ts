@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import HttpError from "exception/HttpError";
-import PostEntity from "post/post.entity";
-import PostEntityRepository from "post/post.repository";
-import User from "user/user.entity";
-import UserRepository from "user/user.repository";
+import PostEntity from "api/post/post.entity";
+import PostEntityRepository from "api/post/post.repository";
+import User from "api/user/user.entity";
+import UserRepository from "api/user/user.repository";
 import Comment from "./comment.entity";
 import CommentRepository from "./comment.repository";
 import { CreateCommentDto } from "./dto/comment.dto";

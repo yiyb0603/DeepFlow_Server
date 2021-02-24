@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import TagsRepository from 'tags/tags.repository';
-import UserRepository from 'user/user.repository';
+import TagsRepository from 'api/tags/tags.repository';
+import UserRepository from 'api/user/user.repository';
 import PostController from './post.controller';
 import PostEntityRepository from './post.repository';
 import PostService from './post.service';

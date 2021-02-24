@@ -1,5 +1,5 @@
 import { PostEnums } from "lib/enum/post";
-import Tags from "tags/tags.entity";
+import Tags from "api/tags/tags.entity";
 import {
   BaseEntity,
   Column,
@@ -11,7 +11,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import User from "user/user.entity";
+import User from "api/user/user.entity";
 
 @Entity({
   name: 'post',
