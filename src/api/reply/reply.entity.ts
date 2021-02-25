@@ -21,17 +21,32 @@ export default class Reply extends BaseEntity {
   })
   user!: User;
 
-  @ManyToOne((type) => PostEntity, { onDelete: 'CASCADE' })
+  @Column()
+  fk_user_idx!: number;
+
+  @ManyToOne((type) => PostEntity, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({
     name: 'fk_post_idx',
   })
   post!: PostEntity;
 
-  @ManyToOne((type) => Comment, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  @Column()
+  fk_post_idx: number;
+
+  @ManyToOne((type) => Comment, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({
     name: 'fk_comment_idx',
   })
   comment!: Comment;
+
+  @Column()
+  fk_comment_idx!: number;
 
   @CreateDateColumn({
     name: 'created_at',

@@ -12,6 +12,7 @@ import PostEntity from 'api/post/post.entity';
 import Comment from 'api/comment/comment.entity';
 import Reply from 'api/reply/reply.entity';
 import Tags from 'api/tags/tags.entity';
+import { ReplyModule } from 'api/reply/reply.module';
 
 const loadEntities: TypeOrmModuleOptions = {
   ...ormConfig,
@@ -31,6 +32,7 @@ const loadEntities: TypeOrmModuleOptions = {
     PostModule,
     TagsModule,
     CommentModule,
+    ReplyModule,
   ],
   controllers: [],
   providers: [{
