@@ -1,10 +1,7 @@
 import { IsArray, IsEnum, IsNumber, IsString } from "class-validator";
 import { PostEnums } from "lib/enum/post";
 
-export class CreatePostDto {
-  @IsNumber()
-  readonly userIdx: number;
-
+export class PostDto {
   @IsEnum(PostEnums)
   readonly category: PostEnums;
 

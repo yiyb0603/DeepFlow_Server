@@ -1,70 +1,75 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import HttpError from "exception/HttpError";
-import PostEntity from "api/post/post.entity";
-import PostEntityRepository from "api/post/post.repository";
 import User from "api/user/user.entity";
 import UserRepository from "api/user/user.repository";
 import Comment from "./comment.entity";
 import CommentRepository from "./comment.repository";
-import { CreateCommentDto } from "./dto/comment.dto";
+import { CommentDto } from "./dto/comment.dto";
+import PostService from "api/post/post.service";
 
 @Injectable()
 export default class CommentService {
   constructor(
     private readonly commentRepository: CommentRepository,
 
-    @InjectRepository(PostEntity)
-    private readonly postRepository: PostEntityRepository,
+    private readonly postService: PostService,
 
     @InjectRepository(User)
     private readonly userRepository: UserRepository,
   ) {}
 
   public async getComments(postIdx: number): Promise<Comment[]> {
-    await this.getExistPost(postIdx);
-
     const comments: Comment[] = await this.commentRepository.getCommentsByPostIdx(postIdx);
     return comments;
   }
 
-  public async createComment(createCommentDto: CreateCommentDto): Promise<void> {
-    const { userIdx, contents, postIdx } = createCommentDto;
+  public async handleCreateComment(createCommentDto: CommentDto, user: User): Promise<void> {
+    const { contents, postIdx } = createCommentDto;
 
     const comment = new Comment();
-    comment.user = await this.getExistUser(userIdx);
+    comment.user = await this.userRepository.getUserByIdx(user.idx);
     comment.contents = contents;
-    comment.post = await this.getExistPost(postIdx);
+    comment.post = await this.postService.getPostByIdx(postIdx);
     comment.createdAt = new Date();
     comment.updatedAt = null;
+
+    await this.commentRepository.save(comment);
   }
 
-  public async deleteComment(commentIdx: number): Promise<void> {
-    const comment = await this.commentRepository.getCommentByIdx(commentIdx);
+  public async handleModifyComment(commentIdx: number, modifyCommentDto: CommentDto, user: User) {
+    const comment: Comment = await this.getExistComment(commentIdx);
+    const { contents, postIdx } = modifyCommentDto;
 
-    if (!comment) {
-      throw new HttpError(404, '존재하지 않는 댓글입니다.');
+    if (comment.fk_user_idx !== user.idx) {
+      throw new HttpError(403, '댓글을 수정할 권한이 없습니다.');
+    }
+
+    comment.user = await this.userRepository.getUserByIdx(user.idx);
+    comment.contents = contents;
+    comment.post = await this.postService.getPostByIdx(postIdx);
+    comment.updatedAt = new Date();
+
+    await this.commentRepository.save(comment);
+  }
+
+  public async handleDeleteComment(commentIdx: number, user: User): Promise<void> {
+    const comment: Comment = await this.getExistComment(commentIdx);
+
+    if (comment.fk_user_idx !== user.idx) {
+      throw new HttpError(403, '댓글을 삭제할 권한이 없습니다.');
     }
 
     await this.commentRepository.remove(comment);
   }
 
-  public async getExistUser(userIdx: number): Promise<User> {
-    const user: User = await this.userRepository.getUserByIdx(userIdx);
+  public async getExistComment(commentIdx: number): Promise<Comment> {
+    const comment: Comment = await this.commentRepository.getCommentByIdx(commentIdx);
 
-    if (!user) {
-      throw new HttpError(404, '존재하지 않는 유저입니다.');
+    if (!comment) {
+      throw new HttpError(404, '존재하지 않는 댓글입니다.');
     }
 
-    return user;
-  }
-
-  public async getExistPost(postIdx: number): Promise<PostEntity> {
-    const post: PostEntity = await this.postRepository.getPostByIdx(postIdx);
-    if (!post) {
-      throw new HttpError(404, '존재하지 않는 글입니다.');
-    }
-
-    return post;
+    return comment;
   }
 }

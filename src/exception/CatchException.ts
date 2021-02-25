@@ -8,24 +8,24 @@ export default class CatchException implements ExceptionFilter {
     const ctx: HttpArgumentsHost = host.switchToHttp();
     const response = ctx.getResponse();
 
-    let customError: HttpError | any = {};
+    let httpError: HttpError | any = {};
     console.log(exception);
 
     if (exception instanceof HttpError) {
-      customError = {
+      httpError = {
         status: exception.statusCode,
         message: exception.message,
       };
     } 
     
     else {
-      customError = {
-        status: exception.getStatus() || 500,
-        message: exception.message || '서버 오류입니다.',
+      httpError = {
+        status: (exception && exception.getStatus()) || 500,
+        message: (exception && exception.message) || '서버 오류입니다.',
       };
     }
 
-    const { status, message } = customError;
+    const { status, message } = httpError;
     return response.status(status).json({
       status,
       message,

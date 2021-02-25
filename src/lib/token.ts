@@ -4,9 +4,10 @@ import getProcessEnv from './getProcessEnv';
 
 const JWT_SECRET: string = getProcessEnv('JWT_SECRET');
 
-export const createToken = (id: string) => {
+export const createToken = (idx: number, githubId: string) => {
 	const payload = {
-		id,
+		idx,
+		githubId,
 	};
 
 	const options: SignOptions = {

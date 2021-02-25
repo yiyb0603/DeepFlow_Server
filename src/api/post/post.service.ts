@@ -6,7 +6,7 @@ import Tags from "api/tags/tags.entity";
 import TagsRepository from "api/tags/tags.repository";
 import User from "api/user/user.entity";
 import UserRepository from "api/user/user.repository";
-import { CreatePostDto } from "./dto/post.dto";
+import { PostDto } from "./dto/post.dto";
 import PostEntity from "./post.entity";
 import PostEntityRepository from "./post.repository";
 
@@ -28,17 +28,84 @@ export default class PostService {
     for (const post of posts) {
       let postTags: Tags[] = [];
       
-      const tag = await this.tagsRepository.getTagsByPostIdx(post.idx);
+      const tag: Tags[] = await this.tagsRepository.getTagsByPostIdx(post.idx);
       postTags = postTags.concat(tag);
       
+      const user: User = await this.userRepository.getUserByIdx(post.fk_user_idx);
+      post.user = user;
+
       post.postTags = postTags;
+
+      delete post.contents;
+      delete post.user.description;
+      delete post.user.joinedAt;
+      delete post.user.location;
+      delete post.user.recommandCount;
     }
 
     return posts;
   }
 
   public async getPost(postIdx: number): Promise<PostEntity> {
-    const post = await this.postRepository.getPostByIdx(postIdx);
+    const post: PostEntity = await this.getPostByIdx(postIdx);
+    post.postTags = await this.tagsRepository.getTagsByPostIdx(postIdx);
+    post.user = await this.userRepository.getUserByIdx(post.fk_user_idx);
+
+    return post;
+  }
+
+  public async handleCreatePost(createPostDto: PostDto, user: User): Promise<void> {
+    const { title, contents, category, postTags } = createPostDto;
+    const existUser = await this.userRepository.getUserById(user.githubId);
+
+    if (!existUser) {
+      throw new HttpError(404, '존재하지 않는 유저입니다.');
+    }
+
+    const post: PostEntity = new PostEntity();
+    post.user = existUser;
+    post.title = title;
+    post.contents = contents;
+    post.category = category;
+
+    await this.postRepository.save(post);
+
+    await this.handlePushTags(postTags, post);
+  }
+
+  public async handleModifyPost(postIdx: number, modifyPostDto: PostDto, user: User) {
+    const post: PostEntity = await this.getPostByIdx(postIdx);
+
+    if (post.fk_user_idx !== user.idx) {
+      throw new HttpError(403, '글을 수정할 권한이 없습니다.');
+    }
+
+    const { title, contents, postTags, category } = modifyPostDto;
+    post.idx = postIdx;
+    post.title = title;
+    post.contents = contents;
+    post.category = category;
+    await this.postRepository.save(post);
+
+    const existTags = await this.tagsRepository.getTagsByPostIdx(postIdx);
+    await this.tagsRepository.remove(existTags);
+
+    await this.handlePushTags(postTags, post);
+  }
+
+  public async handleDeletePost(postIdx: number, user: User) {
+    const post: PostEntity = await this.getPostByIdx(postIdx);
+
+    if (user.idx !== post.fk_user_idx) {
+      throw new HttpError(403, '글을 삭제할 권한이 없습니다.');
+    }
+
+    await this.postRepository.remove(post);
+  }
+
+  public async getPostByIdx(postIdx: number): Promise<PostEntity> {
+    const post: PostEntity = await this.postRepository.getPostByIdx(postIdx);
+
     if (!post) {
       throw new HttpError(404, '존재하지 않는 글입니다.');
     }
@@ -46,19 +113,7 @@ export default class PostService {
     return post;
   }
 
-  public async handleCreatePost(createPostDto: CreatePostDto): Promise<void> {
-    const { userIdx, title, contents, category, postTags } = createPostDto;
-
-    const user: User = await this.userRepository.getUserByIdx(userIdx);
-
-    const post: PostEntity = new PostEntity();
-    post.user = user;
-    post.title = title;
-    post.contents = contents;
-    post.category = category;
-
-    await this.postRepository.save(post);
-
+  public async handlePushTags(postTags: string[], post: PostEntity) {
     for (const postTag of postTags) {
       const tag: Tags = new Tags();
       tag.name = postTag;
@@ -68,13 +123,4 @@ export default class PostService {
     }
   }
 
-  public async handleDeletePost(idx: number) {
-    const post: PostEntity = await this.postRepository.getPostByIdx(idx);
-
-    if (!post) {
-      throw new HttpError(404, '존재하지 않는 글입니다.');
-    }
-
-    await this.postRepository.remove(post);
-  }
 }

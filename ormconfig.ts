@@ -10,7 +10,7 @@ const ormConfig: ConnectionOptions = {
   database: getProcessEnv('DATABASE'),
   synchronize: true,
   logging: false,
-	entities: [__dirname + '/../**/*.entity.{js,ts}'],
+  entities: ["src/modules/domain-invoice/*.entity{.ts,.js}"],
 	charset: 'utf8mb4_unicode_ci',
 };
 

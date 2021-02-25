@@ -1,8 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Res, UseGuards } from "@nestjs/common";
+import User from "api/user/user.entity";
 import { Response } from 'express';
+import { Token } from "lib/decorator/user.decorator";
+import AuthGuard from "middleware/auth";
 import Comment from "./comment.entity";
 import CommentService from "./comment.service";
-import { CreateCommentDto } from "./dto/comment.dto";
+import { CommentDto } from "./dto/comment.dto";
 
 @Controller('comment')
 export default class CommentController {
@@ -24,17 +27,42 @@ export default class CommentController {
   }
 
   @Post('/')
-  public async createComment(@Res() response: Response, @Body() createCommentDto: CreateCommentDto) {
-    await this.commentService.createComment(createCommentDto);
+  @UseGuards(new AuthGuard())
+  public async handleCreateComment(
+    @Res() response: Response,
+    @Token() user: User,
+    @Body() createCommentDto: CommentDto
+  ) {
+    await this.commentService.handleCreateComment(createCommentDto, user);
     return response.status(200).json({
       status: 200,
       message: '댓글을 작성하였습니다.',
     });
   }
 
+  @Put('/:idx')
+  @UseGuards(new AuthGuard())
+  public async handleModifyComment(
+    @Res() response: Response,
+    @Token() user: User,
+    @Param('idx') commentIdx: number,
+    @Body() modifyCommentDto: CommentDto,
+  ) {
+    await this.commentService.handleModifyComment(commentIdx, modifyCommentDto, user);
+    return response.status(200).json({
+      status: 200,
+      message: '댓글을 수정하였습니다.',
+    });
+  }
+
   @Delete('/:idx')
-  public async deleteComment(@Res() response: Response, @Param('idx') commentIdx: number) {
-    await this.commentService.deleteComment(commentIdx);
+  @UseGuards(new AuthGuard())
+  public async handleDeleteComment(
+    @Res() response: Response,
+    @Token() user: User,
+    @Param('idx') commentIdx: number
+  ) {
+    await this.commentService.handleDeleteComment(commentIdx, user);
     return response.status(200).json({
       status: 200,
       message: '댓글을 삭제하였습니다.',

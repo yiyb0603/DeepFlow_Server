@@ -9,6 +9,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  RelationId,
   UpdateDateColumn,
 } from "typeorm";
 import User from "api/user/user.entity";
@@ -40,6 +41,9 @@ export default class PostEntity extends BaseEntity {
   })
   user!: User;
 
+  @Column()
+  fk_user_idx: number;
+
   @Column({
     default: 0,
     name: 'comment_count',
@@ -47,7 +51,8 @@ export default class PostEntity extends BaseEntity {
   commentCount!: number;
 
   @OneToMany((type) => Tags, (tag) => tag.post, {
-    cascade: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
   })
   postTags!: Tags[];
 

@@ -11,10 +11,6 @@ export default class AuthGuard implements CanActivate {
     if (!access_token) {
       throw new HttpError(401, '토큰이 전송되지 않았습니다.');
     }
-
-    if (Array.isArray(access_token)) {
-      throw new HttpError(401, '유효하지 않은 토큰입니다.');
-    }
     
     request.user = this.validateToken(access_token);
     return true;
@@ -27,6 +23,7 @@ export default class AuthGuard implements CanActivate {
     } catch (error) {
       switch (error.message) {
         case 'INVALID_TOKEN':
+        case 'TOKEN_IS_ARRAY':
         case 'NO_USER':
           throw new HttpError(401, '유효하지 않은 토큰입니다.');
 

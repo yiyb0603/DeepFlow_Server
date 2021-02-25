@@ -1,10 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Res, UseGuards } from "@nestjs/common";
 import User from "api/user/user.entity";
 import { Response } from 'express';
 import { Token } from "lib/decorator/user.decorator";
 import { PostEnums } from "lib/enum/post";
 import AuthGuard from "middleware/auth";
-import { CreatePostDto } from "./dto/post.dto";
+import { PostDto } from "./dto/post.dto";
 import PostEntity from "./post.entity";
 import PostService from "./post.service";
 
@@ -15,7 +15,11 @@ export default class PostController {
   ) {}
 
   @Get('/')
-  public async getPostsByCategory(@Res() response: Response, @Token() user: User, @Query('category') category: PostEnums) {
+  public async getPostsByCategory(
+    @Res() response: Response,
+    @Token() user: User,
+    @Query('category') category: PostEnums
+  ) {
     const posts: PostEntity[] = await this.postService.getPostsByCategory(category);
     
     return response.status(200).json({
@@ -41,8 +45,12 @@ export default class PostController {
 
   @Post('/')
   @UseGuards(new AuthGuard())
-  public async handleCreatePost(@Res() response: Response, @Body() createPostDto: CreatePostDto) {
-    await this.postService.handleCreatePost(createPostDto);
+  public async handleCreatePost(
+    @Res() response: Response,
+    @Token() user: User,
+    @Body() createPostDto: PostDto
+  ) {
+    await this.postService.handleCreatePost(createPostDto, user);
 
     return response.status(200).json({
       status: 200,
@@ -50,10 +58,30 @@ export default class PostController {
     });
   }
 
+  @Put('/:idx')
+  @UseGuards(new AuthGuard())
+  public async handleModifyPost(
+    @Res() response: Response,
+    @Token() user: User,
+    @Param('idx') postIdx: number,
+    @Body() modifyPostDto: PostDto
+  ) {
+    await this.postService.handleModifyPost(postIdx, modifyPostDto, user)
+
+    return response.status(200).json({
+      status: 200,
+      message: '글 수정을 성공하였습니다.',
+    });
+  }
+
   @Delete('/:idx')
   @UseGuards(new AuthGuard())
-  public async handleDeletePost(@Res() response: Response, @Param('idx') postIdx: number) {
-    await this.postService.handleDeletePost(postIdx);
+  public async handleDeletePost(
+    @Res() response: Response,
+    @Token() user: User,
+    @Param('idx') postIdx: number
+  ) {
+    await this.postService.handleDeletePost(postIdx, user);
 
     return response.status(200).json({
       status: 200,

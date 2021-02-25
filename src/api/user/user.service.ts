@@ -34,7 +34,8 @@ export default class UserService {
     user.joinedAt = new Date();
 
     await this.userRepository.save(user);
-    const token: string = createToken(githubId);
+    const joinedUser = await this.userRepository.getUserById(githubId);
+    const token: string = createToken(joinedUser.idx, joinedUser.githubId);
     return token;
   }
 
@@ -82,7 +83,7 @@ export default class UserService {
   public async getToken(id: string): Promise<string> | null {
     const user: User = await this.userRepository.getUserById(id);
     if (user) {
-      const token: string = createToken(user.githubId);
+      const token: string = createToken(user.idx, user.githubId);
       return token;
     } else {
       return null;

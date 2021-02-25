@@ -10,11 +10,14 @@ export default class Comment extends BaseEntity {
   idx!: number;
 
   @Column({
-    length: 255,
+    type: 'text',
   })
   contents!: string;
 
-  @ManyToOne((type) => PostEntity, { onDelete: 'CASCADE' })
+  @ManyToOne((type) => PostEntity, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({
     name: 'fk_post_idx',
   })
@@ -25,6 +28,9 @@ export default class Comment extends BaseEntity {
     name: 'fk_user_idx',
   })
   user!: User;
+
+  @Column()
+  fk_user_idx!: number;
 
   @Column({
     name: 'created_at',
