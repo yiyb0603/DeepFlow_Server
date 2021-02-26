@@ -93,7 +93,7 @@ export default class UserService {
   public async getUserInfo(id: string): Promise<User> {
     const user = await this.userRepository.getUserById(id);
 
-    if (!user) {
+    if (user === undefined) {
       throw new HttpError(404, '존재하지 않는 유저입니다.');
     }
 

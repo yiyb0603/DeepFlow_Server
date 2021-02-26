@@ -50,6 +50,12 @@ export default class PostEntity extends BaseEntity {
   })
   commentCount!: number;
 
+  @Column({
+    default: 0,
+    name: 'like_count',
+  })
+  likeCount!: number;
+
   @OneToMany((type) => Tags, (tag) => tag.post, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',

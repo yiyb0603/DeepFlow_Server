@@ -67,7 +67,7 @@ export default class ReplyService {
   public async getExistReply(replyIdx: number): Promise<Reply> {
     const reply: Reply = await this.replyRepository.getReplyByIdx(replyIdx);
 
-    if (!reply) {
+    if (reply === undefined) {
       throw new HttpError(404, '존재하지 않는 답글입니다.');
     }
 

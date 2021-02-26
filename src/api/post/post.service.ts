@@ -9,6 +9,8 @@ import UserRepository from "api/user/user.repository";
 import { PostDto } from "./dto/post.dto";
 import PostEntity from "./post.entity";
 import PostEntityRepository from "./post.repository";
+import LikeEntityRepository from "api/like/like.repository";
+import LikeEntity from "api/like/like.entity";
 
 @Injectable()
 export default class PostService {
@@ -20,6 +22,9 @@ export default class PostService {
 
     @InjectRepository(User)
     private readonly userRepository: UserRepository,
+
+    @InjectRepository(LikeEntity)
+    private readonly likeRepository: LikeEntityRepository,
   ) {}
 
   public async getPostsByCategory(category: PostEnums): Promise<PostEntity[]> {
@@ -35,6 +40,7 @@ export default class PostService {
       post.user = user;
 
       post.postTags = postTags;
+      post.likeCount = await this.likeRepository.getLikeCountByPostIdx(post.idx);
 
       delete post.contents;
       delete post.user.description;
@@ -56,9 +62,9 @@ export default class PostService {
 
   public async handleCreatePost(createPostDto: PostDto, user: User): Promise<void> {
     const { title, contents, category, postTags } = createPostDto;
-    const existUser = await this.userRepository.getUserById(user.githubId);
+    const existUser: User = await this.userRepository.getUserById(user.githubId);
 
-    if (!existUser) {
+    if (existUser === undefined) {
       throw new HttpError(404, '존재하지 않는 유저입니다.');
     }
 
@@ -106,7 +112,7 @@ export default class PostService {
   public async getPostByIdx(postIdx: number): Promise<PostEntity> {
     const post: PostEntity = await this.postRepository.getPostByIdx(postIdx);
 
-    if (!post) {
+    if (post === undefined) {
       throw new HttpError(404, '존재하지 않는 글입니다.');
     }
 

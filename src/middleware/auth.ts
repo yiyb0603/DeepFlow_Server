@@ -8,7 +8,7 @@ export default class AuthGuard implements CanActivate {
 
     const { access_token } = request.headers;
 
-    if (!access_token) {
+    if (access_token === undefined) {
       throw new HttpError(401, '토큰이 전송되지 않았습니다.');
     }
     

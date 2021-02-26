@@ -66,7 +66,7 @@ export default class CommentService {
   public async getExistComment(commentIdx: number): Promise<Comment> {
     const comment: Comment = await this.commentRepository.getCommentByIdx(commentIdx);
 
-    if (!comment) {
+    if (comment === undefined) {
       throw new HttpError(404, '존재하지 않는 댓글입니다.');
     }
 
