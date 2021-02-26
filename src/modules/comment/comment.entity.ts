@@ -1,6 +1,6 @@
-import PostEntity from "api/post/post.entity";
+import PostEntity from "modules/post/post.entity";
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import User from "api/user/user.entity";
+import User from "modules/user/user.entity";
 
 @Entity({
   name: 'comment',

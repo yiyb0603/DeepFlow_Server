@@ -1,5 +1,5 @@
-import PostEntity from "api/post/post.entity";
-import User from "api/user/user.entity";
+import PostEntity from "modules/post/post.entity";
+import User from "modules/user/user.entity";
 import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({

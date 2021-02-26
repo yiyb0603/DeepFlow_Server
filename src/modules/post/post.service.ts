@@ -2,15 +2,15 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import HttpError from "exception/HttpError";
 import { PostEnums } from "lib/enum/post";
-import Tags from "api/tags/tags.entity";
-import TagsRepository from "api/tags/tags.repository";
-import User from "api/user/user.entity";
-import UserRepository from "api/user/user.repository";
+import Tags from "modules/tags/tags.entity";
+import TagsRepository from "modules/tags/tags.repository";
+import User from "modules/user/user.entity";
+import UserRepository from "modules/user/user.repository";
 import { PostDto } from "./dto/post.dto";
 import PostEntity from "./post.entity";
 import PostEntityRepository from "./post.repository";
-import LikeEntityRepository from "api/like/like.repository";
-import LikeEntity from "api/like/like.entity";
+import LikeEntityRepository from "modules/like/like.repository";
+import LikeEntity from "modules/like/like.entity";
 
 @Injectable()
 export default class PostService {

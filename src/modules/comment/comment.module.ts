@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import LikeEntityRepository from 'api/like/like.repository';
-import PostEntityRepository from 'api/post/post.repository';
-import PostService from 'api/post/post.service';
-import TagsRepository from 'api/tags/tags.repository';
-import UserRepository from 'api/user/user.repository';
+import LikeEntityRepository from 'modules/like/like.repository';
+import PostEntityRepository from 'modules/post/post.repository';
+import PostService from 'modules/post/post.service';
+import TagsRepository from 'modules/tags/tags.repository';
+import UserRepository from 'modules/user/user.repository';
 import CommentController from './comment.controller';
 import CommentRepository from './comment.repository';
 import CommentService from './comment.service';

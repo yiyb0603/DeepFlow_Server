@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import CommentService from "api/comment/comment.service";
-import PostService from "api/post/post.service";
-import User from "api/user/user.entity";
-import UserService from "api/user/user.service";
+import CommentService from "modules/comment/comment.service";
+import PostService from "modules/post/post.service";
+import User from "modules/user/user.entity";
+import UserService from "modules/user/user.service";
 import HttpError from "exception/HttpError";
 import { CreateReplyDto, ModifyReplyDto } from "./dto/reply.dto";
 import Reply from "./reply.entity";

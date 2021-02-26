@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import PostService from "api/post/post.service";
-import User from "api/user/user.entity";
-import UserRepository from "api/user/user.repository";
+import PostService from "modules/post/post.service";
+import User from "modules/user/user.entity";
+import UserRepository from "modules/user/user.repository";
 import HttpError from "exception/HttpError";
 import { LikeDto } from "./dto/like.dto";
 import LikeEntity from "./like.entity";

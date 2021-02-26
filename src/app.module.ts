@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { CommentModule } from 'api/comment/comment.module';
+import { CommentModule } from 'modules/comment/comment.module';
 import CatchException from 'exception/CatchException';
-import { PostModule } from 'api/post/post.module';
-import { TagsModule } from 'api/tags/tags.module';
-import { UserModule } from 'api/user/user.module';
+import { PostModule } from 'modules/post/post.module';
+import { TagsModule } from 'modules/tags/tags.module';
+import { UserModule } from 'modules/user/user.module';
 import ormConfig from '../ormconfig';
-import User from 'api/user/user.entity';
-import PostEntity from 'api/post/post.entity';
-import Comment from 'api/comment/comment.entity';
-import Reply from 'api/reply/reply.entity';
-import Tags from 'api/tags/tags.entity';
-import { ReplyModule } from 'api/reply/reply.module';
-import LikeEntity from 'api/like/like.entity';
-import { LikeModule } from 'api/like/like.module';
+import User from 'modules/user/user.entity';
+import PostEntity from 'modules/post/post.entity';
+import Comment from 'modules/comment/comment.entity';
+import Reply from 'modules/reply/reply.entity';
+import Tags from 'modules/tags/tags.entity';
+import { ReplyModule } from 'modules/reply/reply.module';
+import LikeEntity from 'modules/like/like.entity';
+import { LikeModule } from 'modules/like/like.module';
 
 const loadEntities: TypeOrmModuleOptions = {
   ...ormConfig,

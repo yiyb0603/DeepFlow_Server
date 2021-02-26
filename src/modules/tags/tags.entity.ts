@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import PostEntity from "api/post/post.entity";
+import PostEntity from "modules/post/post.entity";
 
 @Entity({
   name: 'tags',

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, Res, UseGuards } from "@nestjs/common";
-import User from "api/user/user.entity";
+import User from "modules/user/user.entity";
 import { Response } from 'express';
 import { Token } from "lib/decorator/user.decorator";
 import AuthGuard from "middleware/auth";

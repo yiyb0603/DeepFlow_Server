@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import HttpError from "exception/HttpError";
-import User from "api/user/user.entity";
-import UserRepository from "api/user/user.repository";
+import User from "modules/user/user.entity";
+import UserRepository from "modules/user/user.repository";
 import Comment from "./comment.entity";
 import CommentRepository from "./comment.repository";
 import { CommentDto } from "./dto/comment.dto";
-import PostService from "api/post/post.service";
+import PostService from "modules/post/post.service";
 
 @Injectable()
 export default class CommentService {
