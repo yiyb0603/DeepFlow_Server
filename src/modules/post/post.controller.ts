@@ -32,6 +32,23 @@ export default class PostController {
     });
   }
 
+  @Get('/search')
+  public async handleSearchPost(
+    @Res() response: Response,
+    @Query('keyword') keyword: string,
+    @Query('category') category: PostEnums,
+  ) {
+    const searchPosts: PostEntity[] = await this.postService.handleSearchPost(keyword, category);
+    
+    return response.status(200).json({
+      status: 200,
+      message: '글 목록을 검색하였습니다.',
+      data: {
+        searchPosts,
+      },
+    });
+  }
+
   @Get('/:idx')
   public async getPost(
     @Res() response: Response,

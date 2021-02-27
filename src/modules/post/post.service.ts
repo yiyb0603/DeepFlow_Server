@@ -9,12 +9,8 @@ import UserRepository from "modules/user/user.repository";
 import { PostDto } from "./dto/post.dto";
 import PostEntity from "./post.entity";
 import PostEntityRepository from "./post.repository";
-import LikeEntityRepository from "modules/like/like.repository";
-import LikeEntity from "modules/like/like.entity";
 import View from "modules/view/view.entity";
 import ViewRepository from "modules/view/view.repository";
-import Comment from "modules/comment/comment.entity";
-import CommentRepository from "modules/comment/comment.repository";
 import { sha256 } from "js-sha256";
 
 @Injectable()
@@ -28,41 +24,13 @@ export default class PostService {
     @InjectRepository(User)
     private readonly userRepository: UserRepository,
 
-    @InjectRepository(LikeEntity)
-    private readonly likeRepository: LikeEntityRepository,
-
     @InjectRepository(View)
     private readonly viewRepository: ViewRepository,
-
-    @InjectRepository(Comment)
-    private readonly commentRepository: CommentRepository,
   ) {}
 
   public async getPostsByCategory(category: PostEnums, page: number): Promise<PostEntity[]> {
     const posts: PostEntity[] = await this.postRepository.getPostsByCategory(category, page);
-    
-    for (const post of posts) {
-      let postTags: Tags[] = [];
-      
-      const tag: Tags[] = await this.tagsRepository.getTagsByPostIdx(post.idx);
-      postTags = postTags.concat(tag);
-      
-      const user: User = await this.userRepository.getUserByIdx(post.fk_user_idx);
-      post.user = user;
-
-      post.postTags = postTags;
-      post.commentCount = await this.commentRepository.getCommentsByPostIdx(post.idx)[1];
-      post.likeCount = await this.likeRepository.getLikeCountByPostIdx(post.idx);
-      post.viewCount = await this.viewRepository.getViewCountByPostIdx(post.idx);
-
-      delete post.contents;
-      delete post.user.description;
-      delete post.user.joinedAt;
-      delete post.user.location;
-      delete post.user.recommandCount;
-
-      await this.postRepository.save(post);
-    }
+    await this.handleProcessPosts(posts);
 
     return posts;
   }
@@ -79,9 +47,19 @@ export default class PostService {
       view.userIp = sha256(ipAddress);
 
       await this.viewRepository.save(view);
+      
+      post.viewCount++;
+      await this.postRepository.save(post);
     }
 
     return post;
+  }
+
+  public async handleSearchPost(keyword: string, category: PostEnums): Promise<PostEntity[]> {
+    const searchPosts: PostEntity[] = await this.postRepository.getPostsByKeyword(keyword, category);
+    await this.handleProcessPosts(searchPosts);
+
+    return searchPosts;
   }
 
   public async handleCreatePost(createPostDto: PostDto, user: User): Promise<void> {
@@ -103,7 +81,7 @@ export default class PostService {
     await this.handlePushTags(postTags, post);
   }
 
-  public async handleModifyPost(postIdx: number, modifyPostDto: PostDto, user: User) {
+  public async handleModifyPost(postIdx: number, modifyPostDto: PostDto, user: User): Promise<void> {
     const post: PostEntity = await this.getPostByIdx(postIdx);
 
     if (post.fk_user_idx !== user.idx) {
@@ -123,7 +101,7 @@ export default class PostService {
     await this.handlePushTags(postTags, post);
   }
 
-  public async handleDeletePost(postIdx: number, user: User) {
+  public async handleDeletePost(postIdx: number, user: User): Promise<void> {
     const post: PostEntity = await this.getPostByIdx(postIdx);
 
     if (user.idx !== post.fk_user_idx) {
@@ -143,7 +121,29 @@ export default class PostService {
     return post;
   }
 
-  public async handlePushTags(postTags: string[], post: PostEntity) {
+  private async handleProcessPosts(posts: PostEntity[]): Promise<void> {
+    for (const post of posts) {
+      let postTags: Tags[] = [];
+      
+      const tag: Tags[] = await this.tagsRepository.getTagsByPostIdx(post.idx);
+      postTags = postTags.concat(tag);
+      
+      const user: User = await this.userRepository.getUserByIdx(post.fk_user_idx);
+      post.user = user;
+
+      post.postTags = postTags;
+
+      delete post.contents;
+      delete post.user.description;
+      delete post.user.joinedAt;
+      delete post.user.location;
+      delete post.user.recommandCount;
+
+      await this.postRepository.save(post);
+    }
+  }
+
+  private async handlePushTags(postTags: string[], post: PostEntity): Promise<void> {
     for (const postTag of postTags) {
       const tag: Tags = new Tags();
       tag.name = postTag;

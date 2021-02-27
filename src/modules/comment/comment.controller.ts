@@ -60,9 +60,10 @@ export default class CommentController {
   public async handleDeleteComment(
     @Res() response: Response,
     @Token() user: User,
-    @Param('idx') commentIdx: number
+    @Query('postIdx') postIdx: number,
+    @Param('idx') commentIdx: number,
   ) {
-    await this.commentService.handleDeleteComment(commentIdx, user);
+    await this.commentService.handleDeleteComment(postIdx, commentIdx, user);
     return response.status(200).json({
       status: 200,
       message: '댓글을 삭제하였습니다.',

@@ -7,6 +7,8 @@ import Comment from "./comment.entity";
 import CommentRepository from "./comment.repository";
 import { CommentDto } from "./dto/comment.dto";
 import PostService from "modules/post/post.service";
+import PostEntity from "modules/post/post.entity";
+import PostEntityRepository from "modules/post/post.repository";
 
 @Injectable()
 export default class CommentService {
@@ -17,6 +19,9 @@ export default class CommentService {
 
     @InjectRepository(User)
     private readonly userRepository: UserRepository,
+
+    @InjectRepository(PostEntity)
+    private readonly postRepository: PostEntityRepository,
   ) {}
 
   public async getComments(postIdx: number): Promise<Comment[]> {
@@ -26,18 +31,21 @@ export default class CommentService {
 
   public async handleCreateComment(createCommentDto: CommentDto, user: User): Promise<void> {
     const { contents, postIdx } = createCommentDto;
+    const existPost: PostEntity = await this.postService.getPostByIdx(postIdx);
 
     const comment = new Comment();
     comment.user = await this.userRepository.getUserByIdx(user.idx);
     comment.contents = contents;
-    comment.post = await this.postService.getPostByIdx(postIdx);
+    comment.post = existPost;
     comment.createdAt = new Date();
     comment.updatedAt = null;
-
     await this.commentRepository.save(comment);
+
+    existPost.commentCount++;
+    await this.postRepository.save(existPost);
   }
 
-  public async handleModifyComment(commentIdx: number, modifyCommentDto: CommentDto, user: User) {
+  public async handleModifyComment(commentIdx: number, modifyCommentDto: CommentDto, user: User): Promise<void> {
     const comment: Comment = await this.getExistComment(commentIdx);
     const { contents, postIdx } = modifyCommentDto;
 
@@ -53,14 +61,18 @@ export default class CommentService {
     await this.commentRepository.save(comment);
   }
 
-  public async handleDeleteComment(commentIdx: number, user: User): Promise<void> {
+  public async handleDeleteComment(postIdx: number, commentIdx: number, user: User): Promise<void> {
     const comment: Comment = await this.getExistComment(commentIdx);
+    const existPost: PostEntity = await this.postService.getPostByIdx(postIdx);
 
     if (comment.fk_user_idx !== user.idx) {
       throw new HttpError(403, '댓글을 삭제할 권한이 없습니다.');
     }
 
     await this.commentRepository.remove(comment);
+
+    existPost.commentCount--;
+    await this.postRepository.save(existPost);
   }
 
   public async getExistComment(commentIdx: number): Promise<Comment> {

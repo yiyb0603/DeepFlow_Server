@@ -49,9 +49,10 @@ export default class LikeController {
   public async handleDeleteLike(
     @Res() response: Response,
     @Token() user: User,
+    @Query('postIdx') postIdx: number,
     @Param('idx') likeIdx: number,
   ) {
-    await this.likeService.handleDeleteLike(likeIdx, user);
+    await this.likeService.handleDeleteLike(postIdx, likeIdx, user);
 
     return response.status(200).json({
       status: 200,

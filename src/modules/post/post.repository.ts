@@ -18,4 +18,11 @@ export default class PostEntityRepository extends Repository<PostEntity> {
       .where('idx = :idx', { idx })
       .getOne();
   }
+
+  public getPostsByKeyword(keyword: string, category: PostEnums): Promise<PostEntity[]> {
+    return this.createQueryBuilder()
+      .where('title LIKE :keyword', { keyword: `%${keyword}%` })
+      .andWhere('category = :category', { category: category.toString() })
+      .getMany();
+  }
 }
