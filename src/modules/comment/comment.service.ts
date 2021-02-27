@@ -20,7 +20,7 @@ export default class CommentService {
   ) {}
 
   public async getComments(postIdx: number): Promise<Comment[]> {
-    const comments: Comment[] = await this.commentRepository.getCommentsByPostIdx(postIdx);
+    const comments: Comment[] = await this.commentRepository.getCommentsByPostIdx(postIdx)[0];
     return comments;
   }
 

@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, Res, UseGuards 
 import User from "modules/user/user.entity";
 import { Response } from 'express';
 import { Token } from "lib/decorator/user.decorator";
+import { IpAddress } from "lib/decorator/ipAddress.decorator";
 import { PostEnums } from "lib/enum/post";
 import AuthGuard from "middleware/auth";
 import { PostDto } from "./dto/post.dto";
@@ -17,10 +18,10 @@ export default class PostController {
   @Get('/')
   public async getPostsByCategory(
     @Res() response: Response,
-    @Token() user: User,
-    @Query('category') category: PostEnums
+    @Query('category') category: PostEnums,
+    @Query('page') page: number,
   ) {
-    const posts: PostEntity[] = await this.postService.getPostsByCategory(category);
+    const posts: PostEntity[] = await this.postService.getPostsByCategory(category, page);
     
     return response.status(200).json({
       status: 200,
@@ -32,8 +33,13 @@ export default class PostController {
   }
 
   @Get('/:idx')
-  public async getPost(@Res() response: Response, @Param('idx') postIdx: number) {
-    const post: PostEntity = await this.postService.getPost(postIdx);
+  public async getPost(
+    @Res() response: Response,
+    @IpAddress() ipAddress: string,
+    @Param('idx') postIdx: number
+  ) {
+    const post: PostEntity = await this.postService.getPost(postIdx, ipAddress);
+
     return response.status(200).json({
       status: 200,
       message: '글을 조회하였습니다.',

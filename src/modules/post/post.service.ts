@@ -11,6 +11,11 @@ import PostEntity from "./post.entity";
 import PostEntityRepository from "./post.repository";
 import LikeEntityRepository from "modules/like/like.repository";
 import LikeEntity from "modules/like/like.entity";
+import View from "modules/view/view.entity";
+import ViewRepository from "modules/view/view.repository";
+import Comment from "modules/comment/comment.entity";
+import CommentRepository from "modules/comment/comment.repository";
+import { sha256 } from "js-sha256";
 
 @Injectable()
 export default class PostService {
@@ -25,10 +30,16 @@ export default class PostService {
 
     @InjectRepository(LikeEntity)
     private readonly likeRepository: LikeEntityRepository,
+
+    @InjectRepository(View)
+    private readonly viewRepository: ViewRepository,
+
+    @InjectRepository(Comment)
+    private readonly commentRepository: CommentRepository,
   ) {}
 
-  public async getPostsByCategory(category: PostEnums): Promise<PostEntity[]> {
-    const posts: PostEntity[] = await this.postRepository.getPostsByCategory(category);
+  public async getPostsByCategory(category: PostEnums, page: number): Promise<PostEntity[]> {
+    const posts: PostEntity[] = await this.postRepository.getPostsByCategory(category, page);
     
     for (const post of posts) {
       let postTags: Tags[] = [];
@@ -40,22 +51,35 @@ export default class PostService {
       post.user = user;
 
       post.postTags = postTags;
+      post.commentCount = await this.commentRepository.getCommentsByPostIdx(post.idx)[1];
       post.likeCount = await this.likeRepository.getLikeCountByPostIdx(post.idx);
+      post.viewCount = await this.viewRepository.getViewCountByPostIdx(post.idx);
 
       delete post.contents;
       delete post.user.description;
       delete post.user.joinedAt;
       delete post.user.location;
       delete post.user.recommandCount;
+
+      await this.postRepository.save(post);
     }
 
     return posts;
   }
 
-  public async getPost(postIdx: number): Promise<PostEntity> {
+  public async getPost(postIdx: number, ipAddress: string): Promise<PostEntity> {
     const post: PostEntity = await this.getPostByIdx(postIdx);
     post.postTags = await this.tagsRepository.getTagsByPostIdx(postIdx);
     post.user = await this.userRepository.getUserByIdx(post.fk_user_idx);
+
+    const existView: View = await this.viewRepository.getViewByPostIdxAndIpAdress(postIdx, sha256(ipAddress));
+    if (existView === undefined) {
+      const view: View = new View();
+      view.post = post;
+      view.userIp = sha256(ipAddress);
+
+      await this.viewRepository.save(view);
+    }
 
     return post;
   }
@@ -128,5 +152,4 @@ export default class PostService {
       await this.tagsRepository.save(tag);
     }
   }
-
 }

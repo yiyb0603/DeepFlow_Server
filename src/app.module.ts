@@ -15,6 +15,8 @@ import Tags from 'modules/tags/tags.entity';
 import { ReplyModule } from 'modules/reply/reply.module';
 import LikeEntity from 'modules/like/like.entity';
 import { LikeModule } from 'modules/like/like.module';
+import { ViewModule } from 'modules/view/view.module';
+import View from 'modules/view/view.entity';
 
 const loadEntities: TypeOrmModuleOptions = {
   ...ormConfig,
@@ -25,6 +27,7 @@ const loadEntities: TypeOrmModuleOptions = {
     Reply,
     Tags,
     LikeEntity,
+    View,
   ],
 };
 
@@ -37,6 +40,7 @@ const loadEntities: TypeOrmModuleOptions = {
     CommentModule,
     ReplyModule,
     LikeModule,
+    ViewModule,
   ],
   controllers: [],
   providers: [{

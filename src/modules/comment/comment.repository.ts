@@ -3,10 +3,10 @@ import Comment from "./comment.entity";
 
 @EntityRepository(Comment)
 export default class CommentRepository extends Repository<Comment> {
-  public getCommentsByPostIdx(postIdx: number): Promise<Comment[]> {
+  public getCommentsByPostIdx(postIdx: number): Promise<[Comment[], number]> {
     return this.createQueryBuilder()
       .where('fk_post_idx = :postIdx', { postIdx })
-      .getMany();
+      .getManyAndCount();
   }
 
   public getCommentByIdx(commentIdx: number): Promise<Comment> {

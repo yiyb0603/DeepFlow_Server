@@ -8,6 +8,7 @@ import PostService from 'modules/post/post.service';
 import TagsRepository from 'modules/tags/tags.repository';
 import UserRepository from 'modules/user/user.repository';
 import UserService from 'modules/user/user.service';
+import ViewRepository from 'modules/view/view.repository';
 import ReplyController from './reply.controller';
 import ReplyRepository from './reply.repository';
 import ReplyService from './reply.service';
@@ -21,6 +22,7 @@ import ReplyService from './reply.service';
       LikeEntityRepository,
       UserRepository,
       CommentRepository,
+      ViewRepository,
     ]),
   ],
   providers: [ReplyService, PostService, CommentService, UserService],

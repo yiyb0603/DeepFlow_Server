@@ -1,0 +1,18 @@
+import { EntityRepository, Repository } from "typeorm";
+import View from "./view.entity";
+
+@EntityRepository(View)
+export default class ViewRepository extends Repository<View> {
+  public getViewByPostIdxAndIpAdress(postIdx: number, ipAddress: string): Promise<View> {
+    return this.createQueryBuilder()
+      .where('fk_post_idx = :postIdx', { postIdx })
+      .andWhere('user_ip = :ipAddress', { ipAddress })
+      .getOne();
+  }
+
+  public getViewCountByPostIdx(postIdx: number): Promise<number> {
+    return this.createQueryBuilder()
+      .where('fk_post_idx = :postIdx', { postIdx })
+      .getCount();
+  }
+}

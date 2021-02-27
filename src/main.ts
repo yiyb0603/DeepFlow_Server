@@ -1,5 +1,6 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import * as requestIp from 'request-ip';
 import getProcessEnv from 'lib/getProcessEnv';
 import { AppModule } from './app.module';
 
@@ -21,6 +22,8 @@ const bootstrap = async (): Promise<void> => {
   app.enableCors({
     origin: '*',
   });
+
+  app.use(requestIp.mw())
 
   const PORT: number = Number(getProcessEnv('SERVER_PORT')) || 8080;
   await app.listen(PORT)
