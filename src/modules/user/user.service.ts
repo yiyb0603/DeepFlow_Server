@@ -11,7 +11,7 @@ import UserRepository from "./user.repository";
 @Injectable()
 export default class UserService {
   constructor(
-    private readonly userRepository: UserRepository
+    private readonly userRepository: UserRepository,
   ) {}
 
   public async handleSignUp(signUpDto: SignUpDto): Promise<string> {
