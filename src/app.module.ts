@@ -17,6 +17,11 @@ import LikeEntity from 'modules/like/like.entity';
 import { LikeModule } from 'modules/like/like.module';
 import { ViewModule } from 'modules/view/view.module';
 import View from 'modules/view/view.entity';
+import Recommand from 'modules/recommand/recommand.entity';
+import { RecommandModule } from 'modules/recommand/recommand.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { UploadModule } from 'modules/upload/upload.module';
+import { join } from 'path';
 
 const loadEntities: TypeOrmModuleOptions = {
   ...ormConfig,
@@ -28,6 +33,7 @@ const loadEntities: TypeOrmModuleOptions = {
     Tags,
     LikeEntity,
     View,
+    Recommand,
   ],
 };
 
@@ -41,6 +47,8 @@ const loadEntities: TypeOrmModuleOptions = {
     ReplyModule,
     LikeModule,
     ViewModule,
+    RecommandModule,
+    UploadModule,
   ],
   controllers: [],
   providers: [{

@@ -18,7 +18,9 @@ export default class LikeEntity extends BaseEntity {
   @Column()
   fk_user_idx!: number;
 
-  @ManyToOne((type) => PostEntity)
+  @ManyToOne((type) => PostEntity, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({
     name: 'fk_post_idx',
   })

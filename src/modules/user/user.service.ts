@@ -68,13 +68,13 @@ export default class UserService {
       },
     });
 
-    const { login, avatar_url, name, bio, location } = data;
+    const { login, avatar_url, name, bio, company } = data;
     const githubInfo: IGithubUserTypes = {
       githubId: login,
       avatar: avatar_url,
       name,
       description: bio,
-      location,
+      location: company,
     };
 
     return githubInfo;

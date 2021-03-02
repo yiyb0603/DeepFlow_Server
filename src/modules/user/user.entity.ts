@@ -7,7 +7,7 @@ import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } 
 })
 export default class User extends BaseEntity {
   @PrimaryGeneratedColumn()
-  idx: number;
+  idx!: number;
 
   // 사용자 깃허브 ID
   @Column({

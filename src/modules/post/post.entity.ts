@@ -32,6 +32,17 @@ export default class PostEntity extends BaseEntity {
   title!: string;
 
   @Column({
+    length: 150,
+  })
+  introduction!: string;
+
+  @Column({
+    nullable: true,
+    default: null,
+  })
+  thumbnail: string;
+
+  @Column({
     type: 'text',
   })
   contents!: string;

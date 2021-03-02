@@ -63,7 +63,7 @@ export default class PostService {
   }
 
   public async handleCreatePost(createPostDto: PostDto, user: User): Promise<void> {
-    const { title, contents, category, postTags } = createPostDto;
+    const { introduction, thumbnail,title, contents, category, postTags } = createPostDto;
     const existUser: User = await this.userRepository.getUserById(user.githubId);
 
     if (existUser === undefined) {
@@ -73,6 +73,8 @@ export default class PostService {
     const post: PostEntity = new PostEntity();
     post.user = existUser;
     post.title = title;
+    post.introduction = introduction;
+    post.thumbnail = thumbnail;
     post.contents = contents;
     post.category = category;
 
