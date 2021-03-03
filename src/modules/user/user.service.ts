@@ -1,8 +1,12 @@
 import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
 import axios, { AxiosResponse } from 'axios';
 import { CLIENT_ID, CLIENT_SECRET } from 'config/config.json';
 import HttpError from "exception/HttpError";
+import generateRank from "lib/generateRank";
 import { createToken } from "lib/token";
+import Recommand from "modules/recommand/recommand.entity";
+import RecommandRepository from "modules/recommand/recommand.repository";
 import { IGithubUserTypes } from "types/user.types";
 import { GithubCodeDto, SignUpDto } from "./dto/user.dto";
 import User from "./user.entity";
@@ -12,6 +16,9 @@ import UserRepository from "./user.repository";
 export default class UserService {
   constructor(
     private readonly userRepository: UserRepository,
+
+    @InjectRepository(Recommand)
+    private readonly recommandRepository: RecommandRepository,
   ) {}
 
   public async handleSignUp(signUpDto: SignUpDto): Promise<string> {
@@ -82,7 +89,7 @@ export default class UserService {
 
   public async getToken(id: string): Promise<string> | null {
     const user: User = await this.userRepository.getUserById(id);
-    if (user) {
+    if (user !== undefined) {
       const token: string = createToken(user.idx, user.githubId);
       return token;
     } else {
@@ -92,6 +99,8 @@ export default class UserService {
 
   public async getUserInfoByIdx(idx: number): Promise<User> {
     const user = await this.userRepository.getUserByIdx(idx);
+    user.recommandCount = await this.recommandRepository.getRecommandCount(idx);
+    user.rank = generateRank(user.recommandCount);
 
     if (user === undefined) {
       throw new HttpError(404, '존재하지 않는 유저입니다.');

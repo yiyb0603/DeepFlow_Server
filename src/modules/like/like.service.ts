@@ -8,7 +8,6 @@ import { LikeDto } from "./dto/like.dto";
 import LikeEntity from "./like.entity";
 import LikeEntityRepository from "./like.repository";
 import PostEntity from "modules/post/post.entity";
-import PostEntityRepository from "modules/post/post.repository";
 
 @Injectable()
 export default class LikeService {
@@ -19,9 +18,6 @@ export default class LikeService {
     private readonly userRepository: UserRepository,
 
     private readonly postService: PostService,
-
-    @InjectRepository(PostEntity)
-    private readonly postRepository: PostEntityRepository,
   ) {}
 
   public async getLikeList(postIdx: number): Promise<LikeEntity[]> {
@@ -50,9 +46,6 @@ export default class LikeService {
     like.pressedAt = new Date();
 
     await this.likeRepository.save(like);
-
-    existPost.likeCount++;
-    await this.postRepository.save(existPost);
   }
 
   public async handleDeleteLike(postIdx, likeIdx: number, user: User): Promise<void> {
@@ -64,9 +57,6 @@ export default class LikeService {
     }
 
     await this.likeRepository.remove(like);
-
-    existPost.likeCount--;
-    await this.postRepository.save(existPost);
   }
 
   public async getLikeByIdx(likeIdx: number): Promise<LikeEntity> {

@@ -8,6 +8,7 @@ export default class PostEntityRepository extends Repository<PostEntity> {
   public getPostsByCategory(category: PostEnums, page: number): Promise<PostEntity[]> {
     return this.createQueryBuilder()
       .where('category = :category', { category: category.toString() })
+      .andWhere('is_temp = false')
       .skip((page - 1) * PAGE_LIMIT)
       .take(PAGE_LIMIT)
       .getMany();
@@ -19,9 +20,10 @@ export default class PostEntityRepository extends Repository<PostEntity> {
       .getOne();
   }
 
-  public getPostsByUserIdx(userIdx: number): Promise<PostEntity[]> {
+  public getPostsByUserIdx(userIdx: number, isTemp: boolean): Promise<PostEntity[]> {
     return this.createQueryBuilder()
       .where('fk_user_idx = :userIdx', { userIdx })
+      .andWhere('is_temp = :isTemp', { isTemp })
       .getMany();
   }
 

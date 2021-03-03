@@ -15,4 +15,10 @@ export default class RecommandRepository extends Repository<Recommand> {
       .where('idx = :recommandIdx', { recommandIdx })
       .getOne();
   }
+
+  public getRecommandCount(userIdx: number): Promise<number> {
+    return this.createQueryBuilder()
+      .where('fk_user_idx = :userIdx', { userIdx })
+      .getCount();
+  }
 }

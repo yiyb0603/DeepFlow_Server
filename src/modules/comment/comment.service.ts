@@ -8,7 +8,6 @@ import CommentRepository from "./comment.repository";
 import { CommentDto } from "./dto/comment.dto";
 import PostService from "modules/post/post.service";
 import PostEntity from "modules/post/post.entity";
-import PostEntityRepository from "modules/post/post.repository";
 
 @Injectable()
 export default class CommentService {
@@ -19,14 +18,11 @@ export default class CommentService {
 
     @InjectRepository(User)
     private readonly userRepository: UserRepository,
-
-    @InjectRepository(PostEntity)
-    private readonly postRepository: PostEntityRepository,
   ) {}
 
   public async getComments(postIdx: number): Promise<Comment[]> {
-    const comments: Comment[] = await this.commentRepository.getCommentsByPostIdx(postIdx)[0];
-    return comments;
+    const comments: [Comment[], number] = await this.commentRepository.getCommentsByPostIdx(postIdx);
+    return comments[0];
   }
 
   public async handleCreateComment(createCommentDto: CommentDto, user: User): Promise<void> {
@@ -40,9 +36,6 @@ export default class CommentService {
     comment.createdAt = new Date();
     comment.updatedAt = null;
     await this.commentRepository.save(comment);
-
-    existPost.commentCount++;
-    await this.postRepository.save(existPost);
   }
 
   public async handleModifyComment(commentIdx: number, modifyCommentDto: CommentDto, user: User): Promise<void> {
@@ -70,9 +63,6 @@ export default class CommentService {
     }
 
     await this.commentRepository.remove(comment);
-
-    existPost.commentCount--;
-    await this.postRepository.save(existPost);
   }
 
   public async getExistComment(commentIdx: number): Promise<Comment> {

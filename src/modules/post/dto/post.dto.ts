@@ -1,4 +1,4 @@
-import { IsArray, IsEnum, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsEnum, IsString } from "class-validator";
 import { PostEnums } from "lib/enum/post";
 
 export class PostDto {
@@ -19,4 +19,7 @@ export class PostDto {
 
   @IsArray()
   readonly postTags: string[];
+
+  @IsBoolean()
+  readonly isTemp: boolean;
 }

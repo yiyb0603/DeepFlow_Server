@@ -54,29 +54,15 @@ export default class PostEntity extends BaseEntity {
   @Column()
   fk_user_idx: number;
 
-  @Column({
-    default: 0,
-    name: 'comment_count',
-  })
   commentCount!: number;
-
-  @Column({
-    default: 0,
-    name: 'like_count',
-  })
   likeCount!: number;
+  viewCount!: number;
 
   @OneToMany((type) => Tags, (tag) => tag.post, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   postTags!: Tags[];
-
-  @Column({
-    default: 0,
-    name: 'view_count',
-  })
-  viewCount!: number;
 
   @CreateDateColumn({
     name: 'created_at',
@@ -89,4 +75,10 @@ export default class PostEntity extends BaseEntity {
     name: 'updated_at',
   })
   updatedAt: Date;
+
+  @Column({
+    type: 'boolean',
+    name: 'is_temp',
+  })
+  isTemp!: boolean;
 }

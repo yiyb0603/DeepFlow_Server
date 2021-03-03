@@ -27,7 +27,7 @@ export default class UserController {
   @Post('/github-info')
   public async getGithubInfo(@Res() response: Response, @Body() githubCodeDto: GithubCodeDto) {
     const githubInfo: IGithubUserTypes = await this.userService.getGithubInfo(githubCodeDto);
-    const token = await this.userService.getToken(githubInfo.githubId);
+    const token: string = await this.userService.getToken(githubInfo.githubId);
 
     if (token !== null) {
       return response.status(200).json({

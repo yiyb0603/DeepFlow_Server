@@ -55,6 +55,23 @@ export default class PostController {
     });
   }
 
+  @Get('/temp')
+  @UseGuards(new AuthGuard())
+  public async getTempPosts(
+    @Res() response: Response,
+    @Token() user: User,
+  ) {
+    const posts: PostEntity[] = await this.postService.getTempPosts(user);
+    
+    return response.status(200).json({
+      status: 200,
+      message: '임시 글 목록을 조회하였습니다.',
+      data: {
+        posts,
+      },
+    });
+  }
+
   @Get('/:idx')
   public async getPost(
     @Res() response: Response,

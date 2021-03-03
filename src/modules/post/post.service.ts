@@ -12,6 +12,10 @@ import PostEntityRepository from "./post.repository";
 import View from "modules/view/view.entity";
 import ViewRepository from "modules/view/view.repository";
 import { sha256 } from "js-sha256";
+import CommentRepository from "modules/comment/comment.repository";
+import LikeEntity from "modules/like/like.entity";
+import LikeEntityRepository from "modules/like/like.repository";
+import Comment from "modules/comment/comment.entity";
 
 @Injectable()
 export default class PostService {
@@ -26,10 +30,23 @@ export default class PostService {
 
     @InjectRepository(View)
     private readonly viewRepository: ViewRepository,
+
+    @InjectRepository(Comment)
+    private readonly commentRepository: CommentRepository,
+
+    @InjectRepository(LikeEntity)
+    private readonly likeRepository: LikeEntityRepository,
   ) {}
 
   public async getPostsByCategory(category: PostEnums, page: number): Promise<PostEntity[]> {
     const posts: PostEntity[] = await this.postRepository.getPostsByCategory(category, page);
+    await this.handleProcessPosts(posts);
+
+    return posts;
+  }
+
+  public async getTempPosts(user: User): Promise<PostEntity[]> {
+    const posts = await this.postRepository.getPostsByUserIdx(user.idx, true);
     await this.handleProcessPosts(posts);
 
     return posts;
@@ -47,9 +64,6 @@ export default class PostService {
       view.userIp = sha256(ipAddress);
 
       await this.viewRepository.save(view);
-      
-      post.viewCount++;
-      await this.postRepository.save(post);
     }
 
     return post;
@@ -63,12 +77,12 @@ export default class PostService {
   }
 
   public async getPostsByUserIdx(userIdx: number) {
-    const userPosts: PostEntity[] = await this.postRepository.getPostsByUserIdx(userIdx);
+    const userPosts: PostEntity[] = await this.postRepository.getPostsByUserIdx(userIdx, false);
     return userPosts;
   }
 
   public async handleCreatePost(createPostDto: PostDto, user: User): Promise<void> {
-    const { introduction, thumbnail, title, contents, category, postTags } = createPostDto;
+    const { introduction, thumbnail, title, contents, category, postTags, isTemp } = createPostDto;
     const existUser: User = await this.userRepository.getUserByIdx(user.idx);
 
     if (existUser === undefined) {
@@ -82,6 +96,7 @@ export default class PostService {
     post.thumbnail = thumbnail;
     post.contents = contents;
     post.category = category;
+    post.isTemp = isTemp;
 
     await this.postRepository.save(post);
 
@@ -137,14 +152,20 @@ export default class PostService {
       
       const user: User = await this.userRepository.getUserByIdx(post.fk_user_idx);
       post.user = user;
-
       post.postTags = postTags;
+
+      const commentCount: [Comment[], number] = await this.commentRepository.getCommentsByPostIdx(post.idx);
+      post.commentCount = commentCount[1];
+      post.likeCount = await this.likeRepository.getLikeCountByPostIdx(post.idx);
+      post.viewCount = await this.viewRepository.getViewCountByPostIdx(post.idx);
 
       delete post.contents;
       delete post.user.description;
       delete post.user.joinedAt;
       delete post.user.location;
       delete post.user.recommandCount;
+      delete post.user.major;
+      delete post.user.rank;
 
       await this.postRepository.save(post);
     }

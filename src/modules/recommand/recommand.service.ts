@@ -1,9 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
 import HttpError from "exception/HttpError";
-import generateRank from "lib/generateRank";
 import User from "modules/user/user.entity";
-import UserRepository from "modules/user/user.repository";
 import UserService from "modules/user/user.service";
 import { RecommandDto } from "./dto/recommand.dto";
 import Recommand from "./recommand.entity";
@@ -13,9 +10,6 @@ import RecommandRepository from "./recommand.repository";
 export default class RecommandService {
   constructor(
     private readonly recommandRepository: RecommandRepository,
-
-    @InjectRepository(User)
-    private readonly userRepository: UserRepository,
 
     private readonly userService: UserService,
   ) {}
@@ -38,14 +32,7 @@ export default class RecommandService {
     recommand.user = targetUser;
     recommand.pressedUser = pressedUser;
     recommand.recommandAt = new Date();
-
     await this.recommandRepository.save(recommand);
-
-    targetUser.recommandCount++;
-    const { recommandCount } = targetUser;
-    
-    targetUser.rank = generateRank(recommandCount);
-    await this.userRepository.save(targetUser);
   }
 
   public async handleRemoveRecommand(recommandIdx: number, user: User) {
@@ -60,11 +47,5 @@ export default class RecommandService {
     }
 
     await this.recommandRepository.remove(existRecommand);
-    
-    existRecommand.user.recommandCount--;
-    const { recommandCount } = existRecommand.user;
-
-    existRecommand.user.rank = generateRank(recommandCount);
-    await this.userRepository.save(existRecommand.user);
   }
 }

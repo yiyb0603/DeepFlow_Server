@@ -48,10 +48,6 @@ export default class User extends BaseEntity {
   })
   description!: string;
 
-  @Column({
-    default: 0,
-    name: 'recommand_count',
-  })
   recommandCount!: number;
 
   // 사용자 등급

@@ -11,7 +11,7 @@ export default class Reply extends BaseEntity {
   idx!: number;
 
   @Column({
-    length: 255,
+    type: 'text',
   })
   contents: string;
 
