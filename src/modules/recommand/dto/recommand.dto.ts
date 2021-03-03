@@ -1,6 +1,6 @@
-import { IsString } from "class-validator";
+import { IsNumber } from "class-validator";
 
 export class RecommandDto {
-  @IsString()
-  readonly userId: string;
+  @IsNumber()
+  readonly userIdx: number;
 }

@@ -20,8 +20,14 @@ export default class PostController {
     @Res() response: Response,
     @Query('category') category: PostEnums,
     @Query('page') page: number,
+    @Query('userIdx') userIdx: number,
   ) {
-    const posts: PostEntity[] = await this.postService.getPostsByCategory(category, page);
+    let posts: PostEntity[] = [];
+    if (isNaN(Number(userIdx))) {
+      posts = await this.postService.getPostsByCategory(category, page);
+    } else {
+      posts = await this.postService.getPostsByUserIdx(userIdx);
+    }
     
     return response.status(200).json({
       status: 200,

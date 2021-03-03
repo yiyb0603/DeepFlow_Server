@@ -21,7 +21,7 @@ export default class RecommandService {
   ) {}
   
   public async handleAddRecommand(recommandDto: RecommandDto, user: User): Promise<void> {
-    const targetUser: User = await this.userService.getUserInfo(recommandDto.userId);
+    const targetUser: User = await this.userService.getUserInfoByIdx(recommandDto.userIdx);
     const existRecommand: Recommand = await this.recommandRepository.getRecommandByPressedUserIdx(targetUser.idx, user.idx);
 
     if (existRecommand !== undefined) {
@@ -32,7 +32,7 @@ export default class RecommandService {
       throw new HttpError(403, '자기 자신을 추천할 수 없습니다.');
     }
 
-    const pressedUser: User = await this.userService.getUserInfo(user.githubId);
+    const pressedUser: User = await this.userService.getUserInfoByIdx(user.idx);
 
     const recommand: Recommand = new Recommand();
     recommand.user = targetUser;

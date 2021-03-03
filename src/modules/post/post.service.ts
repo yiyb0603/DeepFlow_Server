@@ -62,9 +62,14 @@ export default class PostService {
     return searchPosts;
   }
 
+  public async getPostsByUserIdx(userIdx: number) {
+    const userPosts: PostEntity[] = await this.postRepository.getPostsByUserIdx(userIdx);
+    return userPosts;
+  }
+
   public async handleCreatePost(createPostDto: PostDto, user: User): Promise<void> {
-    const { introduction, thumbnail,title, contents, category, postTags } = createPostDto;
-    const existUser: User = await this.userRepository.getUserById(user.githubId);
+    const { introduction, thumbnail, title, contents, category, postTags } = createPostDto;
+    const existUser: User = await this.userRepository.getUserByIdx(user.idx);
 
     if (existUser === undefined) {
       throw new HttpError(404, '존재하지 않는 유저입니다.');

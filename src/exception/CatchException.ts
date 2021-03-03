@@ -8,6 +8,7 @@ export default class CatchException implements ExceptionFilter {
     const response = ctx.getResponse();
 
     let httpError = null;
+    console.log(exception);
 
     if (exception instanceof HttpException) {
       httpError = {

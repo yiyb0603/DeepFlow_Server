@@ -1,4 +1,4 @@
-import { IsArray, IsEnum, IsNumber, IsString, Max } from "class-validator";
+import { IsArray, IsEnum, IsString } from "class-validator";
 import { PostEnums } from "lib/enum/post";
 
 export class PostDto {
@@ -6,7 +6,6 @@ export class PostDto {
   readonly category: PostEnums;
 
   @IsString()
-  @Max(150)
   readonly introduction: string;
 
   @IsString()

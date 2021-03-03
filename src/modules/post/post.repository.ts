@@ -19,6 +19,12 @@ export default class PostEntityRepository extends Repository<PostEntity> {
       .getOne();
   }
 
+  public getPostsByUserIdx(userIdx: number): Promise<PostEntity[]> {
+    return this.createQueryBuilder()
+      .where('fk_user_idx = :userIdx', { userIdx })
+      .getMany();
+  }
+
   public getPostsByKeyword(keyword: string, category: PostEnums): Promise<PostEntity[]> {
     return this.createQueryBuilder()
       .where('title LIKE :keyword', { keyword: `%${keyword}%` })

@@ -9,11 +9,9 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  RelationId,
   UpdateDateColumn,
 } from "typeorm";
 import User from "modules/user/user.entity";
-import View from "modules/view/view.entity";
 
 @Entity({
   name: 'post',

@@ -33,7 +33,7 @@ export default class ReplyService {
     reply.contents = contents;
     reply.comment = await this.commentService.getExistComment(commentIdx);
     reply.post = await this.postService.getPostByIdx(postIdx);
-    reply.user = await this.userService.getUserInfo(user.githubId);
+    reply.user = await this.userService.getUserInfoByIdx(user.idx);
     reply.createdAt = new Date();
     reply.updatedAt = null;
 

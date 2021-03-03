@@ -49,8 +49,8 @@ export default class UserController {
   }
 
   @Get('/:id')
-  public async getUserInfo(@Res() response: Response, @Param('id') githubId: string) {
-    const user: User = await this.userService.getUserInfo(githubId);
+  public async getUserInfo(@Res() response: Response, @Param('id') userIdx: number) {
+    const user: User = await this.userService.getUserInfoByIdx(userIdx);
 
     return response.status(200).json({
       status: 200,
