@@ -1,6 +1,5 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from "@nestjs/common";
 import { HttpArgumentsHost } from "@nestjs/common/interfaces";
-import HttpError from "./HttpError";
 
 @Catch()
 export default class CatchException implements ExceptionFilter {
@@ -8,12 +7,11 @@ export default class CatchException implements ExceptionFilter {
     const ctx: HttpArgumentsHost = host.switchToHttp();
     const response = ctx.getResponse();
 
-    let httpError: HttpError | any = {};
-    console.log(exception);
+    let httpError = null;
 
-    if (exception instanceof HttpError) {
+    if (exception instanceof HttpException) {
       httpError = {
-        status: exception.statusCode,
+        status: exception.getStatus(),
         message: exception.message,
       };
     } 
@@ -29,6 +27,6 @@ export default class CatchException implements ExceptionFilter {
     return response.status(status).json({
       status,
       message,
-    })
+    });
   }
 }

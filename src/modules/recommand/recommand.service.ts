@@ -28,6 +28,10 @@ export default class RecommandService {
       throw new HttpError(409, '이미 추천한 사용자입니다.');
     }
 
+    if (targetUser.idx === user.idx) {
+      throw new HttpError(403, '자기 자신을 추천할 수 없습니다.');
+    }
+
     const pressedUser: User = await this.userService.getUserInfo(user.githubId);
 
     const recommand: Recommand = new Recommand();

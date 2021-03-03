@@ -1,6 +1,7 @@
 import { MajorEnums } from "lib/enum/majors";
 import { RankEnums } from "lib/enum/ranks";
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import Recommand from "modules/recommand/recommand.entity";
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({
   name: 'user',
@@ -47,7 +48,6 @@ export default class User extends BaseEntity {
   })
   description!: string;
 
-  // 추천받은 개수
   @Column({
     default: 0,
     name: 'recommand_count',

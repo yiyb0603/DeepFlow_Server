@@ -1,7 +1,9 @@
 import { RankEnums } from "./enum/ranks"
 
 export default (recommandCount: number) => {
-  switch (recommandCount / 10) {
+  const divideCount: number = Math.floor(recommandCount / 10);
+
+  switch (divideCount) {
     case 0:
       return RankEnums.BRONZE;
 
