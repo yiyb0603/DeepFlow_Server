@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import LikeEntityRepository from 'modules/like/like.repository';
 import PostEntityRepository from 'modules/post/post.repository';
 import PostService from 'modules/post/post.service';
-import TagsRepository from 'modules/tags/tags.repository';
+import TagRepository from 'modules/tag/tag.repository';
 import UserRepository from 'modules/user/user.repository';
 import ViewRepository from 'modules/view/view.repository';
 import CommentController from './comment.controller';
@@ -14,7 +14,7 @@ import CommentService from './comment.service';
   imports: [
     TypeOrmModule.forFeature([
       PostEntityRepository,
-      TagsRepository,
+      TagRepository,
       CommentRepository,
       UserRepository,
       LikeEntityRepository,

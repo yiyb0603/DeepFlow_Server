@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import HttpError from "exception/HttpError";
 import { PostEnums } from "lib/enum/post";
-import Tags from "modules/tags/tags.entity";
-import TagsRepository from "modules/tags/tags.repository";
+import Tag from "modules/tag/tag.entity";
+import TagRepository from "modules/tag/tag.repository";
 import User from "modules/user/user.entity";
 import UserRepository from "modules/user/user.repository";
 import { PostDto } from "./dto/post.dto";
@@ -22,8 +22,8 @@ export default class PostService {
   constructor(
     private readonly postRepository: PostEntityRepository,
 
-    @InjectRepository(Tags)
-    private readonly tagsRepository: TagsRepository,
+    @InjectRepository(Tag)
+    private readonly tagsRepository: TagRepository,
 
     @InjectRepository(User)
     private readonly userRepository: UserRepository,
@@ -145,10 +145,10 @@ export default class PostService {
 
   private async handleProcessPosts(posts: PostEntity[]): Promise<void> {
     for (const post of posts) {
-      let postTags: Tags[] = [];
+      let postTags: Tag[] = [];
       
-      const tag: Tags[] = await this.tagsRepository.getTagsByPostIdx(post.idx);
-      postTags = postTags.concat(tag);
+      const tags: Tag[] = await this.tagsRepository.getTagsByPostIdx(post.idx);
+      postTags = postTags.concat(tags);
       
       const user: User = await this.userRepository.getUserByIdx(post.fk_user_idx);
       post.user = user;
@@ -173,7 +173,7 @@ export default class PostService {
 
   private async handlePushTags(postTags: string[], post: PostEntity): Promise<void> {
     for (const postTag of postTags) {
-      const tag: Tags = new Tags();
+      const tag: Tag = new Tag();
       tag.name = postTag;
       tag.post = post;
 

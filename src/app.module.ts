@@ -4,14 +4,14 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { CommentModule } from 'modules/comment/comment.module';
 import CatchException from 'exception/CatchException';
 import { PostModule } from 'modules/post/post.module';
-import { TagsModule } from 'modules/tags/tags.module';
+import { TagModule } from 'modules/tag/tag.module';
 import { UserModule } from 'modules/user/user.module';
 import ormConfig from '../ormconfig';
 import User from 'modules/user/user.entity';
 import PostEntity from 'modules/post/post.entity';
 import Comment from 'modules/comment/comment.entity';
 import Reply from 'modules/reply/reply.entity';
-import Tags from 'modules/tags/tags.entity';
+import Tags from 'modules/tag/tag.entity';
 import { ReplyModule } from 'modules/reply/reply.module';
 import LikeEntity from 'modules/like/like.entity';
 import { LikeModule } from 'modules/like/like.module';
@@ -42,7 +42,7 @@ const loadEntities: TypeOrmModuleOptions = {
     TypeOrmModule.forRoot(loadEntities),
     UserModule,
     PostModule,
-    TagsModule,
+    TagModule,
     CommentModule,
     ReplyModule,
     LikeModule,

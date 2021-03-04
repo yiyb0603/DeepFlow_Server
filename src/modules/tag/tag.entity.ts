@@ -2,9 +2,9 @@ import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColu
 import PostEntity from "modules/post/post.entity";
 
 @Entity({
-  name: 'tags',
+  name: 'tag',
 })
-export default class Tags extends BaseEntity {
+export default class Tag extends BaseEntity {
   @PrimaryGeneratedColumn()
   idx!: number;
 

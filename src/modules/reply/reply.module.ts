@@ -6,7 +6,7 @@ import LikeEntityRepository from 'modules/like/like.repository';
 import PostEntityRepository from 'modules/post/post.repository';
 import PostService from 'modules/post/post.service';
 import RecommandRepository from 'modules/recommand/recommand.repository';
-import TagsRepository from 'modules/tags/tags.repository';
+import TagRepository from 'modules/tag/tag.repository';
 import UserRepository from 'modules/user/user.repository';
 import UserService from 'modules/user/user.service';
 import ViewRepository from 'modules/view/view.repository';
@@ -19,7 +19,7 @@ import ReplyService from './reply.service';
     TypeOrmModule.forFeature([
       ReplyRepository,
       PostEntityRepository,
-      TagsRepository,
+      TagRepository,
       LikeEntityRepository,
       UserRepository,
       CommentRepository,

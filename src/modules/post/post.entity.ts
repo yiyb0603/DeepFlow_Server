@@ -1,5 +1,5 @@
 import { PostEnums } from "lib/enum/post";
-import Tags from "modules/tags/tags.entity";
+import Tag from "modules/tag/tag.entity";
 import {
   BaseEntity,
   Column,
@@ -58,11 +58,11 @@ export default class PostEntity extends BaseEntity {
   likeCount!: number;
   viewCount!: number;
 
-  @OneToMany((type) => Tags, (tag) => tag.post, {
+  @OneToMany((type) => Tag, (tag) => tag.post, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  postTags!: Tags[];
+  postTags!: Tag[];
 
   @CreateDateColumn({
     name: 'created_at',
