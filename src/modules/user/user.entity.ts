@@ -63,4 +63,11 @@ export default class User extends BaseEntity {
     name: 'joined_at',
   })
   joinedAt!: Date;
+
+  @Column({
+    type: 'boolean',
+    name: 'is_admin',
+    default: false,
+  })
+  isAdmin!: boolean;
 }

@@ -16,6 +16,7 @@ import CommentRepository from "modules/comment/comment.repository";
 import LikeEntity from "modules/like/like.entity";
 import LikeEntityRepository from "modules/like/like.repository";
 import Comment from "modules/comment/comment.entity";
+import { PAGE_LIMIT } from "lib/constants";
 
 @Injectable()
 export default class PostService {
@@ -38,10 +39,8 @@ export default class PostService {
     private readonly likeRepository: LikeEntityRepository,
   ) {}
 
-  private readonly PAGE_LIMIT: number = 15;
-
   public async getPostsByCategory(category: PostEnums, page: number): Promise<PostEntity[]> {
-    const posts: PostEntity[] = await this.postRepository.getPostsByCategory(category, page, this.PAGE_LIMIT);
+    const posts: PostEntity[] = await this.postRepository.getPostsByCategory(category, page, PAGE_LIMIT);
     await this.handleProcessPosts(posts);
 
     return posts;

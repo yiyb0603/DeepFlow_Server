@@ -39,10 +39,11 @@ export default class UserService {
     user.generation = generation;
     user.major = major;
     user.joinedAt = new Date();
+    user.isAdmin = false;
 
     await this.userRepository.save(user);
     const joinedUser = await this.userRepository.getUserById(githubId);
-    const token: string = createToken(joinedUser.idx, joinedUser.githubId);
+    const token: string = createToken(joinedUser.idx, joinedUser.githubId, joinedUser.isAdmin);
     return token;
   }
 
@@ -90,7 +91,7 @@ export default class UserService {
   public async getToken(id: string): Promise<string> | null {
     const user: User = await this.userRepository.getUserById(id);
     if (user !== undefined) {
-      const token: string = createToken(user.idx, user.githubId);
+      const token: string = createToken(user.idx, user.githubId, user.isAdmin);
       return token;
     } else {
       return null;
