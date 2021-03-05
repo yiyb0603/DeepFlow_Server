@@ -38,8 +38,10 @@ export default class PostService {
     private readonly likeRepository: LikeEntityRepository,
   ) {}
 
+  private readonly PAGE_LIMIT: number = 15;
+
   public async getPostsByCategory(category: PostEnums, page: number): Promise<PostEntity[]> {
-    const posts: PostEntity[] = await this.postRepository.getPostsByCategory(category, page);
+    const posts: PostEntity[] = await this.postRepository.getPostsByCategory(category, page, this.PAGE_LIMIT);
     await this.handleProcessPosts(posts);
 
     return posts;
@@ -149,23 +151,25 @@ export default class PostService {
       
       const tags: Tag[] = await this.tagsRepository.getTagsByPostIdx(post.idx);
       postTags = postTags.concat(tags);
-      
-      const user: User = await this.userRepository.getUserByIdx(post.fk_user_idx);
-      post.user = user;
+
       post.postTags = postTags;
 
-      const commentCount: [Comment[], number] = await this.commentRepository.getCommentsByPostIdx(post.idx);
-      post.commentCount = commentCount[1];
+      const comment: Comment[] = await this.commentRepository.getCommentsByPostIdx(post.idx);
+      post.commentCount = comment.length;
       post.likeCount = await this.likeRepository.getLikeCountByPostIdx(post.idx);
       post.viewCount = await this.viewRepository.getViewCountByPostIdx(post.idx);
+      post.user = await this.userRepository.getUserByIdx(post.fk_user_idx);
 
       delete post.contents;
-      delete post.user.description;
-      delete post.user.joinedAt;
-      delete post.user.location;
-      delete post.user.recommandCount;
-      delete post.user.major;
-      delete post.user.rank;
+
+      if (post.user) {
+        delete post.user.description;
+        delete post.user.joinedAt;
+        delete post.user.location;
+        delete post.user.recommandCount;
+        delete post.user.major;
+        delete post.user.rank;
+      }
 
       await this.postRepository.save(post);
     }

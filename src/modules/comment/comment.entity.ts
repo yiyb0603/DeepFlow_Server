@@ -10,13 +10,12 @@ export default class Comment extends BaseEntity {
   idx!: number;
 
   @Column({
-    type: 'text',
+    length: 255,
   })
   contents!: string;
 
   @ManyToOne((type) => PostEntity, {
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
   })
   @JoinColumn({
     name: 'fk_post_idx',
@@ -38,9 +37,9 @@ export default class Comment extends BaseEntity {
   createdAt!: Date;
 
   @Column({
-    name: 'updated_at',
     nullable: true,
     default: null,
+    name: 'updated_at',
   })
   updatedAt: Date;
 }

@@ -8,7 +8,9 @@ export default class Tag extends BaseEntity {
   @PrimaryGeneratedColumn()
   idx!: number;
 
-  @Column()
+  @Column({
+    length: 20,
+  })
   name!: string;
 
   @ManyToOne((type) => PostEntity, (post) => post.postTags, {
@@ -19,4 +21,7 @@ export default class Tag extends BaseEntity {
     name: 'fk_post_idx',
   })
   post!: PostEntity;
+
+  @Column()
+  fk_post_idx!: number;
 }

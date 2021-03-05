@@ -1,16 +1,15 @@
-import { PAGE_LIMIT } from "lib/constants";
 import { PostEnums } from "lib/enum/post";
 import { EntityRepository, Repository } from "typeorm";
 import PostEntity from "./post.entity";
 
 @EntityRepository(PostEntity)
 export default class PostEntityRepository extends Repository<PostEntity> {
-  public getPostsByCategory(category: PostEnums, page: number): Promise<PostEntity[]> {
+  public getPostsByCategory(category: PostEnums, page: number, limit: number): Promise<PostEntity[]> {
     return this.createQueryBuilder()
       .where('category = :category', { category: category.toString() })
       .andWhere('is_temp = false')
-      .skip((page - 1) * PAGE_LIMIT)
-      .take(PAGE_LIMIT)
+      .skip((page - 1) * limit)
+      .take(limit)
       .getMany();
   }
 

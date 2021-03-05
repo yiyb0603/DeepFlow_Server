@@ -5,27 +5,27 @@ import getProcessEnv from "./getProcessEnv";
 import uuidRandom from "./uuidRandom";
 
 export const multerOptions = {
-  fileFilter: (request, file, cb) => {
+  fileFilter: (request, file, callback) => {
     if (file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
-      cb(null, true);
+      callback(null, true);
     } else {
-      cb(new HttpError(400, '지원하지 않는 파일 형식입니다.'), false);
+      callback(new HttpError(400, '지원하지 않는 이미지 형식입니다.'), false);
     }
   },
 
   storage: diskStorage({
-    destination: (request, file, cb) => {
+    destination: (request, file, callback) => {
       const uploadPath: string = 'public';
 
       if (!existsSync(uploadPath)) {
         mkdirSync(uploadPath);
       }
 
-      cb(null, uploadPath);
+      callback(null, uploadPath);
     },
 
-    filename: (request, file, cb) => {
-      cb(null, uuidRandom(file));
+    filename: (request, file, callback) => {
+      callback(null, uuidRandom(file));
     }
   })
 }

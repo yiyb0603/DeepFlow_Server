@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsEnum, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsEnum, IsString, MaxLength } from "class-validator";
 import { PostEnums } from "lib/enum/post";
 
 export class PostDto {
@@ -6,18 +6,21 @@ export class PostDto {
   readonly category: PostEnums;
 
   @IsString()
+  @MaxLength(150)
   readonly introduction: string;
 
   @IsString()
   readonly thumbnail: string;
 
   @IsString()
+  @MaxLength(100)
   readonly title: string;
 
   @IsString()
   readonly contents: string;
 
   @IsArray()
+  @MaxLength(5)
   readonly postTags: string[];
 
   @IsBoolean()

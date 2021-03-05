@@ -32,5 +32,5 @@ export default class LikeEntity extends BaseEntity {
   @CreateDateColumn({
     name: 'pressed_at',
   })
-  pressedAt: Date;
+  pressedAt!: Date;
 }

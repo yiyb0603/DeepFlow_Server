@@ -98,13 +98,14 @@ export default class UserService {
   }
 
   public async getUserInfoByIdx(idx: number): Promise<User> {
-    const user = await this.userRepository.getUserByIdx(idx);
-    user.recommandCount = await this.recommandRepository.getRecommandCount(idx);
-    user.rank = generateRank(user.recommandCount);
+    const user: User = await this.userRepository.getUserByIdx(idx);
 
     if (user === undefined) {
       throw new HttpError(404, '존재하지 않는 유저입니다.');
     }
+
+    user.recommandCount = await this.recommandRepository.getRecommandCount(idx);
+    user.rank = generateRank(user.recommandCount);
 
     return user;
   }

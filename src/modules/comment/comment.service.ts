@@ -21,8 +21,8 @@ export default class CommentService {
   ) {}
 
   public async getComments(postIdx: number): Promise<Comment[]> {
-    const comments: [Comment[], number] = await this.commentRepository.getCommentsByPostIdx(postIdx);
-    return comments[0];
+    const comments: Comment[] = await this.commentRepository.getCommentsByPostIdx(postIdx);
+    return comments;
   }
 
   public async handleCreateComment(createCommentDto: CommentDto, user: User): Promise<void> {

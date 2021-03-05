@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from "class-validator";
+import { IsNumber, IsString, MaxLength } from "class-validator";
 
 export class CreateReplyDto {
   @IsString()
@@ -13,5 +13,6 @@ export class CreateReplyDto {
 
 export class ModifyReplyDto {
   @IsString()
+  @MaxLength(255)
   contents: string;
 }
