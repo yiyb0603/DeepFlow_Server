@@ -62,7 +62,7 @@ export default class PostEntity extends BaseEntity {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  postTags!: Tag[];
+  postTags!: string[];
 
   @CreateDateColumn({
     name: 'created_at',

@@ -18,18 +18,44 @@ export default class PostController {
   public async getPostsByCategory(
     @Query('category') category: PostEnums,
     @Query('page') page: number,
-    @Query('userIdx') userIdx: number,
   ) {
-    let posts: PostEntity[] = [];
-    if (isNaN(Number(userIdx))) {
-      posts = await this.postService.getPostsByCategory(category, page);
-    } else {
-      posts = await this.postService.getPostsByUserIdx(userIdx);
-    }
+    const posts: PostEntity[] = await this.postService.getPostsByCategory(category, page);
     
     return {
       status: 200,
       message: '글 목록을 조회하였습니다.',
+      data: {
+        posts,
+      },
+    };
+  }
+
+  @Get('/tag')
+  public async getPostsByTagName(
+    @Query('category') category: PostEnums,
+    @Query('page') page: number,
+    @Query('tagName') tagName: string,
+  ) {
+    const posts: PostEntity[] = await this.postService.getPostsByTagName(tagName, category, page);
+
+    return {
+      status: 200,
+      message: '태그별 글 목록을 조회하였습니다.',
+      data: {
+        posts,
+      },
+    };
+  }
+
+  @Get('/user/:idx')
+  public async getPostsByUserIdx(
+    @Param('idx') userIdx: number
+  ) {
+    const posts: PostEntity[] = await this.postService.getPostsByUserIdx(userIdx);
+
+    return {
+      status: 200,
+      message: '유저별 글 목록을 조회하였습니다.',
       data: {
         posts,
       },

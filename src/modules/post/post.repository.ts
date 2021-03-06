@@ -1,6 +1,6 @@
-import { PostEnums } from "lib/enum/post";
 import { EntityRepository, Repository } from "typeorm";
 import PostEntity from "./post.entity";
+import { PostEnums } from "lib/enum/post";
 
 @EntityRepository(PostEntity)
 export default class PostEntityRepository extends Repository<PostEntity> {

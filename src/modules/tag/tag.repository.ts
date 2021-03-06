@@ -8,4 +8,8 @@ export default class TagRepository extends Repository<Tag> {
       .where('fk_post_idx = :postIdx', { postIdx })
       .getMany();
   }
+
+  public getTags(): Promise<Tag[]> {
+    return this.createQueryBuilder().getMany();
+  }
 }

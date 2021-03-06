@@ -50,6 +50,7 @@ const loadEntities: TypeOrmModuleOptions = {
     ViewModule,
     RecommandModule,
     NoticeModule,
+    TagModule,
     UploadModule,
   ],
   controllers: [],

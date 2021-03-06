@@ -46,6 +46,17 @@ export default class PostService {
     return posts;
   }
 
+  public async getPostsByTagName(tagName: string, category: PostEnums, page: number) {
+    let posts: PostEntity[] = await this.postRepository.getPostsByCategory(category, page, PAGE_LIMIT);
+    await this.handleProcessPosts(posts);
+
+    posts = posts.filter((post: PostEntity) => {
+      return post.postTags.includes(tagName);
+    });
+
+    return posts;
+  }
+
   public async getTempPosts(user: User): Promise<PostEntity[]> {
     const posts = await this.postRepository.getPostsByUserIdx(user.idx, true);
     await this.handleProcessPosts(posts);
@@ -55,7 +66,8 @@ export default class PostService {
 
   public async getPost(postIdx: number, ipAddress: string): Promise<PostEntity> {
     const post: PostEntity = await this.getPostByIdx(postIdx);
-    post.postTags = await this.tagsRepository.getTagsByPostIdx(postIdx);
+    const postTags: Tag[] = await this.tagsRepository.getTagsByPostIdx(postIdx);
+    post.postTags = postTags.map((tag: Tag) => tag.name);
     post.user = await this.userRepository.getUserByIdx(post.fk_user_idx);
 
     const existView: View = await this.viewRepository.getViewByPostIdxAndIpAdress(postIdx, sha256(ipAddress));
@@ -79,6 +91,8 @@ export default class PostService {
 
   public async getPostsByUserIdx(userIdx: number) {
     const userPosts: PostEntity[] = await this.postRepository.getPostsByUserIdx(userIdx, false);
+    await this.handleProcessPosts(userPosts);
+
     return userPosts;
   }
 
@@ -144,14 +158,14 @@ export default class PostService {
     return post;
   }
 
-  private async handleProcessPosts(posts: PostEntity[]): Promise<void> {
+  public async handleProcessPosts(posts: PostEntity[]): Promise<void> {
     for (const post of posts) {
       let postTags: Tag[] = [];
       
       const tags: Tag[] = await this.tagsRepository.getTagsByPostIdx(post.idx);
       postTags = postTags.concat(tags);
 
-      post.postTags = postTags;
+      post.postTags = postTags.map((tag: Tag) => tag.name);
 
       const comment: Comment[] = await this.commentRepository.getCommentsByPostIdx(post.idx);
       post.commentCount = comment.length;
@@ -169,8 +183,6 @@ export default class PostService {
         delete post.user.major;
         delete post.user.rank;
       }
-
-      await this.postRepository.save(post);
     }
   }
 
