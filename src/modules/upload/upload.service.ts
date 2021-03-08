@@ -4,13 +4,10 @@ import { createImageURL } from "lib/multerOptions";
 @Injectable()
 export default class UploadService {
   public uploadFiles(files: File[]): string[] {
-    let generatedFiles: string[] = [];
+    const generatedFiles: string[] = [];
 
     for (const file of files) {
-      generatedFiles = [
-        ...generatedFiles,
-        createImageURL(file),
-      ];
+      generatedFiles.push(createImageURL(file));
     }
 
     return generatedFiles;

@@ -13,6 +13,15 @@ export default class PostEntityRepository extends Repository<PostEntity> {
       .getMany();
   }
 
+  public getRecentPostsByCount(count: number): Promise<PostEntity[]> {
+    return this.createQueryBuilder()
+      .where('is_temp = false')
+      .skip(0)
+      .take(count)
+      .orderBy('created_at', 'DESC')
+      .getMany();
+  }
+
   public getPostByIdx(idx: number): Promise<PostEntity> {
     return this.createQueryBuilder()
       .where('idx = :idx', { idx })

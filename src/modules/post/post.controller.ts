@@ -78,6 +78,21 @@ export default class PostController {
     };
   }
 
+  @Get('/recent')
+  public async getRecentPosts(
+    @Query('count') count: number,
+  ) {
+    const posts: PostEntity[] = await this.postService.getRecentPosts(count);
+
+    return {
+      status: 200,
+      message: '최신 글 목록을 조회하였습니다.',
+      data: {
+        posts,
+      }
+    }
+  }
+
   @Get('/temp')
   @UseGuards(new AuthGuard())
   public async getTempPosts(

@@ -58,7 +58,14 @@ export default class PostService {
   }
 
   public async getTempPosts(user: User): Promise<PostEntity[]> {
-    const posts = await this.postRepository.getPostsByUserIdx(user.idx, true);
+    const posts: PostEntity[] = await this.postRepository.getPostsByUserIdx(user.idx, true);
+    await this.handleProcessPosts(posts);
+
+    return posts;
+  }
+
+  public async getRecentPosts(count: number): Promise<PostEntity[]> {
+    const posts: PostEntity[] = await this.postRepository.getRecentPostsByCount(count);
     await this.handleProcessPosts(posts);
 
     return posts;
