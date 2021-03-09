@@ -17,6 +17,7 @@ import LikeEntity from "modules/like/like.entity";
 import LikeEntityRepository from "modules/like/like.repository";
 import Comment from "modules/comment/comment.entity";
 import { PAGE_LIMIT } from "lib/constants";
+import { IViewCount } from "types/view.types";
 
 @Injectable()
 export default class PostService {
@@ -71,6 +72,27 @@ export default class PostService {
     return posts;
   }
 
+  public async getPopularPosts(count: number): Promise<PostEntity[]> {
+    const popularViews: IViewCount[] = await this.viewRepository.getViewCountGroupByPostIdx(count);
+    const posts: PostEntity[] = [];
+
+    for (const view of popularViews) {
+      const post: PostEntity = await this.getPostByIdx(view.fk_post_idx);
+
+      const comments: Comment[] = await this.commentRepository.getCommentsByPostIdx(post.idx);
+      post.commentCount = comments.length;
+      post.viewCount = Number(view.count);
+      post.likeCount = await this.likeRepository.getLikeCountByPostIdx(post.idx);
+
+      delete post.contents;
+      delete post.fk_user_idx;
+
+      posts.push(post);
+    }
+
+    return posts;
+  }
+
   public async getPost(postIdx: number, ipAddress: string): Promise<PostEntity> {
     const post: PostEntity = await this.getPostByIdx(postIdx);
     const postTags: Tag[] = await this.tagsRepository.getTagsByPostIdx(postIdx);
@@ -78,7 +100,7 @@ export default class PostService {
     post.user = await this.userRepository.getUserByIdx(post.fk_user_idx);
 
     const existView: View = await this.viewRepository.getViewByPostIdxAndIpAdress(postIdx, sha256(ipAddress));
-    if (existView === undefined) {
+    if (existView === undefined && !post.isTemp) {
       const view: View = new View();
       view.post = post;
       view.userIp = sha256(ipAddress);
@@ -121,7 +143,6 @@ export default class PostService {
     post.isTemp = isTemp;
 
     await this.postRepository.save(post);
-
     await this.handlePushTags(postTags, post);
   }
 

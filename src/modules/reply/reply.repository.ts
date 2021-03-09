@@ -6,6 +6,7 @@ export default class ReplyRepository extends Repository<Reply> {
   public getRepliesByPostIdx(postIdx: number): Promise<Reply[]> {
     return this.createQueryBuilder()
       .where('fk_post_idx = :postIdx', { postIdx })
+      .orderBy('created_at', 'DESC')
       .getMany();
   }
 

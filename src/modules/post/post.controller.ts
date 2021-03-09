@@ -82,15 +82,31 @@ export default class PostController {
   public async getRecentPosts(
     @Query('count') count: number,
   ) {
-    const posts: PostEntity[] = await this.postService.getRecentPosts(count);
+    const recentPosts: PostEntity[] = await this.postService.getRecentPosts(count);
 
     return {
       status: 200,
       message: '최신 글 목록을 조회하였습니다.',
       data: {
-        posts,
+        recentPosts,
       }
     }
+  }
+
+  // 조회수 기준 인기글 목록 조회
+  @Get('/popular')
+  public async getPopularPosts(
+    @Query('count') count: number,
+  ) {
+    const popularPosts: PostEntity[] = await this.postService.getPopularPosts(count);
+
+    return {
+      status: 200,
+      message: '인기글 목록을 조회하였습니다.',
+      data: {
+        popularPosts,
+      },
+    };
   }
 
   @Get('/temp')

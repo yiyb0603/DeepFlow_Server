@@ -10,6 +10,7 @@ export default class PostEntityRepository extends Repository<PostEntity> {
       .andWhere('is_temp = false')
       .skip((page - 1) * limit)
       .take(limit)
+      .orderBy('created_at', 'DESC')
       .getMany();
   }
 
@@ -32,6 +33,7 @@ export default class PostEntityRepository extends Repository<PostEntity> {
     return this.createQueryBuilder()
       .where('fk_user_idx = :userIdx', { userIdx })
       .andWhere('is_temp = :isTemp', { isTemp })
+      .orderBy('created_at', 'DESC')
       .getMany();
   }
 
@@ -39,6 +41,7 @@ export default class PostEntityRepository extends Repository<PostEntity> {
     return this.createQueryBuilder()
       .where('title LIKE :keyword', { keyword: `%${keyword}%` })
       .andWhere('category = :category', { category: category.toString() })
+      .orderBy('created_at', 'DESC')
       .getMany();
   }
 }
