@@ -9,6 +9,9 @@ export class SignUpDto {
   @IsInt()
   readonly generation: number;
 
+  @IsString()
+  readonly position: string;
+
   @IsEnum(MajorEnums)
   readonly major: MajorEnums;
 }

@@ -4,4 +4,5 @@ export interface IGithubUserTypes {
   name: string;
   description: string;
   location: string;
+  blog: string;
 }

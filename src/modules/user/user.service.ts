@@ -22,8 +22,8 @@ export default class UserService {
   ) {}
 
   public async handleSignUp(signUpDto: SignUpDto): Promise<string> {
-    const { githubInfo, generation, major } = signUpDto;
-    const { githubId, avatar, name, description, location } = githubInfo;
+    const { githubInfo, generation, major, position } = signUpDto;
+    const { githubId, avatar, name, description, location, blog } = githubInfo;
 
     const existUser = await this.userRepository.getUserById(githubInfo.githubId);
     if (existUser) {
@@ -38,6 +38,8 @@ export default class UserService {
     user.location = location;
     user.generation = generation;
     user.major = major;
+    user.blog = blog;
+    user.position = position;
     user.joinedAt = new Date();
     user.isAdmin = false;
 
@@ -76,13 +78,14 @@ export default class UserService {
       },
     });
 
-    const { login, avatar_url, name, bio, company } = data;
+    const { login, avatar_url, name, bio, company, blog } = data;
     const githubInfo: IGithubUserTypes = {
       githubId: login,
       avatar: avatar_url,
       name,
       description: bio,
       location: company,
+      blog,
     };
 
     return githubInfo;

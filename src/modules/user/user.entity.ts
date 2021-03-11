@@ -38,6 +38,14 @@ export default class User extends BaseEntity {
   })
   location: string;
 
+  // 사용자 개인 사이트
+  @Column()
+  blog!: string;
+
+  // 주 개발 업무
+  @Column()
+  position!: string;
+
   // 사용자 프로필 이미지
   @Column()
   avatar!: string;
