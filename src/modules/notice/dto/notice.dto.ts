@@ -5,5 +5,8 @@ export class NoticeDto {
   readonly title: string;
 
   @IsString()
+  readonly introduction: string;
+
+  @IsString()
   readonly contents: string;
 }

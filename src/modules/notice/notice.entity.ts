@@ -11,6 +11,9 @@ export default class Notice extends BaseEntity {
   @Column()
   title!: string;
 
+  @Column()
+  introduction!: string;
+
   @Column({
     type: 'text',
   })

@@ -1,5 +1,5 @@
-import { IsArray, IsBoolean, IsEnum, IsString, MaxLength } from "class-validator";
-import { PostEnums } from "lib/enum/post";
+import { ArrayMaxSize, IsArray, IsBoolean, IsEnum, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator';
+import { PostEnums } from 'lib/enum/post';
 
 export class PostDto {
   @IsEnum(PostEnums)
@@ -20,7 +20,7 @@ export class PostDto {
   readonly contents: string;
 
   @IsArray()
-  @MaxLength(5)
+  @ArrayMaxSize(5)
   readonly postTags: string[];
 
   @IsBoolean()

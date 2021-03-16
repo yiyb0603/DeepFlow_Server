@@ -42,9 +42,10 @@ export default class NoticeService {
       throw new HttpError(404, '존재하지 않는 유저입니다.');
     }
 
-    const { title, contents } = createNoticeDto;
+    const { title, introduction, contents } = createNoticeDto;
     const notice: Notice = new Notice();
     notice.title = title;
+    notice.introduction = introduction;
     notice.contents = contents;
     notice.user = existUser;
     notice.createdAt = new Date();
@@ -60,9 +61,10 @@ export default class NoticeService {
       throw new HttpError(403, '공지사항을 수정할 권한이 없습니다.');
     }
 
-    const { title, contents } = modifyNoticeDto;
+    const { title, contents, introduction } = modifyNoticeDto;
     existNotice.title = title;
     existNotice.contents = contents;
+    existNotice.introduction = introduction;
     existNotice.updatedAt = new Date();
 
     await this.noticeRepository.save(existNotice);

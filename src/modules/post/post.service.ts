@@ -125,7 +125,7 @@ export default class PostService {
     return userPosts;
   }
 
-  public async handleCreatePost(createPostDto: PostDto, user: User): Promise<void> {
+  public async handleCreatePost(createPostDto: PostDto, user: User): Promise<number> {
     const { introduction, thumbnail, title, contents, category, postTags, isTemp } = createPostDto;
     const existUser: User = await this.userRepository.getUserByIdx(user.idx);
 
@@ -133,7 +133,7 @@ export default class PostService {
       throw new HttpError(404, '존재하지 않는 유저입니다.');
     }
 
-    const post: PostEntity = new PostEntity();
+    const post = new PostEntity();
     post.user = existUser;
     post.title = title;
     post.introduction = introduction;
@@ -142,8 +142,10 @@ export default class PostService {
     post.category = category;
     post.isTemp = isTemp;
 
-    await this.postRepository.save(post);
+    const { idx } = await this.postRepository.save(post);
     await this.handlePushTags(postTags, post);
+
+    return idx;
   }
 
   public async handleModifyPost(postIdx: number, modifyPostDto: PostDto, user: User): Promise<void> {
@@ -153,11 +155,13 @@ export default class PostService {
       throw new HttpError(403, '글을 수정할 권한이 없습니다.');
     }
 
-    const { title, contents, postTags, category } = modifyPostDto;
+    const { title, contents, postTags, category, introduction, isTemp } = modifyPostDto;
     post.idx = postIdx;
     post.title = title;
+    post.introduction = introduction;
     post.contents = contents;
     post.category = category;
+    post.isTemp = isTemp;
     await this.postRepository.save(post);
 
     const existTags = await this.tagsRepository.getTagsByPostIdx(postIdx);
@@ -178,7 +182,6 @@ export default class PostService {
 
   public async getPostByIdx(postIdx: number): Promise<PostEntity> {
     const post: PostEntity = await this.postRepository.getPostByIdx(postIdx);
-
     if (post === undefined) {
       throw new HttpError(404, '존재하지 않는 글입니다.');
     }

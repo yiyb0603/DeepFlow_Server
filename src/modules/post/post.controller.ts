@@ -147,11 +147,12 @@ export default class PostController {
     @Token() user: User,
     @Body() createPostDto: PostDto
   ) {
-    await this.postService.handleCreatePost(createPostDto, user);
+    const idx: number = await this.postService.handleCreatePost(createPostDto, user);
 
     return {
       status: 200,
       message: '글 작성을 성공하였습니다.',
+      idx,
     };
   }
 
