@@ -47,6 +47,19 @@ export default class UserController {
     }
   }
 
+  @Get('/list')
+  public async getUserList() {
+    const users: User[] = await this.userService.getUserList();
+
+    return {
+      status: 200,
+      message: '유저 목록을 조회하였습니다.',
+      data: {
+        users,
+      },
+    };
+  }
+
   @Get('/:id')
   public async getUserInfo(@Param('id') userIdx: number) {
     const user: User = await this.userService.getUserInfoByIdx(userIdx);

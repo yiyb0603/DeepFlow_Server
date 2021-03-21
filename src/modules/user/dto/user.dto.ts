@@ -1,10 +1,24 @@
-import { IsEnum, IsInt, IsObject, IsString } from "class-validator";
-import { MajorEnums } from "lib/enum/majors";
-import { IGithubUserTypes } from "types/user.types";
+import { IsEnum, IsInt, IsString } from 'class-validator';
+import { MajorEnums } from 'lib/enum/majors';
 
 export class SignUpDto {
-  @IsObject()
-  readonly githubInfo: IGithubUserTypes;
+  @IsString()
+  readonly githubId: string;
+
+  @IsString()
+  readonly avatar: string;
+
+  @IsString()
+  readonly name: string;
+  
+  @IsString()
+  readonly description: string;
+  
+  @IsString()
+  readonly location: string;
+  
+  @IsString()
+  readonly blog: string;
 
   @IsInt()
   readonly generation: number;

@@ -22,18 +22,17 @@ export default class UserService {
   ) {}
 
   public async handleSignUp(signUpDto: SignUpDto): Promise<string> {
-    const { githubInfo, generation, major, position } = signUpDto;
-    const { githubId, avatar, name, description, location, blog } = githubInfo;
+    const { githubId, avatar, name, description, location, blog, generation, major, position } = signUpDto;
 
-    const existUser = await this.userRepository.getUserById(githubInfo.githubId);
+    const existUser = await this.userRepository.getUserById(githubId);
     if (existUser) {
       throw new HttpError(409, '이미 존재하는 유저입니다.');
     }
 
-    const user = new User();
+    const user: User = new User();
     user.githubId = githubId;
     user.name = name;
-    user.avatar = avatar;
+    user.avatar = avatar; 
     user.description = description;
     user.location = location;
     user.generation = generation;
@@ -89,6 +88,11 @@ export default class UserService {
     };
 
     return githubInfo;
+  }
+
+  public async getUserList(): Promise<User[]> {
+    const users: User[] = await this.userRepository.getUserList();
+    return users;
   }
 
   public async getToken(id: string): Promise<string> | null {

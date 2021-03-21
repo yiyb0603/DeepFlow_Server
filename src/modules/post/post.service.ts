@@ -155,9 +155,10 @@ export default class PostService {
       throw new HttpError(403, '글을 수정할 권한이 없습니다.');
     }
 
-    const { title, contents, postTags, category, introduction, isTemp } = modifyPostDto;
+    const { title, thumbnail, contents, postTags, category, introduction, isTemp } = modifyPostDto;
     post.idx = postIdx;
     post.title = title;
+    post.thumbnail = thumbnail;
     post.introduction = introduction;
     post.contents = contents;
     post.category = category;
