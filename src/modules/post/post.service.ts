@@ -1,23 +1,23 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import HttpError from "exception/HttpError";
-import { PostEnums } from "lib/enum/post";
-import Tag from "modules/tag/tag.entity";
-import TagRepository from "modules/tag/tag.repository";
-import User from "modules/user/user.entity";
-import UserRepository from "modules/user/user.repository";
-import { PostDto } from "./dto/post.dto";
-import PostEntity from "./post.entity";
-import PostEntityRepository from "./post.repository";
-import View from "modules/view/view.entity";
-import ViewRepository from "modules/view/view.repository";
-import { sha256 } from "js-sha256";
-import CommentRepository from "modules/comment/comment.repository";
-import LikeEntity from "modules/like/like.entity";
-import LikeEntityRepository from "modules/like/like.repository";
-import Comment from "modules/comment/comment.entity";
-import { PAGE_LIMIT } from "lib/constants";
-import { IViewCount } from "types/view.types";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import HttpError from 'exception/HttpError';
+import { PostEnums } from 'lib/enum/post';
+import Tag from 'modules/tag/tag.entity';
+import TagRepository from 'modules/tag/tag.repository';
+import User from 'modules/user/user.entity';
+import UserRepository from 'modules/user/user.repository';
+import { PostDto } from './dto/post.dto';
+import PostEntity from './post.entity';
+import PostEntityRepository from './post.repository';
+import View from 'modules/view/view.entity';
+import ViewRepository from 'modules/view/view.repository';
+import { sha256 } from 'js-sha256';
+import CommentRepository from 'modules/comment/comment.repository';
+import LikeEntity from 'modules/like/like.entity';
+import LikeEntityRepository from 'modules/like/like.repository';
+import Comment from 'modules/comment/comment.entity';
+import { PAGE_LIMIT } from 'lib/constants';
+import { IViewCount } from 'types/view.types';
 
 @Injectable()
 export default class PostService {
@@ -133,7 +133,7 @@ export default class PostService {
       throw new HttpError(404, '존재하지 않는 유저입니다.');
     }
 
-    const post = new PostEntity();
+    const post: PostEntity = new PostEntity();
     post.user = existUser;
     post.title = title;
     post.introduction = introduction;
@@ -163,6 +163,7 @@ export default class PostService {
     post.contents = contents;
     post.category = category;
     post.isTemp = isTemp;
+    post.updatedAt = new Date();
     await this.postRepository.save(post);
 
     const existTags = await this.tagsRepository.getTagsByPostIdx(postIdx);

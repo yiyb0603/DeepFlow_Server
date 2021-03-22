@@ -1,16 +1,16 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import axios, { AxiosResponse } from 'axios';
 import { CLIENT_ID, CLIENT_SECRET } from 'config/config.json';
-import HttpError from "exception/HttpError";
-import generateRank from "lib/generateRank";
-import { createToken } from "lib/token";
-import Recommand from "modules/recommand/recommand.entity";
-import RecommandRepository from "modules/recommand/recommand.repository";
-import { IGithubUserTypes } from "types/user.types";
-import { GithubCodeDto, SignUpDto } from "./dto/user.dto";
-import User from "./user.entity";
-import UserRepository from "./user.repository";
+import HttpError from 'exception/HttpError';
+import generateRank from 'lib/generateRank';
+import { createToken } from 'lib/token';
+import Recommand from 'modules/recommand/recommand.entity';
+import RecommandRepository from 'modules/recommand/recommand.repository';
+import { IGithubUserTypes } from 'types/user.types';
+import { GithubCodeDto, SignUpDto } from './dto/user.dto';
+import User from './user.entity';
+import UserRepository from './user.repository';
 
 @Injectable()
 export default class UserService {

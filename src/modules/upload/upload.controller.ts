@@ -1,8 +1,8 @@
-import { Controller, Post, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
-import { FilesInterceptor } from "@nestjs/platform-express";
-import { multerOptions } from "lib/multerOptions";
-import UploadService from "./upload.service";
-import AuthGuard from "middleware/auth";
+import { Controller, Post, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from 'lib/multerOptions';
+import UploadService from './upload.service';
+import AuthGuard from 'middleware/auth';
 
 @Controller('uploads')
 export default class UploadController {

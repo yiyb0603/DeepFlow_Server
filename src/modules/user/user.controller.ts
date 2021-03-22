@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
-import { IGithubUserTypes } from "types/user.types";
-import { GithubCodeDto, SignUpDto } from "./dto/user.dto";
-import User from "./user.entity";
-import UserService from "./user.service";
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { IGithubUserTypes } from 'types/user.types';
+import { GithubCodeDto, SignUpDto } from './dto/user.dto';
+import User from './user.entity';
+import UserService from './user.service';
 
 @Controller('user')
 export default class UserController {
