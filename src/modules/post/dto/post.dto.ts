@@ -6,15 +6,15 @@ export class PostDto {
   readonly category: PostEnums;
 
   @IsString()
+  @MaxLength(100)
+  readonly title: string;
+
+  @IsString()
   @MaxLength(150)
   readonly introduction: string;
 
   @IsString()
   readonly thumbnail: string;
-
-  @IsString()
-  @MaxLength(100)
-  readonly title: string;
 
   @IsString()
   readonly contents: string;

@@ -2,7 +2,7 @@ import { ConnectionOptions } from 'typeorm';
 import getProcessEnv from 'lib/getProcessEnv';
 
 const ormConfig: ConnectionOptions = {
-  type: 'mysql',
+  type: 'postgres',
   host: getProcessEnv('DB_HOST'),
   port: Number(getProcessEnv('DB_PORT')),
   username: getProcessEnv('DB_USERNAME'),
@@ -11,7 +11,6 @@ const ormConfig: ConnectionOptions = {
   synchronize: true,
   logging: false,
   entities: ["src/modules/domain-invoice/*.entity{.ts,.js}"],
-	charset: 'utf8mb4_unicode_ci',
 };
 
 export default ormConfig;

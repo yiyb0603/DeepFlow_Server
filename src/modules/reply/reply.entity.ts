@@ -11,7 +11,7 @@ export default class Reply extends BaseEntity {
   idx!: number;
 
   @Column({
-    length: 255,
+    type: 'text',
   })
   contents: string;
 
@@ -50,11 +50,13 @@ export default class Reply extends BaseEntity {
 
   @CreateDateColumn({
     name: 'created_at',
+    type: 'timestamp',
   })
   createdAt!: Date;
 
   @UpdateDateColumn({
     name: 'updated_at',
+    type: 'timestamp',
     nullable: true,
     default: null,
   })

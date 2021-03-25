@@ -18,7 +18,7 @@ import User from 'modules/user/user.entity';
 })
 export default class PostEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
-  idx: number;
+  idx!: number;
 
   @Column({
     type: 'enum',
@@ -26,7 +26,9 @@ export default class PostEntity extends BaseEntity {
   })
   category!: PostEnums;
 
-  @Column()
+  @Column({
+    length: 100,
+  })
   title!: string;
 
   @Column({
@@ -45,7 +47,9 @@ export default class PostEntity extends BaseEntity {
   })
   contents!: string;
 
-  @ManyToOne((type) => User, { onUpdate: 'CASCADE' })
+  @ManyToOne((type) => User, { 
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({
     name: 'fk_user_idx',
   })
@@ -66,13 +70,15 @@ export default class PostEntity extends BaseEntity {
 
   @CreateDateColumn({
     name: 'created_at',
+    type: 'timestamp',
   })
   createdAt!: Date;
 
   @UpdateDateColumn({
+    name: 'updated_at',
+    type: 'timestamp',
     nullable: true,
     default: null,
-    name: 'updated_at',
   })
   updatedAt: Date;
 

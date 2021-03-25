@@ -10,6 +10,7 @@ export default class Recommand extends BaseEntity {
 
   @ManyToOne((type) => User, {
     onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
   })
   @JoinColumn({
     name: 'fk_user_idx',
@@ -32,6 +33,7 @@ export default class Recommand extends BaseEntity {
 
   @CreateDateColumn({
     name: 'recommand_at',
+    type: 'timestamp',
   })
   recommandAt!: Date;
 }

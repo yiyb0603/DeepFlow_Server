@@ -1,18 +1,17 @@
-import { IsNumber, IsString, MaxLength } from "class-validator";
+import { IsInt, IsString } from "class-validator";
 
 export class CreateReplyDto {
   @IsString()
   contents: string;
   
-  @IsNumber()
+  @IsInt()
   commentIdx: number;
 
-  @IsNumber()
+  @IsInt()
   postIdx: number;
 }
 
 export class ModifyReplyDto {
   @IsString()
-  @MaxLength(255)
   contents: string;
 }

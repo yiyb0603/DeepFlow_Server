@@ -4,10 +4,11 @@ import axios, { AxiosResponse } from 'axios';
 import { CLIENT_ID, CLIENT_SECRET } from 'config/config.json';
 import HttpError from 'exception/HttpError';
 import generateRank from 'lib/generateRank';
+import getProcessEnv from 'lib/getProcessEnv';
 import { createToken } from 'lib/token';
 import Recommand from 'modules/recommand/recommand.entity';
 import RecommandRepository from 'modules/recommand/recommand.repository';
-import { IGithubUserTypes } from 'types/user.types';
+import { IGithubUser } from 'types/user.types';
 import { GithubCodeDto, SignUpDto } from './dto/user.dto';
 import User from './user.entity';
 import UserRepository from './user.repository';
@@ -22,7 +23,7 @@ export default class UserService {
   ) {}
 
   public async handleSignUp(signUpDto: SignUpDto): Promise<string> {
-    const { githubId, avatar, name, description, location, blog, generation, major, position } = signUpDto;
+    const { githubId, avatar, name, email, description, location, blog, generation, major, position } = signUpDto;
 
     const existUser = await this.userRepository.getUserById(githubId);
     if (existUser) {
@@ -33,6 +34,7 @@ export default class UserService {
     user.githubId = githubId;
     user.name = name;
     user.avatar = avatar; 
+    user.email = email;
     user.description = description;
     user.location = location;
     user.generation = generation;
@@ -40,7 +42,7 @@ export default class UserService {
     user.blog = blog;
     user.position = position;
     user.joinedAt = new Date();
-    user.isAdmin = false;
+    user.isAdmin = (name === getProcessEnv('ADMIN_NAME'));
 
     await this.userRepository.save(user);
     const joinedUser = await this.userRepository.getUserById(githubId);
@@ -48,7 +50,7 @@ export default class UserService {
     return token;
   }
 
-  public async getGithubInfo(githubCodeDto: GithubCodeDto): Promise<IGithubUserTypes> {
+  public async getGithubInfo(githubCodeDto: GithubCodeDto): Promise<IGithubUser> {
     const { code } = githubCodeDto;
     const getTokenUrl: string = 'https://github.com/login/oauth/access_token';
 
@@ -77,11 +79,12 @@ export default class UserService {
       },
     });
 
-    const { login, avatar_url, name, bio, company, blog } = data;
-    const githubInfo: IGithubUserTypes = {
+    const { login, avatar_url, name, bio, company, blog, email } = data;
+    const githubInfo: IGithubUser = {
       githubId: login,
       avatar: avatar_url,
       name,
+      email,
       description: bio,
       location: company,
       blog,

@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { IGithubUserTypes } from 'types/user.types';
+import { IGithubUser } from 'types/user.types';
 import { GithubCodeDto, SignUpDto } from './dto/user.dto';
 import User from './user.entity';
 import UserService from './user.service';
@@ -25,7 +25,7 @@ export default class UserController {
 
   @Post('/github-info')
   public async getGithubInfo(@Body() githubCodeDto: GithubCodeDto) {
-    const githubInfo: IGithubUserTypes = await this.userService.getGithubInfo(githubCodeDto);
+    const githubInfo: IGithubUser = await this.userService.getGithubInfo(githubCodeDto);
     const token: string = await this.userService.getToken(githubInfo.githubId);
 
     if (token !== null) {

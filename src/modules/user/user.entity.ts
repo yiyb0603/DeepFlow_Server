@@ -1,7 +1,6 @@
-import { MajorEnums } from "lib/enum/majors";
-import { RankEnums } from "lib/enum/ranks";
-import Recommand from "modules/recommand/recommand.entity";
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { MajorEnums } from 'lib/enum/majors';
+import { RankEnums } from 'lib/enum/ranks';
 
 @Entity({
   name: 'user',
@@ -20,9 +19,24 @@ export default class User extends BaseEntity {
   @Column()
   name!: string;
 
-  // 사용자 기수
   @Column()
+  email!: string;
+
+  // 사용자 기수
+  @Column({
+    type: 'int',
+  })
   generation!: number;
+
+  // 사용자 프로필 이미지
+  @Column()
+  avatar!: string;
+
+  // 한줄 소개
+  @Column({
+    length: 100,
+  })
+  description!: string;
 
   // 사용자 전공
   @Column({
@@ -35,26 +49,21 @@ export default class User extends BaseEntity {
   @Column({
     nullable: true,
     default: 'DGSW',
+    length: 50,
   })
   location: string;
 
   // 사용자 개인 사이트
-  @Column()
+  @Column({
+    length: 100,
+  })
   blog!: string;
 
   // 주 개발 업무
-  @Column()
-  position!: string;
-
-  // 사용자 프로필 이미지
-  @Column()
-  avatar!: string;
-
-  // 한줄 소개
   @Column({
-    length: 255,
+    length: 50,
   })
-  description!: string;
+  position!: string;
 
   recommandCount!: number;
 
@@ -62,6 +71,7 @@ export default class User extends BaseEntity {
   @Column({
     nullable: true,
     default: RankEnums.BRONZE,
+    type: 'enum',
     enum: RankEnums,
   })
   rank!: RankEnums;
@@ -69,6 +79,7 @@ export default class User extends BaseEntity {
   // 사용자 가입일
   @CreateDateColumn({
     name: 'joined_at',
+    type: 'timestamp',
   })
   joinedAt!: Date;
 

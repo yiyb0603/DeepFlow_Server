@@ -10,7 +10,7 @@ export default class Comment extends BaseEntity {
   idx!: number;
 
   @Column({
-    length: 255,
+    type: 'text',
   })
   contents!: string;
 
@@ -22,7 +22,9 @@ export default class Comment extends BaseEntity {
   })
   post!: PostEntity;
 
-  @ManyToOne((type) => User)
+  @ManyToOne((type) => User, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({
     name: 'fk_user_idx',
   })
@@ -33,6 +35,7 @@ export default class Comment extends BaseEntity {
 
   @Column({
     name: 'created_at',
+    type: 'timestamp',
   })
   createdAt!: Date;
 
