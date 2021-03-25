@@ -1,12 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
-import User from "modules/user/user.entity";
-import { Token } from "lib/decorator/user.decorator";
-import { IpAddress } from "lib/decorator/ipAddress.decorator";
-import { PostEnums } from "lib/enum/post";
-import AuthGuard from "middleware/auth";
-import { PostDto } from "./dto/post.dto";
-import PostEntity from "./post.entity";
-import PostService from "./post.service";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import User from 'modules/user/user.entity';
+import { Token } from 'lib/decorator/user.decorator';
+import { IpAddress } from 'lib/decorator/ipAddress.decorator';
+import { PostEnums } from 'lib/enum/post';
+import AuthGuard from 'middleware/auth';
+import { PostDto } from './dto/post.dto';
+import PostEntity from './post.entity';
+import PostService from './post.service';
 
 @Controller('post')
 export default class PostController {
@@ -19,12 +19,13 @@ export default class PostController {
     @Query('category') category: PostEnums,
     @Query('page') page: number,
   ) {
-    const posts: PostEntity[] = await this.postService.getPostsByCategory(category, page);
+    const { posts, totalCount } = await this.postService.getPostsByCategory(category, page);
     
     return {
       status: 200,
       message: '글 목록을 조회하였습니다.',
       data: {
+        totalCount,
         posts,
       },
     };

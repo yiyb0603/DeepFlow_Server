@@ -18,6 +18,7 @@ import LikeEntityRepository from 'modules/like/like.repository';
 import Comment from 'modules/comment/comment.entity';
 import { PAGE_LIMIT } from 'lib/constants';
 import { IViewCount } from 'types/view.types';
+import { IPostsAndCount } from 'types/post.types';
 
 @Injectable()
 export default class PostService {
@@ -40,11 +41,15 @@ export default class PostService {
     private readonly likeRepository: LikeEntityRepository,
   ) {}
 
-  public async getPostsByCategory(category: PostEnums, page: number): Promise<PostEntity[]> {
+  public async getPostsByCategory(category: PostEnums, page: number): Promise<IPostsAndCount> {
     const posts: PostEntity[] = await this.postRepository.getPostsByCategory(category, page, PAGE_LIMIT);
+    const totalCount: number = await this.postRepository.getPostCountByCategory(category);
     await this.handleProcessPosts(posts);
 
-    return posts;
+    return {
+      totalCount,
+      posts,
+    }
   }
 
   public async getPostsByTagName(tagName: string, category: PostEnums, page: number) {

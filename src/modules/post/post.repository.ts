@@ -4,6 +4,12 @@ import { PostEnums } from "lib/enum/post";
 
 @EntityRepository(PostEntity)
 export default class PostEntityRepository extends Repository<PostEntity> {
+  public getPostCountByCategory(category: PostEnums): Promise<number> {
+    return this.createQueryBuilder()
+      .where('category = :category', { category: category.toString() })
+      .getCount();
+  }
+
   public getPostsByCategory(category: PostEnums, page: number, limit: number): Promise<PostEntity[]> {
     return this.createQueryBuilder()
       .where('category = :category', { category: category.toString() })
