@@ -1,6 +1,8 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Token } from 'lib/decorator/user.decorator';
+import AuthGuard from 'middleware/auth';
 import { IGithubUser } from 'types/user.types';
-import { GithubCodeDto, SignUpDto } from './dto/user.dto';
+import { GithubCodeDto, UserDto } from './dto/user.dto';
 import User from './user.entity';
 import UserService from './user.service';
 
@@ -11,7 +13,7 @@ export default class UserController {
   ) {}
 
   @Post('/sign-up')
-  public async handleSignUp(@Body() signUpDto: SignUpDto) {
+  public async handleSignUp(@Body() signUpDto: UserDto) {
     const token: string = await this.userService.handleSignUp(signUpDto);
 
     return {
@@ -60,8 +62,8 @@ export default class UserController {
     };
   }
 
-  @Get('/:id')
-  public async getUserInfo(@Param('id') userIdx: number) {
+  @Get('/:idx')
+  public async getUserInfo(@Param('idx') userIdx: number) {
     const user: User = await this.userService.getUserInfoByIdx(userIdx);
 
     return {
@@ -70,6 +72,17 @@ export default class UserController {
       data: {
         user,
       },
+    };
+  }
+
+  @Put('/')
+  @UseGuards(new AuthGuard())
+  public async modifyUserInfo(@Token() user: User, @Body() userDto: UserDto) {
+    await this.userService.modifyUserInfo(user.idx, userDto);
+
+    return {
+      status: 200,
+      message: '유저 정보 수정을 성공하였습니다.',
     };
   }
 }

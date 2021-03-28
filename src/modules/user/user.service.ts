@@ -9,7 +9,7 @@ import { createToken } from 'lib/token';
 import Recommand from 'modules/recommand/recommand.entity';
 import RecommandRepository from 'modules/recommand/recommand.repository';
 import { IGithubUser } from 'types/user.types';
-import { GithubCodeDto, SignUpDto } from './dto/user.dto';
+import { GithubCodeDto, UserDto } from './dto/user.dto';
 import User from './user.entity';
 import UserRepository from './user.repository';
 
@@ -22,7 +22,7 @@ export default class UserService {
     private readonly recommandRepository: RecommandRepository,
   ) {}
 
-  public async handleSignUp(signUpDto: SignUpDto): Promise<string> {
+  public async handleSignUp(signUpDto: UserDto): Promise<string> {
     const { githubId, avatar, name, email, description, location, blog, generation, major, position } = signUpDto;
 
     const existUser = await this.userRepository.getUserById(githubId);
@@ -106,6 +106,23 @@ export default class UserService {
     } else {
       return null;
     }
+  }
+
+  public async modifyUserInfo(userIdx: number, userDto: UserDto): Promise<void> {
+    const user: User = await this.getUserInfoByIdx(userIdx);
+
+    const { avatar, name, email, location, description, position, generation, major, blog } = userDto;
+    user.avatar = avatar;
+    user.name = name;
+    user.email = email;
+    user.location = location;
+    user.description = description;
+    user.position = position;
+    user.generation = generation;
+    user.major = major;
+    user.blog = blog;
+
+    await this.userRepository.save(user);
   }
 
   public async getUserInfoByIdx(idx: number): Promise<User> {

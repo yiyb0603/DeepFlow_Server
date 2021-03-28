@@ -2,7 +2,7 @@ import { IsEmail, IsEnum, IsInt, IsString, Max, MaxLength } from 'class-validato
 import { MajorEnums } from 'lib/enum/majors';
 import { getGenerations } from 'lib/getGenerations';
 
-export class SignUpDto {
+export class UserDto {
   @IsString()
   readonly githubId: string;
 

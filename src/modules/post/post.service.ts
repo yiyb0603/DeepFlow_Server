@@ -52,7 +52,7 @@ export default class PostService {
     }
   }
 
-  public async getPostsByTagName(tagName: string, category: PostEnums, page: number) {
+  public async getPostsByTagName(tagName: string, category: PostEnums, page: number): Promise<PostEntity[]> {
     let posts: PostEntity[] = await this.postRepository.getPostsByCategory(category, page, PAGE_LIMIT);
     await this.handleProcessPosts(posts);
 
@@ -123,7 +123,7 @@ export default class PostService {
     return searchPosts;
   }
 
-  public async getPostsByUserIdx(userIdx: number) {
+  public async getPostsByUserIdx(userIdx: number): Promise<PostEntity[]> {
     const userPosts: PostEntity[] = await this.postRepository.getPostsByUserIdx(userIdx, false);
     await this.handleProcessPosts(userPosts);
 
@@ -146,6 +146,7 @@ export default class PostService {
     post.contents = contents;
     post.category = category;
     post.isTemp = isTemp;
+    post.updatedAt = null;
 
     const { idx } = await this.postRepository.save(post);
     await this.handlePushTags(postTags, post);
