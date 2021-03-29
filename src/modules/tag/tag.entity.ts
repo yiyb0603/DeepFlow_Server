@@ -13,6 +13,9 @@ export default class Tag extends BaseEntity {
   })
   name!: string;
 
+  @Column()
+  description!: string;
+
   @ManyToOne((type) => PostEntity, (post) => post.postTags, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',

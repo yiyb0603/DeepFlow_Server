@@ -7,6 +7,7 @@ import PostEntityRepository from 'modules/post/post.repository';
 import PostService from 'modules/post/post.service';
 import RecommandRepository from 'modules/recommand/recommand.repository';
 import TagRepository from 'modules/tag/tag.repository';
+import TagService from 'modules/tag/tag.service';
 import UserRepository from 'modules/user/user.repository';
 import UserService from 'modules/user/user.service';
 import ViewRepository from 'modules/view/view.repository';
@@ -27,7 +28,13 @@ import ReplyService from './reply.service';
       RecommandRepository,
     ]),
   ],
-  providers: [ReplyService, PostService, CommentService, UserService],
+  providers: [
+    ReplyService,
+    PostService,
+    CommentService,
+    UserService,
+    TagService
+  ],
   controllers: [ReplyController],
 })
 

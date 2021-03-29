@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import CommentRepository from 'modules/comment/comment.repository';
+import CommentService from 'modules/comment/comment.service';
 import LikeEntityRepository from 'modules/like/like.repository';
 import TagRepository from 'modules/tag/tag.repository';
+import TagService from 'modules/tag/tag.service';
 import UserRepository from 'modules/user/user.repository';
 import ViewRepository from 'modules/view/view.repository';
 import PostController from './post.controller';
@@ -20,7 +22,7 @@ import PostService from './post.service';
       ViewRepository,
     ]),
   ],
-  providers: [PostService],
+  providers: [PostService, TagService],
   controllers: [PostController],
 })
 

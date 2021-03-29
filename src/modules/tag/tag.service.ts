@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import axios from 'axios';
+import { NAVER_CLIENT_ID, NAVER_CLIENT_SECRET } from 'config/config.json';
+import PostEntity from 'modules/post/post.entity';
 import { ITagAndPostCount } from 'types/tag.types';
+import Tag from './tag.entity';
 import TagRepository from './tag.repository';
 
 @Injectable()
@@ -11,5 +15,35 @@ export default class TagService {
   public async getTagsAndPostCount(): Promise<ITagAndPostCount[]> {
     const tags: ITagAndPostCount[] = await this.tagRepository.getTags();
     return tags;
+  }
+
+  public async getTagsByPostIdx(postIdx: number): Promise<Tag[]> {
+    const tags: Tag[] = await this.tagRepository.getTagsByPostIdx(postIdx);
+    return tags;
+  }
+
+  public async handlePushTags(postTags: string[], post: PostEntity): Promise<void> {
+    for (const postTag of postTags) {
+      const tag: Tag = new Tag();
+      tag.name = postTag;
+      tag.post = post;
+      tag.description = await this.handleSearchTagKeyword(postTag);
+
+      await this.tagRepository.save(tag);
+    }
+  }
+
+  public async handleSearchTagKeyword(keyword: string): Promise<string> {
+    const SEARCH_URL: string = `https://openapi.naver.com/v1/search/encyc.json?query=${encodeURI(keyword.trim())}&display=1`;
+
+    const { data } = await axios.get(SEARCH_URL, {
+      headers: {
+        'X-Naver-Client-Id': NAVER_CLIENT_ID,
+        'X-Naver-Client-Secret': NAVER_CLIENT_SECRET,
+      },
+    });
+
+    const { description } = data.items[0];
+    return description.replace(/(<([^>]+)>)/ig,"");
   }
 }

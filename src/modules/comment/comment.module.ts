@@ -4,6 +4,7 @@ import LikeEntityRepository from 'modules/like/like.repository';
 import PostEntityRepository from 'modules/post/post.repository';
 import PostService from 'modules/post/post.service';
 import TagRepository from 'modules/tag/tag.repository';
+import TagService from 'modules/tag/tag.service';
 import UserRepository from 'modules/user/user.repository';
 import ViewRepository from 'modules/view/view.repository';
 import CommentController from './comment.controller';
@@ -21,7 +22,7 @@ import CommentService from './comment.service';
       ViewRepository,
     ]),
   ],
-  providers: [CommentService, PostService],
+  providers: [CommentService, PostService, TagService],
   controllers: [CommentController],
 })
 

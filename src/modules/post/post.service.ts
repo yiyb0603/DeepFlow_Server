@@ -16,6 +16,7 @@ import CommentRepository from 'modules/comment/comment.repository';
 import LikeEntity from 'modules/like/like.entity';
 import LikeEntityRepository from 'modules/like/like.repository';
 import Comment from 'modules/comment/comment.entity';
+import TagService from 'modules/tag/tag.service';
 import { PAGE_LIMIT } from 'lib/constants';
 import { IViewCount } from 'types/view.types';
 import { IPostsAndCount } from 'types/post.types';
@@ -26,7 +27,9 @@ export default class PostService {
     private readonly postRepository: PostEntityRepository,
 
     @InjectRepository(Tag)
-    private readonly tagsRepository: TagRepository,
+    private readonly tagRepository: TagRepository,
+
+    private readonly tagService: TagService,
 
     @InjectRepository(User)
     private readonly userRepository: UserRepository,
@@ -104,7 +107,7 @@ export default class PostService {
 
   public async getPost(postIdx: number, ipAddress: string): Promise<PostEntity> {
     const post: PostEntity = await this.getPostByIdx(postIdx);
-    const postTags: Tag[] = await this.tagsRepository.getTagsByPostIdx(postIdx);
+    const postTags: Tag[] = await this.tagRepository.getTagsByPostIdx(postIdx);
     post.postTags = postTags.map((tag: Tag) => tag.name);
     post.user = await this.userRepository.getUserByIdx(post.fk_user_idx);
 
@@ -153,7 +156,7 @@ export default class PostService {
     post.updatedAt = null;
 
     const { idx } = await this.postRepository.save(post);
-    await this.handlePushTags(postTags, post);
+    await this.tagService.handlePushTags(postTags, post);
 
     return idx;
   }
@@ -176,10 +179,10 @@ export default class PostService {
     post.updatedAt = new Date();
     await this.postRepository.save(post);
 
-    const existTags = await this.tagsRepository.getTagsByPostIdx(postIdx);
-    await this.tagsRepository.remove(existTags);
+    const existTags = await this.tagRepository.getTagsByPostIdx(postIdx);
+    await this.tagRepository.remove(existTags);
 
-    await this.handlePushTags(postTags, post);
+    await this.tagService.handlePushTags(postTags, post);
   }
 
   public async handleDeletePost(postIdx: number, user: User): Promise<void> {
@@ -217,7 +220,7 @@ export default class PostService {
     for (const post of posts) {
       let postTags: Tag[] = [];
       
-      const tags: Tag[] = await this.tagsRepository.getTagsByPostIdx(post.idx);
+      const tags: Tag[] = await this.tagRepository.getTagsByPostIdx(post.idx);
       postTags = postTags.concat(tags);
 
       post.postTags = postTags.map((tag: Tag) => tag.name);
@@ -238,16 +241,6 @@ export default class PostService {
         delete post.user.major;
         delete post.user.rank;
       }
-    }
-  }
-
-  private async handlePushTags(postTags: string[], post: PostEntity): Promise<void> {
-    for (const postTag of postTags) {
-      const tag: Tag = new Tag();
-      tag.name = postTag;
-      tag.post = post;
-
-      await this.tagsRepository.save(tag);
     }
   }
 }

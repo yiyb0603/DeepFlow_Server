@@ -13,8 +13,9 @@ export default class TagRepository extends Repository<Tag> {
   public getTags(): Promise<ITagAndPostCount[]> {
     return this.createQueryBuilder()
       .select('name')
+      .addSelect('description')
       .addSelect('COUNT(name)', 'count')
-      .groupBy('name')
+      .groupBy('name, description')
       .execute();
   }
 }
