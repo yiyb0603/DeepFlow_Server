@@ -2,13 +2,13 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } fro
 import User from 'modules/user/user.entity';
 import { Token } from 'lib/decorator/user.decorator';
 import { IpAddress } from 'lib/decorator/ipAddress.decorator';
-import { PostEnums } from 'lib/enum/post';
+import { PostEnums, UserPostEnums } from 'lib/enum/post';
 import AuthGuard from 'middleware/auth';
 import { PostDto } from './dto/post.dto';
 import PostEntity from './post.entity';
 import PostService from './post.service';
 
-@Controller('post')
+@Controller('posts')
 export default class PostController {
   constructor(
     private readonly postService: PostService,
@@ -50,13 +50,20 @@ export default class PostController {
 
   @Get('/user/:idx')
   public async getPostsByUserIdx(
-    @Param('idx') userIdx: number
+    @Param('idx') userIdx: number,
+    @Query('type') type: UserPostEnums,
   ) {
-    const posts: PostEntity[] = await this.postService.getPostsByUserIdx(userIdx);
+    let posts = [];
+
+    if (type === UserPostEnums.WRITED) {
+      posts = await this.postService.getPostsByUserCommented(userIdx);
+    } else {
+      posts = await this.postService.getPostsByUserIdx(userIdx);
+    }
 
     return {
       status: 200,
-      message: '유저별 글 목록을 조회하였습니다.',
+      message: '유저 글 목록을 조회하였습니다.',
       data: {
         posts,
       },

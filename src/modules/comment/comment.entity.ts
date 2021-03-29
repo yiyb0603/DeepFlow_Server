@@ -22,6 +22,9 @@ export default class Comment extends BaseEntity {
   })
   post!: PostEntity;
 
+  @Column()
+  fk_post_idx!: number;
+
   @ManyToOne((type) => User, {
     onDelete: 'SET NULL',
   })

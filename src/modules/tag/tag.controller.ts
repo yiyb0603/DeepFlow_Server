@@ -10,13 +10,13 @@ export default class TagController {
 
   @Get('/')
   public async getTags() {
-    const tagAndPosts: ITagAndPostCount[] = await this.tagService.getTagsAndPostCount();
+    const tagAndCounts: ITagAndPostCount[] = await this.tagService.getTagsAndPostCount();
 
     return {
       status: 200,
       message: '태그 목록 조회를 성공하였습니다.',
       data: {
-        tags: tagAndPosts,
+        tags: tagAndCounts,
       },
     };
   }

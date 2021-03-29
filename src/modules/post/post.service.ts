@@ -42,6 +42,10 @@ export default class PostService {
   ) {}
 
   public async getPostsByCategory(category: PostEnums, page: number): Promise<IPostsAndCount> {
+    if (!page || page <= 0) {
+      throw new HttpError(400, '검증 오류입니다.');
+    }
+
     const posts: PostEntity[] = await this.postRepository.getPostsByCategory(category, page, PAGE_LIMIT);
     const totalCount: number = await this.postRepository.getPostCountByCategory(category);
     await this.handleProcessPosts(posts);
@@ -49,7 +53,7 @@ export default class PostService {
     return {
       totalCount,
       posts,
-    }
+    };
   }
 
   public async getPostsByTagName(tagName: string, category: PostEnums, page: number): Promise<PostEntity[]> {
@@ -195,6 +199,18 @@ export default class PostService {
     }
 
     return post;
+  }
+
+  public async getPostsByUserCommented(userIdx: number): Promise<PostEntity[]> {
+    const posts: PostEntity[] = [];
+    const comments: Comment[] = await this.commentRepository.getCommentsByUserIdx(userIdx);
+
+    for (const comment of comments) {
+      const commentedPost: PostEntity = await this.getPostByIdx(comment.fk_post_idx);
+      posts.push(commentedPost);
+    }
+
+    return posts;
   }
 
   public async handleProcessPosts(posts: PostEntity[]): Promise<void> {

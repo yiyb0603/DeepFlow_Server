@@ -15,4 +15,11 @@ export default class CommentRepository extends Repository<Comment> {
       .where('idx = :commentIdx', { commentIdx })
       .getOne();
   }
+
+  public getCommentsByUserIdx(userIdx: number): Promise<Comment[]> {
+    return this.createQueryBuilder()
+      .where('fk_user_idx = :userIdx', { userIdx })
+      .distinctOn(['fk_post_idx'])
+      .getMany();
+  }
 }

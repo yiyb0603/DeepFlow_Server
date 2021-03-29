@@ -1,4 +1,5 @@
 import { EntityRepository, Repository } from "typeorm";
+import { ITagAndPostCount } from 'types/tag.types';
 import Tag from "./tag.entity";
 
 @EntityRepository(Tag)
@@ -9,7 +10,11 @@ export default class TagRepository extends Repository<Tag> {
       .getMany();
   }
 
-  public getTags(): Promise<Tag[]> {
-    return this.createQueryBuilder().getMany();
+  public getTags(): Promise<ITagAndPostCount[]> {
+    return this.createQueryBuilder()
+      .select('name')
+      .addSelect('COUNT(name)', 'count')
+      .groupBy('name')
+      .execute();
   }
 }
