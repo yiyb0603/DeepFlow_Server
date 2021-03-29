@@ -43,7 +43,12 @@ export default class TagService {
       },
     });
 
-    const { description } = data.items[0];
-    return description.replace(/(<([^>]+)>)/ig,"");
+    let description: string = '';
+
+    if (data.items.length > 0) {
+      description = data.items[0].description;
+      description = description.replace(/(<([^>]+)>)/ig, '');
+    }
+    return description;
   }
 }

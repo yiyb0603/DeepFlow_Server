@@ -56,9 +56,9 @@ export default class PostController {
     let posts = [];
 
     if (type === UserPostEnums.WRITED) {
-      posts = await this.postService.getPostsByUserCommented(userIdx);
-    } else {
       posts = await this.postService.getPostsByUserIdx(userIdx);
+    } else {
+      posts = await this.postService.getPostsByUserCommented(userIdx);
     }
 
     return {

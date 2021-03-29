@@ -213,6 +213,8 @@ export default class PostService {
       posts.push(commentedPost);
     }
 
+    await this.handleProcessPosts(posts);
+    
     return posts;
   }
 
