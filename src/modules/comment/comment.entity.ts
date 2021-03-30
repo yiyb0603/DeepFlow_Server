@@ -1,6 +1,6 @@
-import PostEntity from "modules/post/post.entity";
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import User from "modules/user/user.entity";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import PostEntity from 'modules/post/post.entity';
+import User from 'modules/user/user.entity';
 
 @Entity({
   name: 'comment',
@@ -36,13 +36,13 @@ export default class Comment extends BaseEntity {
   @Column()
   fk_user_idx!: number;
 
-  @Column({
+  @CreateDateColumn({
     name: 'created_at',
     type: 'timestamp',
   })
   createdAt!: Date;
 
-  @Column({
+  @UpdateDateColumn({
     nullable: true,
     default: null,
     name: 'updated_at',

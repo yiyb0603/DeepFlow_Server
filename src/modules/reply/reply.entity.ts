@@ -1,7 +1,7 @@
-import Comment from "modules/comment/comment.entity";
-import PostEntity from "modules/post/post.entity";
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import User from "modules/user/user.entity";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import Comment from 'modules/comment/comment.entity';
+import PostEntity from 'modules/post/post.entity';
+import User from 'modules/user/user.entity';
 
 @Entity({
   name: 'reply',

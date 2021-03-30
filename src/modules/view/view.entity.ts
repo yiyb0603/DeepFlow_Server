@@ -1,5 +1,5 @@
-import PostEntity from "modules/post/post.entity";
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import PostEntity from 'modules/post/post.entity';
 
 @Entity({
   name: 'view',

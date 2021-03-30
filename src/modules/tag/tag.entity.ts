@@ -1,5 +1,5 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import PostEntity from "modules/post/post.entity";
+import { BaseEntity, Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import PostEntity from 'modules/post/post.entity';
 
 @Entity({
   name: 'tag',
@@ -8,6 +8,7 @@ export default class Tag extends BaseEntity {
   @PrimaryGeneratedColumn()
   idx!: number;
 
+  @Index()
   @Column({
     length: 20,
   })

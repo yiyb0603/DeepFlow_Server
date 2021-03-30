@@ -1,6 +1,6 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import PostEntity from "modules/post/post.entity";
-import User from "modules/user/user.entity";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import PostEntity from 'modules/post/post.entity';
+import User from 'modules/user/user.entity';
 
 @Entity({
   name: 'like',

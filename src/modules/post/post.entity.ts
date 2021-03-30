@@ -1,5 +1,3 @@
-import { PostEnums } from 'lib/enum/post';
-import Tag from 'modules/tag/tag.entity';
 import {
   BaseEntity,
   Column,
@@ -11,6 +9,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { PostEnums } from 'lib/enum/post';
+import Tag from 'modules/tag/tag.entity';
 import User from 'modules/user/user.entity';
 
 @Entity({

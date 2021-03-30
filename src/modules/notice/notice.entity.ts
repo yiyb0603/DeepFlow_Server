@@ -1,5 +1,5 @@
-import User from "modules/user/user.entity";
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import User from 'modules/user/user.entity';
 
 @Entity({
   name: 'notice',
@@ -20,6 +20,7 @@ export default class Notice extends BaseEntity {
   contents!: string;
 
   @ManyToOne((type) => User, {
+    onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
   })
   @JoinColumn({

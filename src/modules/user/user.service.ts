@@ -42,7 +42,7 @@ export default class UserService {
     user.blog = blog;
     user.position = position;
     user.joinedAt = new Date();
-    user.isAdmin = (name === getProcessEnv('ADMIN_NAME'));
+    user.isAdmin = (githubId === getProcessEnv('ADMIN_ID'));
 
     await this.userRepository.save(user);
     const joinedUser = await this.userRepository.getUserById(githubId);

@@ -1,5 +1,5 @@
-import User from "modules/user/user.entity";
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import User from 'modules/user/user.entity';
 
 @Entity({
   name: 'recommand',

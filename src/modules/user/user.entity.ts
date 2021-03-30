@@ -1,4 +1,4 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { MajorEnums } from 'lib/enum/majors';
 import { RankEnums } from 'lib/enum/ranks';
 
@@ -10,8 +10,10 @@ export default class User extends BaseEntity {
   idx!: number;
 
   // 사용자 깃허브 ID
+  @Index()
   @Column({
     name: 'github_id',
+    unique: true,
   })
   githubId!: string;
 
@@ -19,7 +21,10 @@ export default class User extends BaseEntity {
   @Column()
   name!: string;
 
-  @Column()
+  @Index()
+  @Column({
+    unique: true,
+  })
   email!: string;
 
   // 사용자 기수
