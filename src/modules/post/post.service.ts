@@ -19,7 +19,7 @@ import Comment from 'modules/comment/comment.entity';
 import TagService from 'modules/tag/tag.service';
 import { PAGE_LIMIT } from 'lib/constants';
 import { IViewCount } from 'types/view.types';
-import { IPostsAndCount } from 'types/post.types';
+import { IPostsResponse } from 'types/post.types';
 
 @Injectable()
 export default class PostService {
@@ -44,17 +44,19 @@ export default class PostService {
     private readonly likeRepository: LikeEntityRepository,
   ) {}
 
-  public async getPostsByCategory(category: PostEnums, page: number): Promise<IPostsAndCount> {
+  public async getPostsByCategory(category: PostEnums, page: number): Promise<IPostsResponse> {
     if (!page || page <= 0) {
       throw new HttpError(400, '검증 오류입니다.');
     }
 
     const posts: PostEntity[] = await this.postRepository.getPostsByCategory(category, page, PAGE_LIMIT);
     const totalCount: number = await this.postRepository.getPostCountByCategory(category);
+    const totalPage: number = totalCount / posts.length;
     await this.handleProcessPosts(posts);
 
     return {
       totalCount,
+      totalPage,
       posts,
     };
   }

@@ -19,13 +19,14 @@ export default class PostController {
     @Query('category') category: PostEnums,
     @Query('page') page: number,
   ) {
-    const { posts, totalCount } = await this.postService.getPostsByCategory(category, page);
+    const { posts, totalCount, totalPage } = await this.postService.getPostsByCategory(category, page);
     
     return {
       status: 200,
       message: '글 목록을 조회하였습니다.',
       data: {
         totalCount,
+        totalPage,
         posts,
       },
     };
