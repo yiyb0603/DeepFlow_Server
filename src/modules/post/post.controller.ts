@@ -35,10 +35,9 @@ export default class PostController {
   @Get('/tag')
   public async getPostsByTagName(
     @Query('category') category: PostEnums,
-    @Query('page') page: number,
     @Query('tagName') tagName: string,
   ) {
-    const posts: PostEntity[] = await this.postService.getPostsByTagName(tagName, category, page);
+    const posts: PostEntity[] = await this.postService.getPostsByTagName(tagName, category);
 
     return {
       status: 200,

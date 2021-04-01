@@ -10,7 +10,15 @@ export default class PostEntityRepository extends Repository<PostEntity> {
       .getCount();
   }
 
-  public getPostsByCategory(category: PostEnums, page: number, limit: number): Promise<PostEntity[]> {
+  public getPostsByCategory(category: PostEnums): Promise<PostEntity[]> {
+    return this.createQueryBuilder()
+      .where('category = :category', { category: category.toString() })
+      .andWhere('is_temp = false')
+      .orderBy('created_at', 'DESC')
+      .getMany();
+  }
+
+  public getPostsByPage(category: PostEnums, page: number, limit: number): Promise<PostEntity[]> {
     return this.createQueryBuilder()
       .where('category = :category', { category: category.toString() })
       .andWhere('is_temp = false')
