@@ -1,12 +1,12 @@
-import { Injectable } from "@nestjs/common";
-import CommentService from "modules/comment/comment.service";
-import PostService from "modules/post/post.service";
-import User from "modules/user/user.entity";
-import UserService from "modules/user/user.service";
-import HttpError from "exception/HttpError";
-import { CreateReplyDto, ModifyReplyDto } from "./dto/reply.dto";
-import Reply from "./reply.entity";
-import ReplyRepository from "./reply.repository";
+import { Injectable } from '@nestjs/common';
+import CommentService from 'modules/comment/comment.service';
+import PostService from 'modules/post/post.service';
+import User from 'modules/user/user.entity';
+import UserService from 'modules/user/user.service';
+import HttpError from 'exception/HttpError';
+import { ReplyDto } from './dto/reply.dto';
+import Reply from './reply.entity';
+import ReplyRepository from './reply.repository';
 
 @Injectable()
 export default class ReplyService {
@@ -20,13 +20,7 @@ export default class ReplyService {
     private readonly userService: UserService,
   ) {}
 
-  public async getReplies(postIdx: number): Promise<Reply[]> {
-    await this.postService.getPostByIdx(postIdx);
-    const replies: Reply[] = await this.replyRepository.getRepliesByPostIdx(postIdx);
-    return replies;
-  }
-
-  public async handleCreateReply(createReplyDto: CreateReplyDto, user: User): Promise<void> {
+  public async handleCreateReply(createReplyDto: ReplyDto, user: User): Promise<void> {
     const { contents, commentIdx, postIdx } = createReplyDto;
     
     const reply: Reply = new Reply();
@@ -40,7 +34,7 @@ export default class ReplyService {
     await this.replyRepository.save(reply);
   }
 
-  public async handleModifyReply(replyIdx: number, modifyReplyDto: ModifyReplyDto, user: User): Promise<void> {
+  public async handleModifyReply(replyIdx: number, modifyReplyDto: ReplyDto, user: User): Promise<void> {
     const { contents } = modifyReplyDto;
     const reply: Reply = await this.getExistReply(replyIdx);
 

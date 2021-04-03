@@ -1,6 +1,7 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import PostEntity from 'modules/post/post.entity';
 import User from 'modules/user/user.entity';
+import Reply from 'modules/reply/reply.entity';
 
 @Entity({
   name: 'comment',
@@ -48,4 +49,10 @@ export default class Comment extends BaseEntity {
     name: 'updated_at',
   })
   updatedAt: Date;
+
+  @OneToMany((type) => Reply, (reply) => reply.comment, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  replies: Reply[];
 }

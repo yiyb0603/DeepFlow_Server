@@ -1,6 +1,6 @@
 import { IsInt, IsString } from "class-validator";
 
-export class CreateReplyDto {
+export class ReplyDto {
   @IsString()
   contents: string;
   
@@ -9,9 +9,4 @@ export class CreateReplyDto {
 
   @IsInt()
   postIdx: number;
-}
-
-export class ModifyReplyDto {
-  @IsString()
-  contents: string;
 }

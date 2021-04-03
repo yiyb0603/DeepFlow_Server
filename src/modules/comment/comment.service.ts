@@ -8,6 +8,8 @@ import CommentRepository from "./comment.repository";
 import { CommentDto } from "./dto/comment.dto";
 import PostService from "modules/post/post.service";
 import PostEntity from "modules/post/post.entity";
+import Reply from 'modules/reply/reply.entity';
+import ReplyRepository from 'modules/reply/reply.repository';
 
 @Injectable()
 export default class CommentService {
@@ -15,6 +17,9 @@ export default class CommentService {
     private readonly commentRepository: CommentRepository,
 
     private readonly postService: PostService,
+
+    @InjectRepository(Reply)
+    private readonly replyRepository: ReplyRepository,
 
     @InjectRepository(User)
     private readonly userRepository: UserRepository,
@@ -24,7 +29,16 @@ export default class CommentService {
     const comments: Comment[] = await this.commentRepository.getCommentsByPostIdx(postIdx);
 
     for (const comment of comments) {
+      let commentReplies: Reply[] = [];
       comment.user = await this.userRepository.getUserByIdx(comment.fk_user_idx);
+      
+      const replies: Reply[] = await this.replyRepository.getRepliesByCommentIdx(comment.idx);
+      for (let i = 0; i < replies.length; i++) {
+        replies[i].user = await this.userRepository.getUserByIdx(replies[i].fk_user_idx);
+      }
+
+      commentReplies = commentReplies.concat(replies);
+      comment.replies = commentReplies;
 
       delete comment.fk_user_idx;
     }

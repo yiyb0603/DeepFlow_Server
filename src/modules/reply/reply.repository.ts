@@ -1,5 +1,5 @@
-import { EntityRepository, Repository } from "typeorm";
-import Reply from "./reply.entity";
+import { EntityRepository, Repository } from 'typeorm';
+import Reply from './reply.entity';
 
 @EntityRepository(Reply)
 export default class ReplyRepository extends Repository<Reply> {
@@ -7,6 +7,12 @@ export default class ReplyRepository extends Repository<Reply> {
     return this.createQueryBuilder()
       .where('fk_post_idx = :postIdx', { postIdx })
       .orderBy('created_at', 'DESC')
+      .getMany();
+  }
+
+  public getRepliesByCommentIdx(commentIdx: number): Promise<Reply[]> {
+    return this.createQueryBuilder()
+      .where('fk_comment_idx = :commentIdx', { commentIdx })
       .getMany();
   }
 

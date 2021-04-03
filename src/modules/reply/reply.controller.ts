@@ -1,10 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
-import User from "modules/user/user.entity";
-import { Token } from "lib/decorator/user.decorator";
-import AuthGuard from "middleware/auth";
-import { CreateReplyDto, ModifyReplyDto } from "./dto/reply.dto";
-import Reply from "./reply.entity";
-import ReplyService from "./reply.service";
+import { Body, Controller, Delete, Param, Post, Put, UseGuards } from '@nestjs/common';
+import User from 'modules/user/user.entity';
+import { Token } from 'lib/decorator/user.decorator';
+import AuthGuard from 'middleware/auth';
+import { ReplyDto } from './dto/reply.dto';
+import ReplyService from './reply.service';
 
 @Controller('reply')
 export default class ReplyController {
@@ -12,26 +11,11 @@ export default class ReplyController {
     private readonly replyService: ReplyService,
   ) {}
 
-  @Get('/')
-  public async getReplies(
-    @Query('postIdx') postIdx: number
-  ) {
-    const replies: Reply[] = await this.replyService.getReplies(postIdx);
-
-    return {
-      status: 200,
-      message: '답글 목록을 조회하였습니다.',
-      data: {
-        replies,
-      },
-    };
-  }
-
   @Post('/')
   @UseGuards(new AuthGuard())
   public async handleCreateReply(
     @Token() user: User,
-    @Body() createReplyDto: CreateReplyDto,
+    @Body() createReplyDto: ReplyDto,
   ) {
     await this.replyService.handleCreateReply(createReplyDto, user);
     
@@ -46,7 +30,7 @@ export default class ReplyController {
   public async handleModifyReply(
     @Token() user: User,
     @Param('idx') replyIdx: number,
-    @Body() modifyReplyDto: ModifyReplyDto,
+    @Body() modifyReplyDto: ReplyDto,
   ) {
     await this.replyService.handleModifyReply(replyIdx, modifyReplyDto, user);
 

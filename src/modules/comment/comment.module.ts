@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import LikeEntityRepository from 'modules/like/like.repository';
 import PostEntityRepository from 'modules/post/post.repository';
 import PostService from 'modules/post/post.service';
+import ReplyRepository from 'modules/reply/reply.repository';
 import TagRepository from 'modules/tag/tag.repository';
 import TagService from 'modules/tag/tag.service';
 import UserRepository from 'modules/user/user.repository';
@@ -20,6 +21,7 @@ import CommentService from './comment.service';
       UserRepository,
       LikeEntityRepository,
       ViewRepository,
+      ReplyRepository,
     ]),
   ],
   providers: [CommentService, PostService, TagService],
