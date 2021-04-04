@@ -22,6 +22,7 @@ import { RecommandModule } from 'modules/recommand/recommand.module';
 import { UploadModule } from 'modules/upload/upload.module';
 import Notice from 'modules/notice/notice.entity';
 import { NoticeModule } from 'modules/notice/notice.module';
+import { TokenModule } from 'modules/token/token.module';
 
 const loadEntities: TypeOrmModuleOptions = {
   ...ormConfig,
@@ -52,6 +53,7 @@ const loadEntities: TypeOrmModuleOptions = {
     NoticeModule,
     TagModule,
     UploadModule,
+    TokenModule,
   ],
   controllers: [],
   providers: [{

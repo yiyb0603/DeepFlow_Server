@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext } from "@nestjs/common";
 import HttpError from "exception/HttpError";
 import { verifyToken } from "lib/token";
+import User from 'modules/user/user.entity';
 
 export default class AuthGuard implements CanActivate {
   public canActivate(context: ExecutionContext): boolean {
@@ -12,13 +13,13 @@ export default class AuthGuard implements CanActivate {
       throw new HttpError(401, '토큰이 전송되지 않았습니다.');
     }
     
-    request.user = this.validateToken(access_token);
+    request.user = AuthGuard.validateToken(access_token);
     return true;
   }
 
-  public validateToken(token: string): string {
+  public static validateToken(token: string): User {
     try {
-      const verify: string = verifyToken(token) as string;
+      const verify: User = verifyToken(token) as User;
       return verify;
     } catch (error) {
       switch (error.message) {
