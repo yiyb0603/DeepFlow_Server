@@ -1,5 +1,5 @@
 import { IsEmail, IsEnum, IsInt, IsString, Max, MaxLength } from 'class-validator';
-import { MajorEnums } from 'lib/enum/majors';
+import { EMajor } from 'lib/enum/majors';
 import { getGenerations } from 'lib/getGenerations';
 
 export class UserDto {
@@ -35,8 +35,8 @@ export class UserDto {
   @MaxLength(50)
   readonly position: string;
 
-  @IsEnum(MajorEnums)
-  readonly major: MajorEnums;
+  @IsEnum(EMajor)
+  readonly major: EMajor;
 }
 
 export class GithubCodeDto {

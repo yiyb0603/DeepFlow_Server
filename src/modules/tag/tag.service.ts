@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { NAVER_CLIENT_ID, NAVER_CLIENT_SECRET } from 'config/config.json';
-import { TagSortEnums } from 'lib/enum/tag';
+import { ETagSort } from 'lib/enum/tag';
 import PostEntity from 'modules/post/post.entity';
 import { ITagAndPostCount } from 'types/tag.types';
 import Tag from './tag.entity';
@@ -13,7 +13,7 @@ export default class TagService {
     private readonly tagRepository: TagRepository,
   ) {}
   
-  public async getTagsAndPostCount(sort: TagSortEnums): Promise<ITagAndPostCount[]> {
+  public async getTagsAndPostCount(sort: ETagSort): Promise<ITagAndPostCount[]> {
     const tags: ITagAndPostCount[] = await this.tagRepository.getTags(sort);
     return tags;
   }

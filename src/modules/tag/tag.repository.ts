@@ -1,5 +1,5 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { TagSortEnums } from 'lib/enum/tag';
+import { ETagSort } from 'lib/enum/tag';
 import { ITagAndPostCount } from 'types/tag.types';
 import Tag from './tag.entity';
 
@@ -11,8 +11,8 @@ export default class TagRepository extends Repository<Tag> {
       .getMany();
   }
 
-  public getTags(sort: TagSortEnums): Promise<ITagAndPostCount[]> {
-    const column: string = (sort === TagSortEnums.POPULAR ? 'count' : 'name');
+  public getTags(sort: ETagSort): Promise<ITagAndPostCount[]> {
+    const column: string = (sort === ETagSort.POPULAR ? 'count' : 'name');
     const order: 'DESC' | 'ASC' = (column === 'count') ? 'DESC' : 'ASC';
 
     return this.createQueryBuilder()

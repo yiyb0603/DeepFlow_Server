@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { TagSortEnums } from 'lib/enum/tag';
+import { ETagSort } from 'lib/enum/tag';
 import { ITagAndPostCount } from 'types/tag.types';
 import TagService from './tag.service';
 
@@ -11,7 +11,7 @@ export default class TagController {
 
   @Get('/')
   public async getTags(
-    @Query('sort') sort: TagSortEnums,
+    @Query('sort') sort: ETagSort,
   ) {
     const tagAndCounts: ITagAndPostCount[] = await this.tagService.getTagsAndPostCount(sort);
 

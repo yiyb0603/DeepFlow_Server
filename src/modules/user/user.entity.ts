@@ -1,6 +1,6 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
-import { MajorEnums } from 'lib/enum/majors';
-import { RankEnums } from 'lib/enum/ranks';
+import { EMajor } from 'lib/enum/majors';
+import { ERank } from 'lib/enum/ranks';
 
 @Entity({
   name: 'user',
@@ -46,9 +46,9 @@ export default class User extends BaseEntity {
   // 사용자 전공
   @Column({
     type: 'enum',
-    enum: MajorEnums,
+    enum: EMajor,
   })
-  major!: MajorEnums;
+  major!: EMajor;
 
   // 사용자 거주지
   @Column({
@@ -75,11 +75,11 @@ export default class User extends BaseEntity {
   // 사용자 등급
   @Column({
     nullable: true,
-    default: RankEnums.BRONZE,
+    default: ERank.BRONZE,
     type: 'enum',
-    enum: RankEnums,
+    enum: ERank,
   })
-  rank!: RankEnums;
+  rank!: ERank;
 
   // 사용자 가입일
   @CreateDateColumn({

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import HttpError from 'exception/HttpError';
-import { PostEnums } from 'lib/enum/post';
+import { EPost } from 'lib/enum/post';
 import Tag from 'modules/tag/tag.entity';
 import TagRepository from 'modules/tag/tag.repository';
 import User from 'modules/user/user.entity';
@@ -44,7 +44,7 @@ export default class PostService {
     private readonly likeRepository: LikeEntityRepository,
   ) {}
 
-  public async getPostsByCategory(category: PostEnums, page: number): Promise<IPostsResponse> {
+  public async getPostsByCategory(category: EPost, page: number): Promise<IPostsResponse> {
     if (!page || page <= 0) {
       throw new HttpError(400, '검증 오류입니다.');
     }
@@ -52,6 +52,7 @@ export default class PostService {
     const posts: PostEntity[] = await this.postRepository.getPostsByPage(category, page, PAGE_LIMIT);
     const totalCount: number = await this.postRepository.getPostCountByCategory(category);
     const totalPage: number = totalCount / posts.length;
+    
     await this.handleProcessPosts(posts);
 
     return {
@@ -61,7 +62,7 @@ export default class PostService {
     };
   }
 
-  public async getPostsByTagName(tagName: string, category: PostEnums): Promise<PostEntity[]> {
+  public async getPostsByTagName(tagName: string, category: EPost): Promise<PostEntity[]> {
     let posts: PostEntity[] = await this.postRepository.getPostsByCategory(category);
 
     await this.handleProcessPosts(posts);
@@ -126,7 +127,7 @@ export default class PostService {
     return post;
   }
 
-  public async handleSearchPost(keyword: string, category: PostEnums): Promise<PostEntity[]> {
+  public async handleSearchPost(keyword: string, category: EPost): Promise<PostEntity[]> {
     const searchPosts: PostEntity[] = await this.postRepository.getPostsByKeyword(keyword, category);
     await this.handleProcessPosts(searchPosts);
 

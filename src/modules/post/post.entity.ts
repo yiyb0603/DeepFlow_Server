@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { PostEnums } from 'lib/enum/post';
+import { EPost } from 'lib/enum/post';
 import Tag from 'modules/tag/tag.entity';
 import User from 'modules/user/user.entity';
 
@@ -22,9 +22,9 @@ export default class PostEntity extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: PostEnums,
+    enum: EPost,
   })
-  category!: PostEnums;
+  category!: EPost;
 
   @Column({
     length: 100,

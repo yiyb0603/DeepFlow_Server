@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } fro
 import User from 'modules/user/user.entity';
 import { Token } from 'lib/decorator/user.decorator';
 import { IpAddress } from 'lib/decorator/ipAddress.decorator';
-import { PostEnums, UserPostEnums } from 'lib/enum/post';
+import { EPost, EUserPost } from 'lib/enum/post';
 import AuthGuard from 'middleware/auth';
 import { PostDto } from './dto/post.dto';
 import PostEntity from './post.entity';
@@ -16,7 +16,7 @@ export default class PostController {
 
   @Get('/')
   public async getPostsByCategory(
-    @Query('category') category: PostEnums,
+    @Query('category') category: EPost,
     @Query('page') page: number,
   ) {
     const { posts, totalCount, totalPage } = await this.postService.getPostsByCategory(category, page);
@@ -34,7 +34,7 @@ export default class PostController {
 
   @Get('/tag')
   public async getPostsByTagName(
-    @Query('category') category: PostEnums,
+    @Query('category') category: EPost,
     @Query('tagName') tagName: string,
   ) {
     const posts: PostEntity[] = await this.postService.getPostsByTagName(tagName, category);
@@ -51,11 +51,11 @@ export default class PostController {
   @Get('/user/:idx')
   public async getPostsByUserIdx(
     @Param('idx') userIdx: number,
-    @Query('type') type: UserPostEnums,
+    @Query('type') type: EUserPost,
   ) {
     let posts = [];
 
-    if (type === UserPostEnums.WRITED) {
+    if (type === EUserPost.WRITED) {
       posts = await this.postService.getPostsByUserIdx(userIdx);
     } else {
       posts = await this.postService.getPostsByUserCommented(userIdx);
@@ -73,7 +73,7 @@ export default class PostController {
   @Get('/search')
   public async handleSearchPost(
     @Query('keyword') keyword: string,
-    @Query('category') category: PostEnums,
+    @Query('category') category: EPost,
   ) {
     const searchPosts: PostEntity[] = await this.postService.handleSearchPost(keyword, category);
     

@@ -1,16 +1,17 @@
 import { EntityRepository, Repository } from "typeorm";
 import PostEntity from "./post.entity";
-import { PostEnums } from "lib/enum/post";
+import { EPost } from "lib/enum/post";
 
 @EntityRepository(PostEntity)
 export default class PostEntityRepository extends Repository<PostEntity> {
-  public getPostCountByCategory(category: PostEnums): Promise<number> {
+  public getPostCountByCategory(category: EPost): Promise<number> {
     return this.createQueryBuilder()
       .where('category = :category', { category: category.toString() })
+      .andWhere('is_temp = false')
       .getCount();
   }
 
-  public getPostsByCategory(category: PostEnums): Promise<PostEntity[]> {
+  public getPostsByCategory(category: EPost): Promise<PostEntity[]> {
     return this.createQueryBuilder()
       .where('category = :category', { category: category.toString() })
       .andWhere('is_temp = false')
@@ -18,7 +19,7 @@ export default class PostEntityRepository extends Repository<PostEntity> {
       .getMany();
   }
 
-  public getPostsByPage(category: PostEnums, page: number, limit: number): Promise<PostEntity[]> {
+  public getPostsByPage(category: EPost, page: number, limit: number): Promise<PostEntity[]> {
     return this.createQueryBuilder()
       .where('category = :category', { category: category.toString() })
       .andWhere('is_temp = false')
@@ -51,7 +52,7 @@ export default class PostEntityRepository extends Repository<PostEntity> {
       .getMany();
   }
 
-  public getPostsByKeyword(keyword: string, category: PostEnums): Promise<PostEntity[]> {
+  public getPostsByKeyword(keyword: string, category: EPost): Promise<PostEntity[]> {
     return this.createQueryBuilder()
       .where('title LIKE :keyword', { keyword: `%${keyword}%` })
       .andWhere('category = :category', { category: category.toString() })

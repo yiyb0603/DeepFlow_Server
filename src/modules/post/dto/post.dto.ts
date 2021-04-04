@@ -1,9 +1,9 @@
 import { ArrayMaxSize, IsArray, IsBoolean, IsEnum, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator';
-import { PostEnums } from 'lib/enum/post';
+import { EPost } from 'lib/enum/post';
 
 export class PostDto {
-  @IsEnum(PostEnums)
-  readonly category: PostEnums;
+  @IsEnum(EPost)
+  readonly category: EPost;
 
   @IsString()
   @MaxLength(100)

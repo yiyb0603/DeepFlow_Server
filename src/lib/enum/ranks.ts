@@ -1,4 +1,4 @@
-export enum RankEnums {
+export enum ERank {
   BRONZE = 0,
   SILVER = 1,
   GOLD = 2,

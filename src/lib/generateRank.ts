@@ -1,28 +1,28 @@
-import { RankEnums } from "./enum/ranks"
+import { ERank } from "./enum/ranks"
 
 export default (recommandCount: number) => {
   const divideCount: number = Math.floor(recommandCount / 10);
 
   switch (divideCount) {
     case 0:
-      return RankEnums.BRONZE;
+      return ERank.BRONZE;
 
     case 1:
-      return RankEnums.SILVER;
+      return ERank.SILVER;
 
     case 2:
-      return RankEnums.GOLD;
+      return ERank.GOLD;
 
     case 3:
-      return RankEnums.PLATINUM;
+      return ERank.PLATINUM;
 
     case 4:
-      return RankEnums.DIAMOND;
+      return ERank.DIAMOND;
 
     case 5:
-      return RankEnums.MASTER;
+      return ERank.MASTER;
 
     default:
-      return RankEnums.CHALLENGER;
+      return ERank.CHALLENGER;
   }
 }
