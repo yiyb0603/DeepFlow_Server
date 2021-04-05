@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { NAVER_CLIENT_ID, NAVER_CLIENT_SECRET } from 'config/config.json';
+import HttpError from 'exception/HttpError';
 import { ETagSort } from 'lib/enum/tag';
 import PostEntity from 'modules/post/post.entity';
 import { ITagAndPostCount } from 'types/tag.types';
@@ -21,6 +22,16 @@ export default class TagService {
   public async getTagsByPostIdx(postIdx: number): Promise<Tag[]> {
     const tags: Tag[] = await this.tagRepository.getTagsByPostIdx(postIdx);
     return tags;
+  }
+
+  public async getTagByTagName(tagName: string): Promise<Tag> {
+    const tag: Tag = await this.tagRepository.getTagByTagName(tagName);
+
+    if (tag === undefined) {
+      throw new HttpError(404, '존재하지 않는 태그입니다.');
+    }
+
+    return tag;
   }
 
   public async handlePushTags(postTags: string[], post: PostEntity): Promise<void> {

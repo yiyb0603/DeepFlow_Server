@@ -11,6 +11,12 @@ export default class TagRepository extends Repository<Tag> {
       .getMany();
   }
 
+  public getTagByTagName(tagName: string): Promise<Tag> {
+    return this.createQueryBuilder()
+      .where('name = :tagName', { tagName })
+      .getOne();
+  }
+
   public getTags(sort: ETagSort): Promise<ITagAndPostCount[]> {
     const column: string = (sort === ETagSort.POPULAR ? 'count' : 'name');
     const order: 'DESC' | 'ASC' = (column === 'count') ? 'DESC' : 'ASC';
