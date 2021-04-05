@@ -42,7 +42,7 @@ export default class LikeService {
 
     const like: LikeEntity = new LikeEntity();
     like.user = user;
-    like.post = await this.postService.getPostByIdx(postIdx);
+    like.post = existPost;
     like.pressedAt = new Date();
 
     await this.likeRepository.save(like);

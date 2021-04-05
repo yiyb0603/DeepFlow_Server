@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import CommentRepository from 'modules/comment/comment.repository';
 import CommentService from 'modules/comment/comment.service';
+import CommentEmojiRepository from 'modules/commentEmoji/commentEmoji.repository';
 import LikeEntityRepository from 'modules/like/like.repository';
 import PostEntityRepository from 'modules/post/post.repository';
 import PostService from 'modules/post/post.service';
@@ -26,6 +27,7 @@ import ReplyService from './reply.service';
       CommentRepository,
       ViewRepository,
       RecommandRepository,
+      CommentEmojiRepository,
     ]),
   ],
   providers: [

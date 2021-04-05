@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import CommentEmojiRepository from 'modules/commentEmoji/commentEmoji.repository';
+import CommentRepository from 'modules/comment/comment.repository';
+import CommentService from 'modules/comment/comment.service';
 import LikeEntityRepository from 'modules/like/like.repository';
 import PostEntityRepository from 'modules/post/post.repository';
 import PostService from 'modules/post/post.service';
@@ -9,25 +10,31 @@ import TagRepository from 'modules/tag/tag.repository';
 import TagService from 'modules/tag/tag.service';
 import UserRepository from 'modules/user/user.repository';
 import ViewRepository from 'modules/view/view.repository';
-import CommentController from './comment.controller';
-import CommentRepository from './comment.repository';
-import CommentService from './comment.service';
+import CommentEmojiController from './commentEmoji.controller';
+import CommentEmojiRepository from './commentEmoji.repository';
+import CommentEmojiService from './commentEmoji.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
+      CommentEmojiRepository,
+      CommentRepository,
+      ReplyRepository,
+      UserRepository,
       PostEntityRepository,
       TagRepository,
-      CommentRepository,
-      UserRepository,
       LikeEntityRepository,
       ViewRepository,
-      ReplyRepository,
-      CommentEmojiRepository,
     ]),
   ],
-  providers: [CommentService, PostService, TagService],
-  controllers: [CommentController],
+  providers: [
+    CommentEmojiService,
+    CommentService,
+    PostService,
+    TagService,
+  ],
+  controllers: [CommentEmojiController],
 })
-
-export class CommentModule {}
+export class CommentEmojiModule {
+  
+}

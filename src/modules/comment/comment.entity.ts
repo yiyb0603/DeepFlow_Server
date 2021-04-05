@@ -2,6 +2,7 @@ import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, On
 import PostEntity from 'modules/post/post.entity';
 import User from 'modules/user/user.entity';
 import Reply from 'modules/reply/reply.entity';
+import CommentEmoji from 'modules/commentEmoji/commentEmoji.entity';
 
 @Entity({
   name: 'comment',
@@ -49,6 +50,11 @@ export default class Comment extends BaseEntity {
     name: 'updated_at',
   })
   updatedAt: Date;
+
+  @OneToMany((type) => CommentEmoji, (commentEmoji) => commentEmoji.comment, {
+    onDelete: 'CASCADE',
+  })
+  emojies: CommentEmoji[];
 
   @OneToMany((type) => Reply, (reply) => reply.comment, {
     onDelete: 'CASCADE',

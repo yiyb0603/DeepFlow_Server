@@ -23,6 +23,8 @@ import { UploadModule } from 'modules/upload/upload.module';
 import Notice from 'modules/notice/notice.entity';
 import { NoticeModule } from 'modules/notice/notice.module';
 import { TokenModule } from 'modules/token/token.module';
+import CommentEmoji from 'modules/commentEmoji/commentEmoji.entity';
+import { CommentEmojiModule } from 'modules/commentEmoji/commentEmoji.module';
 
 const loadEntities: TypeOrmModuleOptions = {
   ...ormConfig,
@@ -30,6 +32,7 @@ const loadEntities: TypeOrmModuleOptions = {
     User,
     PostEntity,
     Comment,
+    CommentEmoji,
     Reply,
     Tags,
     LikeEntity,
@@ -46,6 +49,7 @@ const loadEntities: TypeOrmModuleOptions = {
     PostModule,
     TagModule,
     CommentModule,
+    CommentEmojiModule,
     ReplyModule,
     LikeModule,
     ViewModule,
