@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/comm
 import { Token } from 'lib/decorator/user.decorator';
 import AuthGuard from 'middleware/auth';
 import { IGithubUser } from 'types/user.types';
-import { GithubCodeDto, UserDto } from './dto/user.dto';
+import { GithubCodeDto, ModifyUserDto, UserDto } from './dto/user.dto';
 import User from './user.entity';
 import UserService from './user.service';
 
@@ -77,8 +77,8 @@ export default class UserController {
 
   @Put('/')
   @UseGuards(new AuthGuard())
-  public async modifyUserInfo(@Token() user: User, @Body() userDto: UserDto) {
-    await this.userService.modifyUserInfo(user.idx, userDto);
+  public async modifyUserInfo(@Token() user: User, @Body() modifyUserDto: ModifyUserDto) {
+    await this.userService.modifyUserInfo(user.idx, modifyUserDto);
 
     return {
       status: 200,
