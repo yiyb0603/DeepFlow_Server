@@ -111,7 +111,7 @@ export default class UserService {
   public async modifyUserInfo(userIdx: number, modifyUserDto: ModifyUserDto): Promise<void> {
     const user: User = await this.getUserInfoByIdx(userIdx);
 
-    const { avatar, name, email, location, description, position, blog } = modifyUserDto;
+    const { avatar, name, email, location, description, position, blog, generation, major } = modifyUserDto;
     user.avatar = avatar || user.avatar;
     user.name = name || user.name;
     user.email = email || user.email;
@@ -119,6 +119,8 @@ export default class UserService {
     user.description = description || user.description;
     user.position = position || user.position;
     user.blog = blog || user.blog;
+    user.generation = generation;
+    user.major = major;
 
     await this.userRepository.save(user);
   }

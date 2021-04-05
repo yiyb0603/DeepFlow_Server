@@ -1,4 +1,5 @@
-import { IsEmail, IsEnum, IsInt, IsOptional, IsString, Max, MaxLength } from 'class-validator';
+import { IsEmail, IsEnum, IsInt, IsString, Max, MaxLength } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
 import { EMajor } from 'lib/enum/majors';
 import { getGenerations } from 'lib/getGenerations';
 
@@ -44,32 +45,4 @@ export class GithubCodeDto {
   readonly code: string;
 }
 
-export class ModifyUserDto {
-  @IsOptional()
-  @IsString()
-  readonly name: string;
-
-  @IsOptional()
-  @IsString()
-  readonly avatar: string;
-
-  @IsOptional()
-  @IsEmail()
-  readonly email: string;
-
-  @IsOptional()
-  @IsString()
-  readonly blog: string;
-
-  @IsOptional()
-  @IsString()
-  readonly position: string;
-
-  @IsOptional()
-  @IsString()
-  readonly description: string;
-
-  @IsOptional()
-  @IsString()
-  readonly location: string;
-}
+export class ModifyUserDto extends PartialType(UserDto) {}
