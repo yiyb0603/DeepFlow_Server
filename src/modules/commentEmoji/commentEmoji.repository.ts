@@ -18,6 +18,14 @@ export default class CommentEmojiRepository extends Repository<CommentEmoji> {
       .getOne();
   }
 
+  public async getIsPressedEmoji(emoji: string, commentIdx: number, userIdx: number): Promise<CommentEmoji> {
+    return this.createQueryBuilder()
+      .where('emoji = :emoji', { emoji })
+      .andWhere('fk_comment_idx = :commentIdx', { commentIdx })
+      .andWhere('fk_user_idx = :userIdx', { userIdx })
+      .getOne();
+  }
+
   public getEmojiesByEmoji(commentIdx: number, emoji: string): Promise<CommentEmoji[]> {
     return this.createQueryBuilder()
       .where('fk_comment_idx = :commentIdx', { commentIdx })

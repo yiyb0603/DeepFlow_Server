@@ -20,6 +20,12 @@ export default class CommentEmojiService {
     const { emoji, commentIdx } = commentEmojiDto;
 
     const existComment: Comment = await this.commentService.getExistComment(commentIdx);
+    const existEmoji: CommentEmoji = await this.commentEmojiRepository.getIsPressedEmoji(emoji, commentIdx, user.idx);
+
+    if (existEmoji !== undefined) {
+      throw new HttpError(409, '이미 공감하였습니다.');
+    }
+
     if (existComment !== undefined) {
       const commentEmoji: CommentEmoji = new CommentEmoji();
       
