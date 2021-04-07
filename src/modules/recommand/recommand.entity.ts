@@ -8,6 +8,11 @@ export default class Recommand extends BaseEntity {
   @PrimaryGeneratedColumn()
   idx!: number;
 
+  @Column({
+    length: 100,
+  })
+  reason!: string;
+
   @ManyToOne((type) => User, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

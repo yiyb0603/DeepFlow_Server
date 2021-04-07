@@ -13,9 +13,20 @@ export default class RecommandService {
 
     private readonly userService: UserService,
   ) {}
+
+  public async getUserRecommandsByUserIdx(userIdx: number): Promise<Recommand[]> {
+    const recommands: Recommand[] = await this.recommandRepository.getRecommandsByUserIdx(userIdx);
+
+    for (const recommand of recommands) {
+      recommand.user = await this.userService.getUserInfoByIdx(recommand.fk_pressed_user_idx);
+    }
+
+    return recommands;
+  }
   
   public async handleAddRecommand(recommandDto: RecommandDto, user: User): Promise<void> {
-    const targetUser: User = await this.userService.getUserInfoByIdx(recommandDto.userIdx);
+    const { userIdx, reason } = recommandDto;
+    const targetUser: User = await this.userService.getUserInfoByIdx(userIdx);
     const existRecommand: Recommand = await this.recommandRepository.getRecommandByPressedUserIdx(targetUser.idx, user.idx);
 
     if (existRecommand !== undefined) {
@@ -29,6 +40,7 @@ export default class RecommandService {
     const pressedUser: User = await this.userService.getUserInfoByIdx(user.idx);
 
     const recommand: Recommand = new Recommand();
+    recommand.reason = reason;
     recommand.user = targetUser;
     recommand.pressedUser = pressedUser;
     recommand.recommandAt = new Date();

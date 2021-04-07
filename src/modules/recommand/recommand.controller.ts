@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from "@nestjs/common";
 import { Token } from "lib/decorator/user.decorator";
 import AuthGuard from "middleware/auth";
 import User from "modules/user/user.entity";
@@ -10,6 +10,21 @@ export default class RecommandController {
   constructor(
     private readonly recommandService: RecommandService,
   ) {}
+
+  @Get('/:idx')
+  public async getUserRecommandsByUserIdx(
+    @Param('idx') userIdx: number,
+  ) {
+    const recommands = await this.recommandService.getUserRecommandsByUserIdx(userIdx);
+
+    return {
+      status: 200,
+      message: '유저 추천목록을 조회하였습니다.',
+      data: {
+        recommands,
+      },
+    };
+  }
   
   @Post('/')
   @UseGuards(new AuthGuard())
