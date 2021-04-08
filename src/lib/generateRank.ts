@@ -1,4 +1,4 @@
-import { ERank } from "./enum/ranks"
+import { ERank } from './enum/ranks';
 
 export default (recommandCount: number) => {
   const divideCount: number = Math.floor(recommandCount / 10);

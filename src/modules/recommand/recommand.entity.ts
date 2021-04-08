@@ -8,9 +8,7 @@ export default class Recommand extends BaseEntity {
   @PrimaryGeneratedColumn()
   idx!: number;
 
-  @Column({
-    length: 100,
-  })
+  @Column()
   reason!: string;
 
   @ManyToOne((type) => User, {

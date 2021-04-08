@@ -17,7 +17,7 @@ export class UserDto {
   readonly email: string;
   
   @IsString()
-  @MaxLength(100)
+  @MaxLength(50)
   readonly description: string;
   
   @IsString()

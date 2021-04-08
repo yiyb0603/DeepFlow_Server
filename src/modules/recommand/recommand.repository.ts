@@ -1,5 +1,5 @@
-import { EntityRepository, Repository } from "typeorm";
-import Recommand from "./recommand.entity";
+import { EntityRepository, Repository } from 'typeorm';
+import Recommand from './recommand.entity';
 
 @EntityRepository(Recommand)
 export default class RecommandRepository extends Repository<Recommand> {

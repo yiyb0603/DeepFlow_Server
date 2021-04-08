@@ -81,7 +81,7 @@ export default class PostController {
       status: 200,
       message: '글 목록을 검색하였습니다.',
       data: {
-        searchPosts,
+        posts: searchPosts,
       },
     };
   }
