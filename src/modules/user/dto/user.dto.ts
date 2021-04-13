@@ -21,7 +21,7 @@ export class UserDto {
   readonly description: string;
   
   @IsString()
-  @MaxLength(50)
+  @MaxLength(100)
   readonly location: string;
   
   @IsString()
@@ -33,7 +33,7 @@ export class UserDto {
   readonly generation: number;
 
   @IsString()
-  @MaxLength(50)
+  @MaxLength(100)
   readonly position: string;
 
   @IsEnum(EMajor)

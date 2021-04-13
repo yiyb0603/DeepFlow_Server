@@ -54,7 +54,7 @@ export default class User extends BaseEntity {
   @Column({
     nullable: true,
     default: 'DGSW',
-    length: 50,
+    length: 100,
   })
   location: string;
 
@@ -66,7 +66,7 @@ export default class User extends BaseEntity {
 
   // 주 개발 업무
   @Column({
-    length: 50,
+    length: 100,
   })
   position!: string;
 
