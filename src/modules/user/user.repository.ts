@@ -18,6 +18,7 @@ export default class UserRepository extends Repository<User> {
   public getUserList(): Promise<User[]> {
     return this.createQueryBuilder()
       .orderBy('generation', 'ASC')
+      .addOrderBy('name', 'ASC')
       .getMany();
   }
 }

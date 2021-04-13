@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { Token } from 'lib/decorator/user.decorator';
 import AuthGuard from 'middleware/auth';
 import { IGithubUser } from 'types/user.types';
@@ -56,6 +56,21 @@ export default class UserController {
     return {
       status: 200,
       message: '유저 목록을 조회하였습니다.',
+      data: {
+        users,
+      },
+    };
+  }
+
+  @Get('/popular')
+  public async getPopularUserList(
+    @Query('count') count: number,
+  ) {
+    const users: User[] = await this.userService.getPopularUserList(count);
+
+    return {
+      status: 200,
+      message: '인기 유저목록을 조회하였습니다.',
       data: {
         users,
       },

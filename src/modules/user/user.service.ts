@@ -98,6 +98,17 @@ export default class UserService {
     return users;
   }
 
+  public async getPopularUserList(count: number): Promise<User[]> {
+    const users = await this.getUserList();
+
+    for (let i = 0; i < users.length; i++) {
+      users[i] = await this.getUserInfoByIdx(users[i].idx);
+    }
+
+    users.sort((a, b) => b.recommandCount - a.recommandCount);
+    return users.slice(0, count);
+  }
+
   public async getToken(id: string): Promise<string> | null {
     const user: User = await this.userRepository.getUserById(id);
     if (user !== undefined) {

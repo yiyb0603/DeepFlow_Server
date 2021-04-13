@@ -51,7 +51,7 @@ export default class PostService {
 
     const posts: PostEntity[] = await this.postRepository.getPostsByPage(category, page, PAGE_LIMIT);
     const totalCount: number = await this.postRepository.getPostCountByCategory(category);
-    const totalPage: number = totalCount / posts.length;
+    const totalPage: number = Math.ceil(totalCount / PAGE_LIMIT);
     
     await this.handleProcessPosts(posts);
 
