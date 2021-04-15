@@ -16,11 +16,6 @@ export default class RecommandService {
 
   public async getUserRecommandsByUserIdx(userIdx: number): Promise<Recommand[]> {
     const recommands: Recommand[] = await this.recommandRepository.getRecommandsByUserIdx(userIdx);
-
-    for (const recommand of recommands) {
-      recommand.user = await this.userService.getUserInfoByIdx(recommand.fk_pressed_user_idx);
-    }
-
     return recommands;
   }
   

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import HttpError from 'exception/HttpError';
 import Comment from 'modules/comment/comment.entity';
 import CommentService from 'modules/comment/comment.service';

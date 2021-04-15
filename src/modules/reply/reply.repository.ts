@@ -11,8 +11,9 @@ export default class ReplyRepository extends Repository<Reply> {
   }
 
   public getRepliesByCommentIdx(commentIdx: number): Promise<Reply[]> {
-    return this.createQueryBuilder()
-      .where('fk_comment_idx = :commentIdx', { commentIdx })
+    return this.createQueryBuilder('reply')
+      .leftJoinAndSelect('reply.user', 'user')
+      .where('reply.fk_comment_idx = :commentIdx', { commentIdx })
       .getMany();
   }
 

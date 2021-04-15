@@ -24,10 +24,6 @@ export default class LikeService {
     await this.postService.getPostByIdx(postIdx);
     const likes: LikeEntity[] = await this.likeRepository.getLikeListByPostIdx(postIdx);
 
-    for (const like of likes) {
-      like.user = await this.userRepository.getUserByIdx(like.fk_user_idx);
-    }
-
     return likes;
   }
 

@@ -50,10 +50,10 @@ export default class PostService {
     }
 
     const posts: PostEntity[] = await this.postRepository.getPostsByPage(category, page, PAGE_LIMIT);
+    await this.handleProcessPost(posts);
+
     const totalCount: number = await this.postRepository.getPostCountByCategory(category);
     const totalPage: number = Math.ceil(totalCount / PAGE_LIMIT);
-    
-    await this.handleProcessPosts(posts);
 
     return {
       totalCount,
@@ -63,28 +63,20 @@ export default class PostService {
   }
 
   public async getPostsByTagName(tagName: string, category: EPost): Promise<PostEntity[]> {
-    let posts: PostEntity[] = await this.postRepository.getPostsByCategory(category);
-
-    await this.handleProcessPosts(posts);
-
-    posts = posts.filter((post: PostEntity) => {
-      return post.postTags.includes(tagName);
-    });
-
+    const posts: PostEntity[] = await this.postRepository.getPostsByTagName(tagName, category);
+    await this.handleProcessPost(posts);
     return posts;
   }
 
   public async getTempPosts(user: User): Promise<PostEntity[]> {
     const posts: PostEntity[] = await this.postRepository.getPostsByUserIdx(user.idx, true);
-    await this.handleProcessPosts(posts);
-
+    await this.handleProcessPost(posts);
     return posts;
   }
 
   public async getRecentPosts(count: number): Promise<PostEntity[]> {
     const posts: PostEntity[] = await this.postRepository.getRecentPostsByCount(count);
-    await this.handleProcessPosts(posts);
-
+    await this.handleProcessPost(posts);
     return posts;
   }
 
@@ -94,11 +86,6 @@ export default class PostService {
 
     for (const view of popularViews) {
       const post: PostEntity = await this.getPostByIdx(view.fk_post_idx);
-
-      const comments: Comment[] = await this.commentRepository.getCommentsByPostIdx(post.idx);
-      post.commentCount = comments.length;
-      post.viewCount = Number(view.count);
-      post.likeCount = await this.likeRepository.getLikeCountByPostIdx(post.idx);
 
       delete post.contents;
       delete post.fk_user_idx;
@@ -129,15 +116,13 @@ export default class PostService {
 
   public async handleSearchPost(keyword: string, category: EPost): Promise<PostEntity[]> {
     const searchPosts: PostEntity[] = await this.postRepository.getPostsByKeyword(keyword, category);
-    await this.handleProcessPosts(searchPosts);
-
+    await this.handleProcessPost(searchPosts);
     return searchPosts;
   }
 
   public async getPostsByUserIdx(userIdx: number): Promise<PostEntity[]> {
     const userPosts: PostEntity[] = await this.postRepository.getPostsByUserIdx(userIdx, false);
-    await this.handleProcessPosts(userPosts);
-
+    await this.handleProcessPost(userPosts);
     return userPosts;
   }
 
@@ -209,44 +194,15 @@ export default class PostService {
   }
 
   public async getPostsByUserCommented(userIdx: number): Promise<PostEntity[]> {
-    const posts: PostEntity[] = [];
-    const comments: Comment[] = await this.commentRepository.getCommentsByUserIdx(userIdx);
-
-    for (const comment of comments) {
-      const commentedPost: PostEntity = await this.getPostByIdx(comment.fk_post_idx);
-      posts.push(commentedPost);
-    }
-
-    await this.handleProcessPosts(posts);
-    
+    const posts: PostEntity[] = await this.postRepository.getPostsByUserCommented(userIdx);
+    await this.handleProcessPost(posts);
     return posts;
   }
 
-  public async handleProcessPosts(posts: PostEntity[]): Promise<void> {
+  private async handleProcessPost(posts: PostEntity[]): Promise<void> {
     for (const post of posts) {
-      let postTags: Tag[] = [];
-      
-      const tags: Tag[] = await this.tagRepository.getTagsByPostIdx(post.idx);
-      postTags = postTags.concat(tags);
-
-      post.postTags = postTags.map((tag: Tag) => tag.name);
-
-      const comment: Comment[] = await this.commentRepository.getCommentsByPostIdx(post.idx);
-      post.commentCount = comment.length;
-      post.likeCount = await this.likeRepository.getLikeCountByPostIdx(post.idx);
-      post.viewCount = await this.viewRepository.getViewCountByPostIdx(post.idx);
-      post.user = await this.userRepository.getUserByIdx(post.fk_user_idx);
-
-      delete post.contents;
-
-      if (post.user) {
-        delete post.user.description;
-        delete post.user.joinedAt;
-        delete post.user.location;
-        delete post.user.recommandCount;
-        delete post.user.major;
-        delete post.user.rank;
-      }
+      const postTags = await this.tagRepository.getTagsByPostIdx(post.idx);
+      post.postTags = postTags.map((tag) => tag.name);
     }
   }
 }

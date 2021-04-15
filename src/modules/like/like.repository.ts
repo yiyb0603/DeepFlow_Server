@@ -1,10 +1,11 @@
-import { EntityRepository, Repository } from "typeorm"
-import LikeEntity from "./like.entity";
+import { EntityRepository, Repository } from 'typeorm';
+import LikeEntity from './like.entity';
 
 @EntityRepository(LikeEntity)
 export default class LikeEntityRepository extends Repository<LikeEntity> {
   public getLikeListByPostIdx(postIdx: number): Promise<LikeEntity[]> {
-    return this.createQueryBuilder()
+    return this.createQueryBuilder('like')
+      .leftJoinAndSelect('like.user', 'user')
       .where('fk_post_idx = :postIdx', { postIdx })
       .getMany();
   }

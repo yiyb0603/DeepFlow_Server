@@ -12,6 +12,10 @@ import {
 import { EPost } from 'lib/enum/post';
 import Tag from 'modules/tag/tag.entity';
 import User from 'modules/user/user.entity';
+import Comment from 'modules/comment/comment.entity';
+import Reply from 'modules/reply/reply.entity';
+import View from 'modules/view/view.entity';
+import LikeEntity from 'modules/like/like.entity';
 
 @Entity({
   name: 'post',
@@ -58,15 +62,27 @@ export default class PostEntity extends BaseEntity {
   @Column()
   fk_user_idx: number;
 
-  commentCount!: number;
-  likeCount!: number;
-  viewCount!: number;
-
   @OneToMany((type) => Tag, (tag) => tag.post, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   postTags!: string[];
+
+  @OneToMany((type) => Comment, (comment) => comment.post)
+  comments: Comment[];
+  commentCount!: number;
+
+  @OneToMany((type) => Reply, (reply) => reply.post)
+  replies: Reply[];
+  replyCount!: number;
+  
+  @OneToMany((type) => View, (view) => view.post)
+  views: View[];
+  viewCount!: number;
+
+  @OneToMany((type) => LikeEntity, (like) => like.post)
+  likes: LikeEntity[];
+  likeCount!: number;
 
   @CreateDateColumn({
     name: 'created_at',

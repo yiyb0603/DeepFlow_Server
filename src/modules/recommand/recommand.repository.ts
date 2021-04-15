@@ -4,9 +4,10 @@ import Recommand from './recommand.entity';
 @EntityRepository(Recommand)
 export default class RecommandRepository extends Repository<Recommand> {
   public getRecommandsByUserIdx(userIdx: number): Promise<Recommand[]> {
-    return this.createQueryBuilder()
-      .where('fk_user_idx = :userIdx', { userIdx })
-      .orderBy('recommand_at', 'DESC')
+    return this.createQueryBuilder('recommand')
+      .leftJoinAndSelect('recommand.pressedUser', 'user')
+      .where('recommand.fk_user_idx = :userIdx', { userIdx })
+      .orderBy('recommand.recommand_at', 'DESC')
       .getMany();
   }
 

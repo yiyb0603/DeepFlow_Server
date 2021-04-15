@@ -1,6 +1,7 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, Index, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { EMajor } from 'lib/enum/majors';
 import { ERank } from 'lib/enum/ranks';
+import CommentEmoji from 'modules/commentEmoji/commentEmoji.entity';
 
 @Entity({
   name: 'user',
