@@ -1,5 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import HttpError from "exception/HttpError";
+import getProcessEnv from 'lib/getProcessEnv';
+import { sendFCM } from 'lib/sendFCM';
 import User from "modules/user/user.entity";
 import UserService from "modules/user/user.service";
 import { RecommandDto } from "./dto/recommand.dto";
@@ -40,6 +42,16 @@ export default class RecommandService {
     recommand.pressedUser = pressedUser;
     recommand.recommandAt = new Date();
     await this.recommandRepository.save(recommand);
+
+    const { idx, name, fcmAllow, fcmToken } = targetUser;
+    if (fcmAllow && fcmToken) {
+      sendFCM({
+        token: fcmToken,
+        title: `${name} 님이 답글을 작성하였습니다`,
+        body: reason,
+        link: `${getProcessEnv('WEB_ADDRESS')}/user/${idx}`,
+      });
+    }
   }
 
   public async handleRemoveRecommand(recommandIdx: number, user: User) {

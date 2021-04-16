@@ -46,3 +46,8 @@ export class GithubCodeDto {
 }
 
 export class ModifyUserDto extends PartialType(UserDto) {}
+
+export class SetFCMDto {
+  @IsString()
+  fcmToken: string;
+}

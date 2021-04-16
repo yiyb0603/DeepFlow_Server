@@ -12,6 +12,8 @@ import Reply from 'modules/reply/reply.entity';
 import ReplyRepository from 'modules/reply/reply.repository';
 import CommentEmoji from 'modules/commentEmoji/commentEmoji.entity';
 import CommentEmojiRepository from 'modules/commentEmoji/commentEmoji.repository';
+import { sendFCM } from 'lib/sendFCM';
+import getProcessEnv from 'lib/getProcessEnv';
 
 @Injectable()
 export default class CommentService {
@@ -72,13 +74,24 @@ export default class CommentService {
     const { contents, postIdx } = createCommentDto;
     const existPost: PostEntity = await this.postService.getPostByIdx(postIdx);
 
-    const comment = new Comment();
+    const comment: Comment = new Comment();
     comment.user = await this.userRepository.getUserByIdx(user.idx);
     comment.contents = contents;
     comment.post = existPost;
     comment.createdAt = new Date();
     comment.updatedAt = null;
     await this.commentRepository.save(comment);
+
+    const { fcmAllow, fcmToken, name } = existPost.user;
+
+    if (fcmAllow && fcmToken) {
+      sendFCM({
+        token: fcmToken,
+        title: `${name} 님이 댓글을 작성하였습니다`,
+        body: contents,
+        link: `${getProcessEnv('WEB_ADDRESS')}/post/${existPost.idx}`,
+      });
+    }
   }
 
   public async handleModifyComment(commentIdx: number, modifyCommentDto: CommentDto, user: User): Promise<void> {

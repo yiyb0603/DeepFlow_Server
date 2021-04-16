@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Put, Query, UseGuards } from '@nest
 import { Token } from 'lib/decorator/user.decorator';
 import AuthGuard from 'middleware/auth';
 import { IGithubUser } from 'types/user.types';
-import { GithubCodeDto, ModifyUserDto, UserDto } from './dto/user.dto';
+import { GithubCodeDto, ModifyUserDto, SetFCMDto, UserDto } from './dto/user.dto';
 import User from './user.entity';
 import UserService from './user.service';
 
@@ -98,6 +98,20 @@ export default class UserController {
     return {
       status: 200,
       message: '유저 정보 수정을 성공하였습니다.',
+    };
+  }
+
+  @Post('/fcm')
+  @UseGuards(new AuthGuard())
+  public async setFCMToken(
+    @Token() user: User,
+    @Body() setFCMDto: SetFCMDto,
+  ) {
+    await this.userService.setFCMToken(setFCMDto, user);
+
+    return {
+      status: 200,
+      message: 'FCM 토큰을 저장하였습니다.',
     };
   }
 }

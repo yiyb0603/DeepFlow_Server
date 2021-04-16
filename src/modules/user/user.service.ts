@@ -9,7 +9,7 @@ import { createToken } from 'lib/token';
 import Recommand from 'modules/recommand/recommand.entity';
 import RecommandRepository from 'modules/recommand/recommand.repository';
 import { IGithubUser } from 'types/user.types';
-import { GithubCodeDto, ModifyUserDto, UserDto } from './dto/user.dto';
+import { GithubCodeDto, ModifyUserDto, SetFCMDto, UserDto } from './dto/user.dto';
 import User from './user.entity';
 import UserRepository from './user.repository';
 
@@ -91,6 +91,13 @@ export default class UserService {
     };
 
     return githubInfo;
+  }
+
+  public async setFCMToken(setFCMDto: SetFCMDto, user: User) {
+    const existUser: User = await this.getUserInfoByIdx(user.idx);
+    existUser.fcmToken = setFCMDto.fcmToken;
+    existUser.fcmAllow = true;
+    await this.userRepository.save(existUser);
   }
 
   public async getUserList(): Promise<User[]> {

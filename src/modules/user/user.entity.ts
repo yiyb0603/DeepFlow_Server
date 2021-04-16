@@ -95,4 +95,19 @@ export default class User extends BaseEntity {
     default: false,
   })
   isAdmin!: boolean;
+
+  @Column({
+    name: 'fcm_token',
+    nullable: true,
+    default: '',
+  })
+  fcmToken!: string;
+
+  @Column({
+    name: 'fcm_allow',
+    type: 'boolean',
+    nullable: true,
+    default: false,
+  })
+  fcmAllow!: boolean;
 }
