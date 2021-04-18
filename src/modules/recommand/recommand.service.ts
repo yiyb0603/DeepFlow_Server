@@ -43,11 +43,11 @@ export default class RecommandService {
     recommand.recommandAt = new Date();
     await this.recommandRepository.save(recommand);
 
-    const { idx, name, fcmAllow, fcmToken } = targetUser;
+    const { idx, fcmAllow, fcmToken } = targetUser;
     if (fcmAllow && fcmToken) {
       sendFCM({
         token: fcmToken,
-        title: `${name} 님이 답글을 작성하였습니다`,
+        title: `${pressedUser.name} 님이 추천을 작성하였습니다`,
         body: reason,
         link: `${getProcessEnv('WEB_ADDRESS')}/user/${idx}`,
       });
