@@ -11,8 +11,9 @@ export default class CommentRepository extends Repository<Comment> {
   }
 
   public getCommentByIdx(commentIdx: number): Promise<Comment> {
-    return this.createQueryBuilder()
-      .where('idx = :commentIdx', { commentIdx })
+    return this.createQueryBuilder('comment')
+      .leftJoinAndSelect('comment.user', 'user')
+      .where('comment.idx = :commentIdx', { commentIdx })
       .getOne();
   }
 
