@@ -6,7 +6,7 @@ export class PostDto {
   readonly category: EPost;
 
   @IsString()
-  @MaxLength(50)
+  @MaxLength(100)
   readonly title: string;
 
   @IsString()
