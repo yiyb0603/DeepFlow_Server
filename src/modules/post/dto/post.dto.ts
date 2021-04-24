@@ -1,10 +1,6 @@
-import { ArrayMaxSize, IsArray, IsBoolean, IsEnum, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator';
-import { EPost } from 'lib/enum/post';
+import { ArrayMaxSize, IsArray, IsBoolean, IsString, MaxLength } from 'class-validator';
 
 export class PostDto {
-  @IsEnum(EPost)
-  readonly category: EPost;
-
   @IsString()
   @MaxLength(100)
   readonly title: string;

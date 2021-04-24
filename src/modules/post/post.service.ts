@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { sha256 } from 'js-sha256';
 import HttpError from 'exception/HttpError';
-import { EPost } from 'lib/enum/post';
 import Tag from 'modules/tag/tag.entity';
 import TagRepository from 'modules/tag/tag.repository';
 import User from 'modules/user/user.entity';
@@ -11,15 +11,11 @@ import PostEntity from './post.entity';
 import PostEntityRepository from './post.repository';
 import View from 'modules/view/view.entity';
 import ViewRepository from 'modules/view/view.repository';
-import { sha256 } from 'js-sha256';
-import CommentRepository from 'modules/comment/comment.repository';
-import LikeEntity from 'modules/like/like.entity';
-import LikeEntityRepository from 'modules/like/like.repository';
-import Comment from 'modules/comment/comment.entity';
 import TagService from 'modules/tag/tag.service';
 import { PAGE_LIMIT } from 'lib/constants';
 import { IViewCount } from 'types/view.types';
 import { IPostsResponse } from 'types/post.types';
+import { EPostSort } from 'lib/enum/post';
 
 @Injectable()
 export default class PostService {
@@ -36,24 +32,22 @@ export default class PostService {
 
     @InjectRepository(View)
     private readonly viewRepository: ViewRepository,
-
-    @InjectRepository(Comment)
-    private readonly commentRepository: CommentRepository,
-
-    @InjectRepository(LikeEntity)
-    private readonly likeRepository: LikeEntityRepository,
   ) {}
 
-  public async getPostsByCategory(category: EPost, page: number): Promise<IPostsResponse> {
+  public async getPostsBySort(sort: EPostSort, page: number): Promise<IPostsResponse> {
     if (!page || page <= 0) {
       throw new HttpError(400, '검증 오류입니다.');
     }
 
-    const posts: PostEntity[] = await this.postRepository.getPostsByPage(category, page, PAGE_LIMIT);
+    const posts: PostEntity[] = await this.postRepository.getPostsByPage(page, PAGE_LIMIT);
     await this.handleProcessPost(posts);
 
-    const totalCount: number = await this.postRepository.getPostCountByCategory(category);
+    const totalCount: number = await this.postRepository.getPostsCount();
     const totalPage: number = Math.ceil(totalCount / PAGE_LIMIT);
+
+    if (sort === EPostSort.POPULAR) {
+      posts.sort((a, b) => b.viewCount - a.viewCount);
+    }
 
     return {
       totalCount,
@@ -62,8 +56,8 @@ export default class PostService {
     };
   }
 
-  public async getPostsByTagName(tagName: string, category: EPost): Promise<PostEntity[]> {
-    const posts: PostEntity[] = await this.postRepository.getPostsByTagName(tagName, category);
+  public async getPostsByTagName(tagName: string): Promise<PostEntity[]> {
+    const posts: PostEntity[] = await this.postRepository.getPostsByTagName(tagName);
     await this.handleProcessPost(posts);
     return posts;
   }
@@ -114,8 +108,8 @@ export default class PostService {
     return post;
   }
 
-  public async handleSearchPost(keyword: string, category: EPost): Promise<PostEntity[]> {
-    const searchPosts: PostEntity[] = await this.postRepository.getPostsByKeyword(keyword, category);
+  public async handleSearchPost(keyword: string): Promise<PostEntity[]> {
+    const searchPosts: PostEntity[] = await this.postRepository.getPostsByKeyword(keyword);
     await this.handleProcessPost(searchPosts);
     return searchPosts;
   }
@@ -127,7 +121,7 @@ export default class PostService {
   }
 
   public async handleCreatePost(createPostDto: PostDto, user: User): Promise<number> {
-    const { introduction, thumbnail, title, contents, category, postTags, isTemp } = createPostDto;
+    const { introduction, thumbnail, title, contents, postTags, isTemp } = createPostDto;
     const existUser: User = await this.userRepository.getUserByIdx(user.idx);
 
     if (existUser === undefined) {
@@ -140,7 +134,6 @@ export default class PostService {
     post.introduction = introduction;
     post.thumbnail = thumbnail;
     post.contents = contents;
-    post.category = category;
     post.isTemp = isTemp;
     post.updatedAt = null;
 
@@ -157,13 +150,12 @@ export default class PostService {
       throw new HttpError(403, '글을 수정할 권한이 없습니다.');
     }
 
-    const { title, thumbnail, contents, postTags, category, introduction, isTemp } = modifyPostDto;
+    const { title, thumbnail, contents, postTags, introduction, isTemp } = modifyPostDto;
     post.idx = postIdx;
     post.title = title;
     post.thumbnail = thumbnail;
     post.introduction = introduction;
     post.contents = contents;
-    post.category = category;
     post.isTemp = isTemp;
     post.updatedAt = new Date();
     await this.postRepository.save(post);

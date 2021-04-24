@@ -1,4 +1,4 @@
 export enum ETagSort {
-  POPULAR = 0,
-  ALPHABETICAL = 1,
-}
+  POPULAR = 'popular',
+  ALPHABETICAL = 'alphabetical',
+};

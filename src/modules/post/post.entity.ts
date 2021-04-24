@@ -9,7 +9,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { EPost } from 'lib/enum/post';
 import Tag from 'modules/tag/tag.entity';
 import User from 'modules/user/user.entity';
 import Comment from 'modules/comment/comment.entity';
@@ -23,12 +22,6 @@ import LikeEntity from 'modules/like/like.entity';
 export default class PostEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   idx!: number;
-
-  @Column({
-    type: 'enum',
-    enum: EPost,
-  })
-  category!: EPost;
 
   @Column({
     length: 100,

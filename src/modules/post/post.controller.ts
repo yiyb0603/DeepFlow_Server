@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } fro
 import User from 'modules/user/user.entity';
 import { Token } from 'lib/decorator/user.decorator';
 import { IpAddress } from 'lib/decorator/ipAddress.decorator';
-import { EPost, EUserPost } from 'lib/enum/post';
+import { EPostSort, EUserPost } from 'lib/enum/post';
 import AuthGuard from 'middleware/auth';
 import { PostDto } from './dto/post.dto';
 import PostEntity from './post.entity';
@@ -15,11 +15,11 @@ export default class PostController {
   ) {}
 
   @Get('/')
-  public async getPostsByCategory(
-    @Query('category') category: EPost,
+  public async getPostsBySort(
+    @Query('sort') sort: EPostSort,
     @Query('page') page: number,
   ) {
-    const { posts, totalCount, totalPage } = await this.postService.getPostsByCategory(category, page);
+    const { posts, totalCount, totalPage } = await this.postService.getPostsBySort(sort, page);
     
     return {
       status: 200,
@@ -34,10 +34,9 @@ export default class PostController {
 
   @Get('/tag')
   public async getPostsByTagName(
-    @Query('category') category: EPost,
     @Query('tagName') tagName: string,
   ) {
-    const posts: PostEntity[] = await this.postService.getPostsByTagName(tagName, category);
+    const posts: PostEntity[] = await this.postService.getPostsByTagName(tagName);
 
     return {
       status: 200,
@@ -73,9 +72,8 @@ export default class PostController {
   @Get('/search')
   public async handleSearchPost(
     @Query('keyword') keyword: string,
-    @Query('category') category: EPost,
   ) {
-    const searchPosts: PostEntity[] = await this.postService.handleSearchPost(keyword, category);
+    const searchPosts: PostEntity[] = await this.postService.handleSearchPost(keyword);
     
     return {
       status: 200,
