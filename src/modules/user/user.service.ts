@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import axios, { AxiosResponse } from 'axios';
 import { CLIENT_ID, CLIENT_SECRET } from 'config/config.json';
 import HttpError from 'exception/HttpError';
+import { EUserSort } from 'lib/enum/user';
 import generateRank from 'lib/generateRank';
 import getProcessEnv from 'lib/getProcessEnv';
 import { createToken } from 'lib/token';
@@ -100,20 +101,18 @@ export default class UserService {
     await this.userRepository.save(existUser);
   }
 
-  public async getUserList(): Promise<User[]> {
+  public async getUserList(sort: EUserSort): Promise<User[]> {
     const users: User[] = await this.userRepository.getUserList();
-    return users;
-  }
 
-  public async getPopularUserList(count: number): Promise<User[]> {
-    const users = await this.getUserList();
-
-    for (let i = 0; i < users.length; i++) {
-      users[i] = await this.getUserInfoByIdx(users[i].idx);
+    for (const user of users) {
+      user.recommandCount = await this.recommandRepository.getRecommandCount(user.idx);
     }
 
-    users.sort((a, b) => b.recommandCount - a.recommandCount);
-    return users.slice(0, count);
+    if (sort === EUserSort.POPULAR) {
+      users.sort((a, b) => b.recommandCount - a.recommandCount);  
+    }
+
+    return users;
   }
 
   public async getToken(id: string): Promise<string> | null {

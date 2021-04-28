@@ -16,7 +16,7 @@ export default class TokenService {
 
   public async handleRefreshToken(refreshTokenDto: RefreshTokenDto): Promise<string> {
     const { accessToken } = refreshTokenDto;
-    const token: User = AuthGuard.validateToken(accessToken);
+    const token: User = AuthGuard.validateToken(accessToken, true);
     
     if (token !== null) {
       const { idx, githubId, isAdmin } = token;

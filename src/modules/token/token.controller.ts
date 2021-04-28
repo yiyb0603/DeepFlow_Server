@@ -1,5 +1,4 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import AuthGuard from 'middleware/auth';
 import { RefreshTokenDto } from './dto/token.dto';
 import TokenService from './token.service';
 
@@ -10,7 +9,6 @@ export default class TokenController {
   ) {}
 
   @Post('/')
-  @UseGuards(new AuthGuard())
   public async handleRefreshToken(
     @Body() refreshTokenDto: RefreshTokenDto, 
   ) {

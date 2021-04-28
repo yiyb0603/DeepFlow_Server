@@ -1,5 +1,4 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { EPostSort } from 'lib/enum/post';
 import PostEntity from './post.entity';
 
 @EntityRepository(PostEntity)

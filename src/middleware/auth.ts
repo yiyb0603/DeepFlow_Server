@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext } from "@nestjs/common";
 import HttpError from "exception/HttpError";
-import { verifyToken } from "lib/token";
+import { decodeToken, verifyToken } from "lib/token";
 import User from 'modules/user/user.entity';
 
 export default class AuthGuard implements CanActivate {
@@ -17,9 +17,11 @@ export default class AuthGuard implements CanActivate {
     return true;
   }
 
-  public static validateToken(token: string): User {
+  public static validateToken(token: string, isRefresh = false): User {
+    let verify: User = null;
+
     try {
-      const verify: User = verifyToken(token) as User;
+      verify = verifyToken(token) as User;
       return verify;
     } catch (error) {
       switch (error.message) {
@@ -28,7 +30,12 @@ export default class AuthGuard implements CanActivate {
         case 'NO_USER':
           throw new HttpError(401, '유효하지 않은 토큰입니다.');
 
-        case 'EXPIRED_TOKEN':
+        case 'jwt expired':
+          if (isRefresh) {
+            verify = decodeToken(token) as User;
+            return verify;
+          }
+
           throw new HttpError(410, '토큰이 만료되었습니다.');
         
         default:

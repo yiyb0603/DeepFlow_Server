@@ -12,7 +12,7 @@ export const createToken = (idx: number, githubId: string, isAdmin: boolean) => 
 	};
 
 	const options: SignOptions = {
-		expiresIn: '30d',
+		expiresIn: '3d',
 	};
 
 	return jwt.sign(payload, JWT_SECRET, options);
