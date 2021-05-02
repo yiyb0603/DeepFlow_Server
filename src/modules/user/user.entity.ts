@@ -1,7 +1,5 @@
-import { BaseEntity, Column, CreateDateColumn, Entity, Index, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { EMajor } from 'lib/enum/majors';
-import { ERank } from 'lib/enum/ranks';
-import CommentEmoji from 'modules/commentEmoji/commentEmoji.entity';
 
 @Entity({
   name: 'user',
@@ -72,15 +70,7 @@ export default class User extends BaseEntity {
   position!: string;
 
   recommandCount!: number;
-
-  // 사용자 등급
-  @Column({
-    nullable: true,
-    default: ERank.BRONZE,
-    type: 'enum',
-    enum: ERank,
-  })
-  rank!: ERank;
+  rank!: number;
 
   // 사용자 가입일
   @CreateDateColumn({

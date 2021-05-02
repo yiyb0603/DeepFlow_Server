@@ -109,7 +109,11 @@ export default class UserService {
     }
 
     if (sort === EUserSort.POPULAR) {
-      users.sort((a, b) => b.recommandCount - a.recommandCount);  
+      users.sort((a, b) => b.recommandCount - a.recommandCount);
+
+      for (let i = 0; i < users.length; i++) {
+        users[i].rank = (i + 1);
+      }
     }
 
     return users;
