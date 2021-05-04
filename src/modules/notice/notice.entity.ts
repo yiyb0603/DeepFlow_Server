@@ -8,11 +8,10 @@ export default class Notice extends BaseEntity {
   @PrimaryGeneratedColumn()
   idx!: number;
 
-  @Column()
+  @Column({
+    length: 100,
+  })
   title!: string;
-
-  @Column()
-  introduction!: string;
 
   @Column({
     type: 'text',
