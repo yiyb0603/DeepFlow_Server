@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
+import { IpAddress } from 'lib/decorator/ipAddress.decorator';
 import { Token } from "lib/decorator/user.decorator";
 import AuthGuard from "middleware/auth";
 import User from "modules/user/user.entity";
@@ -29,9 +30,10 @@ export default class NoticeController {
 
   @Get('/:idx')
   public async getNotice(
+    @IpAddress() ipAdress: string,
     @Param('idx') noticeIdx: number,
   ) {
-    const notice: Notice = await this.noticeService.getNotice(noticeIdx);
+    const notice: Notice = await this.noticeService.getNotice(noticeIdx, ipAdress);
 
     return {
       status: 200,

@@ -1,12 +1,15 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import HttpError from "exception/HttpError";
-import { PAGE_LIMIT } from "lib/constants";
-import User from "modules/user/user.entity";
-import UserRepository from "modules/user/user.repository";
-import { NoticeDto } from "./dto/notice.dto";
-import Notice from "./notice.entity";
-import NoticeRepository from "./notice.repository";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { sha256 } from 'js-sha256';
+import HttpError from 'exception/HttpError';
+import { PAGE_LIMIT } from 'lib/constants';
+import NoticeView from 'modules/noticeview/noticeView.entity';
+import NoticeViewRepository from 'modules/noticeview/noticeView.repository';
+import User from 'modules/user/user.entity';
+import UserRepository from 'modules/user/user.repository';
+import { NoticeDto } from './dto/notice.dto';
+import Notice from './notice.entity';
+import NoticeRepository from './notice.repository';
 
 @Injectable()
 export default class NoticeService {
@@ -15,6 +18,9 @@ export default class NoticeService {
     
     @InjectRepository(User)
     private readonly userRepository: UserRepository,
+
+    @InjectRepository(NoticeView)
+    private readonly noticeViewRepository: NoticeViewRepository,
   ) {}
 
   public async getNotices(page: number): Promise<Notice[]> {
@@ -22,8 +28,21 @@ export default class NoticeService {
     return notices;
   }
 
-  public async getNotice(noticeIdx: number): Promise<Notice> {
+  public async getNotice(noticeIdx: number, ipAdress?: string): Promise<Notice> {
     const notice: Notice = await this.noticeRepository.getNoticeByIdx(noticeIdx);
+
+    if (ipAdress !== undefined) {
+      const existNoticeView: NoticeView = await this.noticeViewRepository.getNoticeViewByNoticeIdxAndIpAddress(noticeIdx, sha256(ipAdress));
+
+      if (existNoticeView === undefined) {
+        const noticeView: NoticeView = new NoticeView();
+        noticeView.fk_notice_idx = noticeIdx;
+        noticeView.notice = notice;
+        noticeView.userIp = sha256(ipAdress);
+
+        await this.noticeViewRepository.save(noticeView);
+      }
+    }
 
     if (notice === undefined) {
       throw new HttpError(404, '존재하지 않는 공지사항 입니다.');
