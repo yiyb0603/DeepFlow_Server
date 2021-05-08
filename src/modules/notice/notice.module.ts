@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import NoticeViewRepository from 'modules/noticeview/noticeView.repository';
+import NoticeViewRepository from 'modules/noticeView/noticeView.repository';
 import UserRepository from "modules/user/user.repository";
 import NoticeController from "./notice.controller";
 import NoticeRepository from "./notice.repository";

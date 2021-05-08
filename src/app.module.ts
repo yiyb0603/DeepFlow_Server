@@ -25,8 +25,8 @@ import { NoticeModule } from 'modules/notice/notice.module';
 import { TokenModule } from 'modules/token/token.module';
 import CommentEmoji from 'modules/commentEmoji/commentEmoji.entity';
 import { CommentEmojiModule } from 'modules/commentEmoji/commentEmoji.module';
-import NoticeView from 'modules/noticeview/noticeView.entity';
-import { NoticeViewModule } from 'modules/noticeview/noticeView.module';
+import NoticeView from 'modules/noticeView/noticeView.entity';
+import { NoticeViewModule } from 'modules/noticeView/noticeView.module';
 
 const loadEntities: TypeOrmModuleOptions = {
   ...ormConfig,

@@ -1,6 +1,6 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import User from 'modules/user/user.entity';
-import NoticeView from 'modules/noticeview/noticeView.entity';
+import NoticeView from 'modules/noticeView/noticeView.entity';
 
 @Entity({
   name: 'notice',
