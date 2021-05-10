@@ -89,7 +89,7 @@ export default class CommentService {
         token: fcmToken,
         title: `${name} 님이 댓글을 작성하였습니다`,
         body: contents,
-        link: `${getProcessEnv('WEB_ADDRESS')}/post/${existPost.idx}`,
+        link: `${getProcessEnv('WEB_ADDRESS')}/question/${existPost.idx}`,
       });
     }
   }
