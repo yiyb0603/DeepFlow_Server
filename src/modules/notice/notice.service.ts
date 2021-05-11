@@ -15,13 +15,13 @@ import NoticeRepository from './notice.repository';
 export default class NoticeService {
   constructor(
     private readonly noticeRepository: NoticeRepository,
-    
+
     @InjectRepository(User)
     private readonly userRepository: UserRepository,
 
     @InjectRepository(NoticeView)
     private readonly noticeViewRepository: NoticeViewRepository,
-  ) {}
+  ) { }
 
   public async getNotices(page: number): Promise<Notice[]> {
     const notices: Notice[] = await this.noticeRepository.getNoticesByPage(page, PAGE_LIMIT);
@@ -30,6 +30,10 @@ export default class NoticeService {
 
   public async getNotice(noticeIdx: number, ipAdress?: string): Promise<Notice> {
     const notice: Notice = await this.noticeRepository.getNoticeByIdx(noticeIdx);
+
+    if (notice === undefined) {
+      throw new HttpError(404, '존재하지 않는 공지사항 입니다.');
+    }
 
     if (ipAdress !== undefined) {
       const existNoticeView: NoticeView = await this.noticeViewRepository.getNoticeViewByNoticeIdxAndIpAddress(noticeIdx, sha256(ipAdress));
@@ -42,10 +46,6 @@ export default class NoticeService {
 
         await this.noticeViewRepository.save(noticeView);
       }
-    }
-
-    if (notice === undefined) {
-      throw new HttpError(404, '존재하지 않는 공지사항 입니다.');
     }
 
     return notice;

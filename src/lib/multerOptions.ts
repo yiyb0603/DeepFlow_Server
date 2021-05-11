@@ -26,9 +26,13 @@ export const multerOptions = {
 
     filename: (request, file, callback) => {
       callback(null, uuidRandom(file));
-    }
-  })
-}
+    },
+  }),
+
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+};
 
 export const createImageURL = (file): string => {
   const serverAddress: string = getProcessEnv('SERVER_ADDRESS');

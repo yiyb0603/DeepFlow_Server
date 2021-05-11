@@ -1,10 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
-import User from "modules/user/user.entity";
-import { Token } from "lib/decorator/user.decorator";
-import AuthGuard from "middleware/auth";
-import Comment from "./comment.entity";
-import CommentService from "./comment.service";
-import { CommentDto } from "./dto/comment.dto";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import User from 'modules/user/user.entity';
+import { Token } from 'lib/decorator/user.decorator';
+import AuthGuard from 'middleware/auth';
+import Comment from './comment.entity';
+import CommentService from './comment.service';
+import { CommentDto } from './dto/comment.dto';
 
 @Controller('comment')
 export default class CommentController {
