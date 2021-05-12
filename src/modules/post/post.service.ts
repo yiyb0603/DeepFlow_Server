@@ -137,6 +137,12 @@ export default class PostService {
     post.isTemp = isTemp;
     post.updatedAt = null;
 
+    if (!isTemp) {
+      if (!thumbnail || !introduction) {
+        throw new HttpError(400, '검증 오류입니다.');
+      }
+    }
+
     const { idx } = await this.postRepository.save(post);
     await this.tagService.handlePushTags(postTags, post);
 

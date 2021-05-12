@@ -7,12 +7,10 @@ export class PostDto {
   readonly title: string;
 
   @IsString()
-  @IsNotEmpty()
   @MaxLength(150)
   readonly introduction: string;
 
   @IsString()
-  @IsNotEmpty()
   readonly thumbnail: string;
 
   @IsString()
