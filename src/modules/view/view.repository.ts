@@ -4,20 +4,20 @@ import View from "./view.entity";
 
 @EntityRepository(View)
 export default class ViewRepository extends Repository<View> {
-  public getViewByPostIdxAndIpAdress(postIdx: number, ipAddress: string): Promise<View> {
+  public findByPostIdxAndIpAdress(postIdx: number, ipAddress: string): Promise<View> {
     return this.createQueryBuilder()
       .where('fk_post_idx = :postIdx', { postIdx })
       .andWhere('user_ip = :ipAddress', { ipAddress })
       .getOne();
   }
 
-  public getViewCountByPostIdx(postIdx: number): Promise<number> {
+  public countByPostIdx(postIdx: number): Promise<number> {
     return this.createQueryBuilder()
       .where('fk_post_idx = :postIdx', { postIdx })
       .getCount();
   }
 
-  public getViewCountGroupByPostIdx(count: number): Promise<IViewCount[]> {
+  public getCountGroupByPostIdx(count: number): Promise<IViewCount[]> {
     return this.createQueryBuilder()
       .select('fk_post_idx')
       .addSelect('COUNT(*)', 'count')

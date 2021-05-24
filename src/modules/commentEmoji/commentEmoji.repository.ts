@@ -3,7 +3,7 @@ import CommentEmoji from './commentEmoji.entity';
 
 @EntityRepository(CommentEmoji)
 export default class CommentEmojiRepository extends Repository<CommentEmoji> {
-  public getCommentEmojiesByCommentIdx(commentIdx: number): Promise<CommentEmoji[]> {
+  public findAllByCommentIdx(commentIdx: number): Promise<CommentEmoji[]> {
     return this.createQueryBuilder()
       .select('COUNT(emoji)', 'count')
       .addSelect('emoji')
@@ -12,13 +12,13 @@ export default class CommentEmojiRepository extends Repository<CommentEmoji> {
       .execute();
   }
 
-  public async getEmojiByIdx(emojiIdx: number): Promise<CommentEmoji> {
+  public async findByIdx(emojiIdx: number): Promise<CommentEmoji> {
     return this.createQueryBuilder()
       .where('idx = :emojiIdx', { emojiIdx })
       .getOne();
   }
 
-  public async getIsPressedEmoji(emoji: string, commentIdx: number, userIdx: number): Promise<CommentEmoji> {
+  public async findByEmojiAndCommentIdxAndUserIdx(emoji: string, commentIdx: number, userIdx: number): Promise<CommentEmoji> {
     return this.createQueryBuilder()
       .where('emoji = :emoji', { emoji })
       .andWhere('fk_comment_idx = :commentIdx', { commentIdx })
@@ -26,7 +26,7 @@ export default class CommentEmojiRepository extends Repository<CommentEmoji> {
       .getOne();
   }
 
-  public getEmojiesByEmoji(commentIdx: number, emoji: string): Promise<CommentEmoji[]> {
+  public findAllByEmoji(commentIdx: number, emoji: string): Promise<CommentEmoji[]> {
     return this.createQueryBuilder()
       .where('fk_comment_idx = :commentIdx', { commentIdx })
       .andWhere('emoji = :emoji', { emoji })

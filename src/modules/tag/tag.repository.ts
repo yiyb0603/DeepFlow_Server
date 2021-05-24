@@ -5,19 +5,19 @@ import Tag from './tag.entity';
 
 @EntityRepository(Tag)
 export default class TagRepository extends Repository<Tag> {
-  public getTagsByPostIdx(postIdx: number): Promise<Tag[]> {
+  public findAllByPostIdx(postIdx: number): Promise<Tag[]> {
     return this.createQueryBuilder()
       .where('fk_post_idx = :postIdx', { postIdx })
       .getMany();
   }
 
-  public getTagByTagName(tagName: string): Promise<Tag> {
+  public findByTagName(tagName: string): Promise<Tag> {
     return this.createQueryBuilder()
       .where('name = :tagName', { tagName })
       .getOne();
   }
 
-  public getTags(sort: ETagSort): Promise<ITagAndPostCount[]> {
+  public findAll(sort: ETagSort): Promise<ITagAndPostCount[]> {
     const column: string = (sort === ETagSort.POPULAR ? 'count' : 'name');
     const order: 'DESC' | 'ASC' = (column === 'count') ? 'DESC' : 'ASC';
 

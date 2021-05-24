@@ -22,7 +22,7 @@ export default class LikeService {
 
   public async getLikeList(postIdx: number): Promise<LikeEntity[]> {
     await this.postService.getPostByIdx(postIdx);
-    const likes: LikeEntity[] = await this.likeRepository.getLikeListByPostIdx(postIdx);
+    const likes: LikeEntity[] = await this.likeRepository.findAllByPostIdx(postIdx);
 
     return likes;
   }
@@ -56,7 +56,7 @@ export default class LikeService {
   }
 
   public async getLikeByIdx(likeIdx: number): Promise<LikeEntity> {
-    const like: LikeEntity = await this.likeRepository.getLikeByIdx(likeIdx);
+    const like: LikeEntity = await this.likeRepository.findByIdx(likeIdx);
 
     if (like === undefined) {
       throw new HttpError(404, '해당 좋아요가 존재하지 않습니다.');
@@ -66,7 +66,7 @@ export default class LikeService {
   }
 
   public async getLikeByUserIdx(postIdx: number, user: User): Promise<LikeEntity> {
-    const like: LikeEntity = await this.likeRepository.getLikeByUserIdx(postIdx, user.idx);
+    const like: LikeEntity = await this.likeRepository.findByUserIdx(postIdx, user.idx);
     return like;
   }
 }

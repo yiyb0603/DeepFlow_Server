@@ -17,14 +17,14 @@ export default class RecommandService {
   ) {}
 
   public async getUserRecommandsByUserIdx(userIdx: number): Promise<Recommand[]> {
-    const recommands: Recommand[] = await this.recommandRepository.getRecommandsByUserIdx(userIdx);
+    const recommands: Recommand[] = await this.recommandRepository.findAllByUserIdx(userIdx);
     return recommands;
   }
   
   public async handleAddRecommand(recommandDto: RecommandDto, user: User): Promise<void> {
     const { userIdx, reason } = recommandDto;
     const targetUser: User = await this.userService.getUserInfoByIdx(userIdx);
-    const existRecommand: Recommand = await this.recommandRepository.getRecommandByPressedUserIdx(targetUser.idx, user.idx);
+    const existRecommand: Recommand = await this.recommandRepository.findByPressedUserIdx(targetUser.idx, user.idx);
 
     if (existRecommand !== undefined) {
       throw new HttpError(409, '이미 추천한 사용자입니다.');
@@ -55,7 +55,7 @@ export default class RecommandService {
   }
 
   public async handleRemoveRecommand(recommandIdx: number, user: User) {
-    const existRecommand: Recommand = await this.recommandRepository.getRecommandByIdx(recommandIdx);
+    const existRecommand: Recommand = await this.recommandRepository.findByIdx(recommandIdx);
 
     if (existRecommand === undefined) {
       throw new HttpError(404, '존재하지 않는 추천입니다.');

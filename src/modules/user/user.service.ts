@@ -26,7 +26,7 @@ export default class UserService {
   public async handleSignUp(signUpDto: UserDto): Promise<string> {
     const { githubId, avatar, name, email, description, location, blog, generation, major, position } = signUpDto;
 
-    const existUser = await this.userRepository.getUserById(githubId);
+    const existUser = await this.userRepository.findById(githubId);
     if (existUser) {
       throw new HttpError(409, '이미 존재하는 유저입니다.');
     }
@@ -46,7 +46,7 @@ export default class UserService {
     user.isAdmin = (githubId === getProcessEnv('ADMIN_ID'));
 
     await this.userRepository.save(user);
-    const joinedUser = await this.userRepository.getUserById(githubId);
+    const joinedUser = await this.userRepository.findById(githubId);
     const token: string = createToken(joinedUser.idx, joinedUser.githubId, joinedUser.isAdmin);
     return token;
   }
@@ -102,10 +102,10 @@ export default class UserService {
   }
 
   public async getUserList(sort: EUserSort): Promise<User[]> {
-    const users: User[] = await this.userRepository.getUserList();
+    const users: User[] = await this.userRepository.findAll();
 
     for (const user of users) {
-      user.recommandCount = await this.recommandRepository.getRecommandCount(user.idx);
+      user.recommandCount = await this.recommandRepository.countByUserIdx(user.idx);
     }
 
     if (sort === EUserSort.POPULAR) {
@@ -120,7 +120,7 @@ export default class UserService {
   }
 
   public async getToken(id: string): Promise<string> | null {
-    const user: User = await this.userRepository.getUserById(id);
+    const user: User = await this.userRepository.findById(id);
     if (user !== undefined) {
       const token: string = createToken(user.idx, user.githubId, user.isAdmin);
       return token;
@@ -147,13 +147,13 @@ export default class UserService {
   }
 
   public async getUserInfoByIdx(idx: number): Promise<User> {
-    const user: User = await this.userRepository.getUserByIdx(idx);
+    const user: User = await this.userRepository.findByIdx(idx);
 
     if (user === undefined) {
       throw new HttpError(404, '존재하지 않는 유저입니다.');
     }
 
-    user.recommandCount = await this.recommandRepository.getRecommandCount(idx);
+    user.recommandCount = await this.recommandRepository.countByUserIdx(idx);
     user.rank = generateRank(user.recommandCount);
 
     return user;

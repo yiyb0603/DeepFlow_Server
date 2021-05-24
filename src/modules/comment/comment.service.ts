@@ -33,26 +33,26 @@ export default class CommentService {
   ) {}
 
   public async getComments(postIdx: number): Promise<Comment[]> {
-    const comments: Comment[] = await this.commentRepository.getCommentsByPostIdx(postIdx);
+    const comments: Comment[] = await this.commentRepository.findAllByPostIdx(postIdx);
 
     for (const comment of comments) {
       let commentReplies: Reply[] = [];
       let commentEmojies: CommentEmoji[] = [];
 
-      comment.user = await this.userRepository.getUserByIdx(comment.fk_user_idx);
+      comment.user = await this.userRepository.findByIdx(comment.fk_user_idx);
       
-      const emojies: CommentEmoji[] = await this.commentEmojiRepository.getCommentEmojiesByCommentIdx(comment.idx);
-      const replies: Reply[] = await this.replyRepository.getRepliesByCommentIdx(comment.idx);
+      const emojies: CommentEmoji[] = await this.commentEmojiRepository.findAllByCommentIdx(comment.idx);
+      const replies: Reply[] = await this.replyRepository.findAllByCommentIdx(comment.idx);
 
       for (const reply of replies) {
-        reply.user = await this.userRepository.getUserByIdx(reply.fk_user_idx);
+        reply.user = await this.userRepository.findByIdx(reply.fk_user_idx);
       }
 
       for (const emoji of emojies) {
-        const users: CommentEmoji[] = await this.commentEmojiRepository.getEmojiesByEmoji(comment.idx, emoji.emoji);
+        const users: CommentEmoji[] = await this.commentEmojiRepository.findAllByEmoji(comment.idx, emoji.emoji);
         
         for (const user of users) {
-          user.user = await this.userRepository.getUserByIdx(user.fk_user_idx);
+          user.user = await this.userRepository.findByIdx(user.fk_user_idx);
         }
 
         emoji.users = users;
@@ -75,7 +75,7 @@ export default class CommentService {
     const existPost: PostEntity = await this.postService.getPostByIdx(postIdx);
 
     const comment: Comment = new Comment();
-    comment.user = await this.userRepository.getUserByIdx(user.idx);
+    comment.user = await this.userRepository.findByIdx(user.idx);
     comment.contents = contents;
     comment.post = existPost;
     comment.createdAt = new Date();
@@ -102,7 +102,7 @@ export default class CommentService {
       throw new HttpError(403, '댓글을 수정할 권한이 없습니다.');
     }
 
-    comment.user = await this.userRepository.getUserByIdx(user.idx);
+    comment.user = await this.userRepository.findByIdx(user.idx);
     comment.contents = contents;
     comment.post = await this.postService.getPostByIdx(postIdx);
     comment.updatedAt = new Date();
@@ -126,7 +126,7 @@ export default class CommentService {
   }
 
   public async getExistComment(commentIdx: number): Promise<Comment> {
-    const comment: Comment = await this.commentRepository.getCommentByIdx(commentIdx);
+    const comment: Comment = await this.commentRepository.findByIdx(commentIdx);
 
     if (comment === undefined) {
       throw new HttpError(404, '존재하지 않는 댓글입니다.');

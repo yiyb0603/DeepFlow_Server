@@ -39,10 +39,10 @@ export default class PostService {
       throw new HttpError(400, '검증 오류입니다.');
     }
 
-    const posts: PostEntity[] = await this.postRepository.getPostsByPage(page, PAGE_LIMIT);
+    const posts: PostEntity[] = await this.postRepository.findAll(page, PAGE_LIMIT);
     await this.handleProcessPost(posts);
 
-    const totalCount: number = await this.postRepository.getPostsCount();
+    const totalCount: number = await this.postRepository.countByIsTempFalse();
     const totalPage: number = Math.ceil(totalCount / PAGE_LIMIT);
 
     if (sort === EPostSort.POPULAR) {
@@ -57,25 +57,25 @@ export default class PostService {
   }
 
   public async getPostsByTagName(tagName: string): Promise<PostEntity[]> {
-    const posts: PostEntity[] = await this.postRepository.getPostsByTagName(tagName);
+    const posts: PostEntity[] = await this.postRepository.findAllByTagName(tagName);
     await this.handleProcessPost(posts);
     return posts;
   }
 
   public async getTempPosts(user: User): Promise<PostEntity[]> {
-    const posts: PostEntity[] = await this.postRepository.getPostsByUserIdx(user.idx, true);
+    const posts: PostEntity[] = await this.postRepository.findAllByUserIdx(user.idx, true);
     await this.handleProcessPost(posts);
     return posts;
   }
 
   public async getRecentPosts(count: number): Promise<PostEntity[]> {
-    const posts: PostEntity[] = await this.postRepository.getRecentPostsByCount(count);
+    const posts: PostEntity[] = await this.postRepository.findRecentPostsByIsTempFalse(count);
     await this.handleProcessPost(posts);
     return posts;
   }
 
   public async getPopularPosts(count: number): Promise<PostEntity[]> {
-    const popularViews: IViewCount[] = await this.viewRepository.getViewCountGroupByPostIdx(count);
+    const popularViews: IViewCount[] = await this.viewRepository.getCountGroupByPostIdx(count);
     const posts: PostEntity[] = [];
 
     for (const view of popularViews) {
@@ -92,11 +92,11 @@ export default class PostService {
 
   public async getPost(postIdx: number, ipAddress: string): Promise<PostEntity> {
     const post: PostEntity = await this.getPostByIdx(postIdx);
-    const postTags: Tag[] = await this.tagRepository.getTagsByPostIdx(postIdx);
+    const postTags: Tag[] = await this.tagRepository.findAllByPostIdx(postIdx);
     post.postTags = postTags.map((tag: Tag) => tag.name);
-    post.user = await this.userRepository.getUserByIdx(post.fk_user_idx);
+    post.user = await this.userRepository.findByIdx(post.fk_user_idx);
 
-    const existView: View = await this.viewRepository.getViewByPostIdxAndIpAdress(postIdx, sha256(ipAddress));
+    const existView: View = await this.viewRepository.findByPostIdxAndIpAdress(postIdx, sha256(ipAddress));
     if (existView === undefined && !post.isTemp) {
       const view: View = new View();
       view.post = post;
@@ -109,20 +109,20 @@ export default class PostService {
   }
 
   public async handleSearchPost(keyword: string): Promise<PostEntity[]> {
-    const searchPosts: PostEntity[] = await this.postRepository.getPostsByKeyword(keyword);
+    const searchPosts: PostEntity[] = await this.postRepository.findAllByKeyword(keyword);
     await this.handleProcessPost(searchPosts);
     return searchPosts;
   }
 
   public async getPostsByUserIdx(userIdx: number): Promise<PostEntity[]> {
-    const userPosts: PostEntity[] = await this.postRepository.getPostsByUserIdx(userIdx, false);
+    const userPosts: PostEntity[] = await this.postRepository.findAllByUserIdx(userIdx, false);
     await this.handleProcessPost(userPosts);
     return userPosts;
   }
 
   public async handleCreatePost(createPostDto: PostDto, user: User): Promise<number> {
     const { introduction, thumbnail, title, contents, postTags, isTemp } = createPostDto;
-    const existUser: User = await this.userRepository.getUserByIdx(user.idx);
+    const existUser: User = await this.userRepository.findByIdx(user.idx);
 
     if (existUser === undefined) {
       throw new HttpError(404, '존재하지 않는 유저입니다.');
@@ -166,7 +166,7 @@ export default class PostService {
     post.updatedAt = new Date();
     await this.postRepository.save(post);
 
-    const existTags = await this.tagRepository.getTagsByPostIdx(postIdx);
+    const existTags = await this.tagRepository.findAllByPostIdx(postIdx);
     await this.tagRepository.remove(existTags);
 
     await this.tagService.handlePushTags(postTags, post);
@@ -183,7 +183,7 @@ export default class PostService {
   }
 
   public async getPostByIdx(postIdx: number): Promise<PostEntity> {
-    const post: PostEntity = await this.postRepository.getPostByIdx(postIdx);
+    const post: PostEntity = await this.postRepository.findByIdx(postIdx);
     if (post === undefined) {
       throw new HttpError(404, '존재하지 않는 글입니다.');
     }
@@ -192,14 +192,14 @@ export default class PostService {
   }
 
   public async getPostsByUserCommented(userIdx: number): Promise<PostEntity[]> {
-    const posts: PostEntity[] = await this.postRepository.getPostsByUserCommented(userIdx);
+    const posts: PostEntity[] = await this.postRepository.findAllByUserCommented(userIdx);
     await this.handleProcessPost(posts);
     return posts;
   }
 
   private async handleProcessPost(posts: PostEntity[]): Promise<void> {
     for (const post of posts) {
-      const postTags = await this.tagRepository.getTagsByPostIdx(post.idx);
+      const postTags = await this.tagRepository.findAllByPostIdx(post.idx);
       post.postTags = postTags.map((tag) => tag.name);
     }
   }

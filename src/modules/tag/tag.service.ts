@@ -15,17 +15,17 @@ export default class TagService {
   ) {}
   
   public async getTagsAndPostCount(sort: ETagSort): Promise<ITagAndPostCount[]> {
-    const tags: ITagAndPostCount[] = await this.tagRepository.getTags(sort);
+    const tags: ITagAndPostCount[] = await this.tagRepository.findAll(sort);
     return tags;
   }
 
   public async getTagsByPostIdx(postIdx: number): Promise<Tag[]> {
-    const tags: Tag[] = await this.tagRepository.getTagsByPostIdx(postIdx);
+    const tags: Tag[] = await this.tagRepository.findAllByPostIdx(postIdx);
     return tags;
   }
 
   public async getTagByTagName(tagName: string): Promise<Tag> {
-    const tag: Tag = await this.tagRepository.getTagByTagName(tagName);
+    const tag: Tag = await this.tagRepository.findByTagName(tagName);
 
     if (tag === undefined) {
       throw new HttpError(404, '존재하지 않는 태그입니다.');

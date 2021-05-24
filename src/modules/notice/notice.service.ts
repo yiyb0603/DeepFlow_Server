@@ -24,19 +24,19 @@ export default class NoticeService {
   ) { }
 
   public async getNotices(page: number): Promise<Notice[]> {
-    const notices: Notice[] = await this.noticeRepository.getNoticesByPage(page, PAGE_LIMIT);
+    const notices: Notice[] = await this.noticeRepository.findAll(page, PAGE_LIMIT);
     return notices;
   }
 
   public async getNotice(noticeIdx: number, ipAdress?: string): Promise<Notice> {
-    const notice: Notice = await this.noticeRepository.getNoticeByIdx(noticeIdx);
+    const notice: Notice = await this.noticeRepository.findByIdx(noticeIdx);
 
     if (notice === undefined) {
       throw new HttpError(404, '존재하지 않는 공지사항 입니다.');
     }
 
     if (ipAdress !== undefined) {
-      const existNoticeView: NoticeView = await this.noticeViewRepository.getNoticeViewByNoticeIdxAndIpAddress(noticeIdx, sha256(ipAdress));
+      const existNoticeView: NoticeView = await this.noticeViewRepository.findByNoticeIdxAndIpAddress(noticeIdx, sha256(ipAdress));
 
       if (existNoticeView === undefined) {
         const noticeView: NoticeView = new NoticeView();
@@ -56,7 +56,7 @@ export default class NoticeService {
       throw new HttpError(403, '공지사항을 작성할 권한이 없습니다.');
     }
 
-    const existUser: User = await this.userRepository.getUserByIdx(user.idx);
+    const existUser: User = await this.userRepository.findByIdx(user.idx);
     if (existUser === undefined) {
       throw new HttpError(404, '존재하지 않는 유저입니다.');
     }

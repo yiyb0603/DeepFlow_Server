@@ -20,7 +20,7 @@ export default class TokenService {
     
     if (token !== null) {
       const { idx, githubId, isAdmin } = token;
-      const user: User = await this.userRepository.getUserByIdx(token.idx);
+      const user: User = await this.userRepository.findByIdx(token.idx);
 
       if (user === undefined) {
         throw new HttpError(404, '존재하지 않는 유저입니다.');

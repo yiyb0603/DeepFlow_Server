@@ -19,7 +19,7 @@ export default class CommentEmojiService {
     const { emoji, commentIdx } = commentEmojiDto;
 
     const existComment: Comment = await this.commentService.getExistComment(commentIdx);
-    const existEmoji: CommentEmoji = await this.commentEmojiRepository.getIsPressedEmoji(emoji, commentIdx, user.idx);
+    const existEmoji: CommentEmoji = await this.commentEmojiRepository.findByEmojiAndCommentIdxAndUserIdx(emoji, commentIdx, user.idx);
 
     if (existEmoji !== undefined) {
       throw new HttpError(409, '이미 공감하였습니다.');
@@ -37,7 +37,7 @@ export default class CommentEmojiService {
   }
 
   public async deleteCommentEmoji(emojiIdx: number, user: User): Promise<void> {
-    const existEmoji = await this.commentEmojiRepository.getEmojiByIdx(emojiIdx);
+    const existEmoji = await this.commentEmojiRepository.findByIdx(emojiIdx);
 
     if (existEmoji === undefined) {
       throw new HttpError(404, '존재하지 않는 댓글 공감입니다.');

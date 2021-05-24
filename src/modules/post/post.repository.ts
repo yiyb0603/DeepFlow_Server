@@ -3,13 +3,13 @@ import PostEntity from './post.entity';
 
 @EntityRepository(PostEntity)
 export default class PostEntityRepository extends Repository<PostEntity> {
-  public getPostsCount(): Promise<number> {
+  public countByIsTempFalse(): Promise<number> {
     return this.createQueryBuilder('post')
       .where('post.is_temp = false')
       .getCount();
   }
 
-  public getPostsByPage(page: number, limit: number): Promise<PostEntity[]> {
+  public findAll(page: number, limit: number): Promise<PostEntity[]> {
     return this.createQueryBuilder('post')
       .leftJoinAndSelect('post.user', 'user')
       .loadRelationCountAndMap('post.commentCount', 'post.comments')
@@ -23,7 +23,7 @@ export default class PostEntityRepository extends Repository<PostEntity> {
       .getMany();
   }
 
-  public getPostsByTagName(tagName: string): Promise<PostEntity[]> {
+  public findAllByTagName(tagName: string): Promise<PostEntity[]> {
     return this.createQueryBuilder('post')
       .leftJoin('post.postTags', 'tag')
       .leftJoinAndSelect('post.user', 'user')
@@ -36,7 +36,7 @@ export default class PostEntityRepository extends Repository<PostEntity> {
       .getMany();
   }
 
-  public getRecentPostsByCount(count: number): Promise<PostEntity[]> {
+  public findRecentPostsByIsTempFalse(count: number): Promise<PostEntity[]> {
     return this.createQueryBuilder('post')
       .leftJoinAndSelect('post.user', 'user')
       .loadRelationCountAndMap('post.commentCount', 'post.comments')
@@ -50,7 +50,7 @@ export default class PostEntityRepository extends Repository<PostEntity> {
       .getMany();
   }
 
-  public getPostByIdx(idx: number): Promise<PostEntity> {
+  public findByIdx(idx: number): Promise<PostEntity> {
     return this.createQueryBuilder('post')
       .loadRelationCountAndMap('post.commentCount', 'post.comments')
       .loadRelationCountAndMap('post.replyCount', 'post.replies')
@@ -61,7 +61,7 @@ export default class PostEntityRepository extends Repository<PostEntity> {
       .getOne();
   }
 
-  public getPostsByUserIdx(userIdx: number, isTemp: boolean): Promise<PostEntity[]> {
+  public findAllByUserIdx(userIdx: number, isTemp: boolean): Promise<PostEntity[]> {
     return this.createQueryBuilder('post')
       .leftJoinAndSelect('post.user', 'user')
       .loadRelationCountAndMap('post.commentCount', 'post.comments')
@@ -74,7 +74,7 @@ export default class PostEntityRepository extends Repository<PostEntity> {
       .getMany();
   }
 
-  public getPostsByKeyword(keyword: string): Promise<PostEntity[]> {
+  public findAllByKeyword(keyword: string): Promise<PostEntity[]> {
     return this.createQueryBuilder('post')
       .leftJoinAndSelect('post.user', 'user')
       .loadRelationCountAndMap('post.commentCount', 'post.comments')
@@ -86,7 +86,7 @@ export default class PostEntityRepository extends Repository<PostEntity> {
       .getMany();
   }
 
-  public getPostsByUserCommented(userIdx: number): Promise<PostEntity[]> {
+  public findAllByUserCommented(userIdx: number): Promise<PostEntity[]> {
     return this.createQueryBuilder('post')
       .leftJoin('post.comments', 'comment')
       .loadRelationCountAndMap('post.commentCount', 'post.comments')
