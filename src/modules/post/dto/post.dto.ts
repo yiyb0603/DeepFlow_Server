@@ -1,4 +1,12 @@
-import { ArrayMaxSize, IsArray, IsBoolean, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import {
+  ArrayMaxSize,
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class PostDto {
   @IsString()
@@ -10,6 +18,7 @@ export class PostDto {
   @MaxLength(150)
   readonly introduction: string;
 
+  @IsOptional()
   @IsString()
   readonly thumbnail: string;
 

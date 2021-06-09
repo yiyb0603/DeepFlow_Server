@@ -1,10 +1,11 @@
-import HttpError from "exception/HttpError";
-import { existsSync, mkdirSync } from "fs";
-import { diskStorage } from "multer";
-import getProcessEnv from "./getProcessEnv";
-import uuidRandom from "./uuidRandom";
+import { MulterModuleOptions } from '@nestjs/platform-express';
+import HttpError from 'exception/HttpError';
+import { existsSync, mkdirSync } from 'fs';
+import { diskStorage } from 'multer';
+import getProcessEnv from './getProcessEnv';
+import uuidRandom from './uuidRandom';
 
-export const multerOptions = {
+export const multerOptions: MulterModuleOptions = {
   fileFilter: (request, file, callback) => {
     if (file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
       callback(null, true);

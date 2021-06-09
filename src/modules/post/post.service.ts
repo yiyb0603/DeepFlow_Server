@@ -93,6 +93,7 @@ export default class PostService {
   public async getPost(postIdx: number, ipAddress: string): Promise<PostEntity> {
     const post: PostEntity = await this.getPostByIdx(postIdx);
     const postTags: Tag[] = await this.tagRepository.findAllByPostIdx(postIdx);
+
     post.postTags = postTags.map((tag: Tag) => tag.name);
     post.user = await this.userRepository.findByIdx(post.fk_user_idx);
 
@@ -128,6 +129,12 @@ export default class PostService {
       throw new HttpError(404, '존재하지 않는 유저입니다.');
     }
 
+    if (!isTemp) {
+      if (!introduction) {
+        throw new HttpError(400, '검증 오류입니다.');
+      }
+    }
+
     const post: PostEntity = new PostEntity();
     post.user = existUser;
     post.title = title;
@@ -136,12 +143,6 @@ export default class PostService {
     post.contents = contents;
     post.isTemp = isTemp;
     post.updatedAt = null;
-
-    if (!isTemp) {
-      if (!thumbnail || !introduction) {
-        throw new HttpError(400, '검증 오류입니다.');
-      }
-    }
 
     const { idx } = await this.postRepository.save(post);
     await this.tagService.handlePushTags(postTags, post);
@@ -200,7 +201,7 @@ export default class PostService {
   private async handleProcessPost(posts: PostEntity[]): Promise<void> {
     for (const post of posts) {
       const postTags = await this.tagRepository.findAllByPostIdx(post.idx);
-      post.postTags = postTags.map((tag) => tag.name);
+      post.postTags = postTags.map((tag: Tag) => tag.name);
     }
   }
 }

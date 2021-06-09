@@ -1,5 +1,5 @@
-import { Injectable } from "@nestjs/common";
-import { createImageURL } from "lib/multerOptions";
+import { Injectable } from '@nestjs/common';
+import { createImageURL } from 'lib/multerOptions';
 
 @Injectable()
 export default class UploadService {
