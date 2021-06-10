@@ -5,10 +5,9 @@ import { join } from 'path';
 import * as requestIp from 'request-ip';
 import * as express from 'express';
 import * as admin from 'firebase-admin';
+import * as serviceAccount from './config/serviceAccount.json';
 import getProcessEnv from 'lib/getProcessEnv';
 import { AppModule } from './app.module';
-
-const serviceAccount = require('./config/serviceAccount.json');
 
 const bootstrap = async (): Promise<void> => {
   const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule, {
