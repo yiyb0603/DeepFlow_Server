@@ -1,12 +1,12 @@
-import { Injectable } from "@nestjs/common";
-import HttpError from "exception/HttpError";
+import { Injectable } from '@nestjs/common';
+import HttpError from 'exception/HttpError';
 import getProcessEnv from 'lib/getProcessEnv';
 import { sendFCM } from 'lib/sendFCM';
-import User from "modules/user/user.entity";
-import UserService from "modules/user/user.service";
-import { RecommandDto } from "./dto/recommand.dto";
-import Recommand from "./recommand.entity";
-import RecommandRepository from "./recommand.repository";
+import User from 'modules/user/user.entity';
+import UserService from 'modules/user/user.service';
+import { RecommandDto } from './dto/recommand.dto';
+import Recommand from './recommand.entity';
+import RecommandRepository from './recommand.repository';
 
 @Injectable()
 export default class RecommandService {
@@ -37,10 +37,12 @@ export default class RecommandService {
     const pressedUser: User = await this.userService.getUserInfoByIdx(user.idx);
 
     const recommand: Recommand = new Recommand();
+
     recommand.reason = reason;
     recommand.user = targetUser;
     recommand.pressedUser = pressedUser;
     recommand.recommandAt = new Date();
+
     await this.recommandRepository.save(recommand);
 
     const { idx, fcmAllow, fcmToken } = targetUser;

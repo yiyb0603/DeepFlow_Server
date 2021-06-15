@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from "@nestjs/common";
-import { Token } from "lib/decorator/user.decorator";
-import AuthGuard from "middleware/auth";
-import User from "modules/user/user.entity";
-import { RecommandDto } from "./dto/recommand.dto";
-import RecommandService from "./recommand.service";
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Token } from 'lib/decorator/user.decorator';
+import AuthGuard from 'middleware/auth';
+import User from 'modules/user/user.entity';
+import { RecommandDto } from './dto/recommand.dto';
+import RecommandService from './recommand.service';
 
 @Controller('recommand')
 export default class RecommandController {
