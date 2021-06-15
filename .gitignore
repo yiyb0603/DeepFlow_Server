@@ -26,6 +26,7 @@ lerna-debug.log*
 .settings/
 *.sublime-workspace
 .env
+docker-compose.yml
 config/
 public/
 
