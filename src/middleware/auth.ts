@@ -8,15 +8,13 @@ import User from 'modules/user/user.entity';
 export default class AuthGuard implements CanActivate {
   public canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    console.log(request);
-    console.log(request.headers);
     const accessToken: string = request.headers['access_token'] as string;
 
-    // if (accessToken === undefined) {
-    //   throw new HttpError(401, '토큰이 전송되지 않았습니다.');
-    // }
+    if (accessToken === undefined) {
+      throw new HttpError(401, '토큰이 전송되지 않았습니다.');
+    }
 
-    // request.user = AuthGuard.validateToken(accessToken);
+    request.user = AuthGuard.validateToken(accessToken);
     return true;
   }
 
