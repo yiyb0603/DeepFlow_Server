@@ -8,6 +8,7 @@ import User from 'modules/user/user.entity';
 export default class AuthGuard implements CanActivate {
   public canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
+    console.log(request);
     const accessToken: string = request.headers['access_token'] as string;
 
     if (accessToken === undefined) {
