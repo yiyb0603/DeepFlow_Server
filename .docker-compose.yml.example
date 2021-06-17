@@ -15,6 +15,7 @@ services:
       - DB_PASSWORD=DB 비밀번호
       - DATABASE=DB 스키마 이름
       - JWT_SECRET=yiyb0603
+      - TOKEN_KEY=x-access-token
       - ADMIN_ID=yiyb0603
       - SERVER_ADDRESS=서버주소
       - WEB_ADDRESS=웹 주소
