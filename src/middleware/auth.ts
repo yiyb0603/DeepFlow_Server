@@ -11,6 +11,8 @@ export default class AuthGuard implements CanActivate {
     console.log(request);
     console.log(request.headers);
 
+    console.log(TOKEN_KEY);
+    console.log(request.headers[TOKEN_KEY]);
     const accessToken: string = request.headers[TOKEN_KEY] as string;
 
     if (accessToken === undefined) {
