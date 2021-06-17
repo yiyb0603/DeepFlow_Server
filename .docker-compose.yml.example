@@ -8,11 +8,16 @@ services:
       args:
         - NODE_ENV=development
     environment:
-      - PORT=8080
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_USER=DB 유저이름
-      - DB_PW=DB 비밀번호
+      - SERVER_PORT=포트
+      - DB_HOST=DB 유저이름
+      - DB_PORT=DB 포트번호
+      - DB_USERNAME=DB 유저이름
+      - DB_PASSWORD=DB 비밀번호
+      - DATABASE=DB 스키마 이름
+      - JWT_SECRET=yiyb0603
+      - ADMIN_ID=yiyb0603
+      - SERVER_ADDRESS=서버주소
+      - WEB_ADDRESS=웹 주소
     ports:
       - 8080:8080
     depends_on:

@@ -1,7 +1,5 @@
 import { CanActivate, ExecutionContext } from '@nestjs/common';
-import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import HttpError from 'exception/HttpError';
-import { Request } from 'express';
 import { decodeToken, verifyToken } from 'lib/token';
 import User from 'modules/user/user.entity';
 
