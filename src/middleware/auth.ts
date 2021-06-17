@@ -1,11 +1,12 @@
 import { CanActivate, ExecutionContext } from '@nestjs/common';
 import HttpError from 'exception/HttpError';
+import getProcessEnv from 'lib/getProcessEnv';
 import { decodeToken, verifyToken } from 'lib/token';
 import User from 'modules/user/user.entity';
-import { TOKEN_KEY } from 'config/config.json';
 
 export default class AuthGuard implements CanActivate {
   public canActivate(context: ExecutionContext): boolean {
+    const TOKEN_KEY = getProcessEnv('TOKEN_KEY');
     const request = context.switchToHttp().getRequest();
 
     console.log(request);
