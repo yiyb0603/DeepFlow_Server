@@ -7,6 +7,10 @@ import { TOKEN_KEY } from 'config/config.json';
 export default class AuthGuard implements CanActivate {
   public canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
+
+    console.log(request);
+    console.log(request.headers);
+
     const accessToken: string = request.headers[TOKEN_KEY] as string;
 
     if (accessToken === undefined) {
