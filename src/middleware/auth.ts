@@ -1,20 +1,17 @@
 import { CanActivate, ExecutionContext } from '@nestjs/common';
 import HttpError from 'exception/HttpError';
-import getProcessEnv from 'lib/getProcessEnv';
 import { decodeToken, verifyToken } from 'lib/token';
 import User from 'modules/user/user.entity';
 
 export default class AuthGuard implements CanActivate {
   public canActivate(context: ExecutionContext): boolean {
-    const TOKEN_KEY = getProcessEnv('TOKEN_KEY');
     const request = context.switchToHttp().getRequest();
 
     console.log(request);
     console.log(request.headers);
 
-    console.log(TOKEN_KEY);
-    console.log(request.headers[TOKEN_KEY]);
-    const accessToken: string = request.headers[TOKEN_KEY] as string;
+    console.log(request.headers['x-access-token']);
+    const accessToken: string = request.headers['x-access-token'];
 
     if (accessToken === undefined) {
       throw new HttpError(401, '토큰이 전송되지 않았습니다.');
