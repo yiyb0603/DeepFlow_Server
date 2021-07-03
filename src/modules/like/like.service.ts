@@ -1,13 +1,13 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import PostService from "modules/post/post.service";
-import User from "modules/user/user.entity";
-import UserRepository from "modules/user/user.repository";
-import HttpError from "exception/HttpError";
-import { LikeDto } from "./dto/like.dto";
-import LikeEntity from "./like.entity";
-import LikeEntityRepository from "./like.repository";
-import PostEntity from "modules/post/post.entity";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import PostService from 'modules/post/post.service';
+import User from 'modules/user/user.entity';
+import UserRepository from 'modules/user/user.repository';
+import HttpError from 'exception/HttpError';
+import { LikeDto } from './dto/like.dto';
+import LikeEntity from './like.entity';
+import LikeEntityRepository from './like.repository';
+import PostEntity from 'modules/post/post.entity';
 
 @Injectable()
 export default class LikeService {

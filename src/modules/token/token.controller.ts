@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { RefreshTokenDto } from './dto/token.dto';
 import TokenService from './token.service';
 

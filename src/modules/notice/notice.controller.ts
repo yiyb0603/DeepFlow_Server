@@ -1,11 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { IpAddress } from 'lib/decorator/ipAddress.decorator';
-import { Token } from "lib/decorator/user.decorator";
-import AuthGuard from "middleware/auth";
-import User from "modules/user/user.entity";
-import { NoticeDto } from "./dto/notice.dto";
-import Notice from "./notice.entity";
-import NoticeService from "./notice.service";
+import { Token } from 'lib/decorator/user.decorator';
+import AuthGuard from 'middleware/auth';
+import User from 'modules/user/user.entity';
+import { NoticeDto } from './dto/notice.dto';
+import Notice from './notice.entity';
+import NoticeService from './notice.service';
 
 @Controller('notice')
 export default class NoticeController {

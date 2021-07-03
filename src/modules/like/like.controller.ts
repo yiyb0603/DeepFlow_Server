@@ -1,10 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from "@nestjs/common";
-import User from "modules/user/user.entity";
-import { Token } from "lib/decorator/user.decorator";
-import AuthGuard from "middleware/auth";
-import { LikeDto } from "./dto/like.dto";
-import LikeEntity from "./like.entity";
-import LikeService from "./like.service";
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import User from 'modules/user/user.entity';
+import { Token } from 'lib/decorator/user.decorator';
+import AuthGuard from 'middleware/auth';
+import { LikeDto } from './dto/like.dto';
+import LikeEntity from './like.entity';
+import LikeService from './like.service';
 
 @Controller('like')
 export default class LikeController {

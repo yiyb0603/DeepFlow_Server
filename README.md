@@ -159,3 +159,7 @@ https://velog.io/@yiyb0603/DeepFlow-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-5%EC%A3
 ### 9주차 ~ 12주차 진행 및 느낀점
 
 https://velog.io/@yiyb0603/DeepFlow-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-9%EC%A3%BC%EC%B0%A8-12%EC%A3%BC%EC%B0%A8
+
+### 프로젝트 회고록
+
+https://velog.io/@yiyb0603/DeepFlow-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%ED%9A%8C%EA%B3%A0%EB%A1%9D

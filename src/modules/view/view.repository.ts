@@ -1,6 +1,6 @@
-import { EntityRepository, Repository } from "typeorm";
-import { IViewCount } from "types/view.types";
-import View from "./view.entity";
+import { EntityRepository, Repository } from 'typeorm';
+import { IViewCount } from 'types/view.types';
+import View from './view.entity';
 
 @EntityRepository(View)
 export default class ViewRepository extends Repository<View> {
